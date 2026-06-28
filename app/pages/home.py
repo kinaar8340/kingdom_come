@@ -1,10 +1,20 @@
 """Home / landing page content."""
 
 HOME_MD = """
+## What is Kingdom Come?
+
+**Kingdom Come** is Aaron Michael Kinder's unified **knowledge repository and interactive
+portal** for a Hopf-fibration-based Theory of Everything (TOE). It combines:
+
+- **Visual intuition** — linked Hopf fibers, S² base maps, flux stability charts
+- **Theory & derivations** — postulates, equations, step-by-step modules
+- **Project showcase** — links to six related Hugging Face Spaces and GitHub repos
+
+> **Not a game** — this is a scientific visualization and physics record platform.
+
 ## Start Here
 
-Kingdom Come unifies derivations, simulations, and records for a **Hopf-fibration-based
-Theory of Everything**. Enter at any level:
+Enter at any level:
 
 | Path | Best for |
 |------|----------|

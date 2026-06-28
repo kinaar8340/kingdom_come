@@ -15,9 +15,17 @@ sys.path.insert(0, str(ROOT / "src"))
 from kingdom.core.flux_flywheel import map_z_to_flywheel
 from kingdom.viz.hopf_plotly import build_hopf_fibration_figure_auto, default_view_mode, is_hf_space
 
-from app.components.theme import FOOTER_HTML, HERO_HTML, KINGDOM_CSS
+from app.build_info import get_build_label
+from app.components.theme import HERO_HTML, KINGDOM_CSS, footer_html
+from app.pages.help import HELP_MD, QUICKSTART_MD
 from app.pages.home import HOME_MD, SHOWCASE_CARDS
 from app.pages.theory import DERIVATION_HOPF_MD, THEORY_MD
+
+HOPF_PRESETS: dict[str, tuple[int, int, float, float, float]] = {
+    "Classic Hopf": (8, 160, 0.6, 1.2, 1.0),
+    "Dense fiber weave": (14, 200, 0.45, 2.1, 1.2),
+    "Wide projection": (6, 120, 0.8, 0.5, 1.8),
+}
 
 
 def render_hopf_visualizer(
@@ -80,8 +88,12 @@ def build_app() -> gr.Blocks:
 
         with gr.Tabs():
             with gr.Tab("Home"):
+                gr.Markdown(QUICKSTART_MD)
                 gr.Markdown(HOME_MD)
                 gr.HTML(SHOWCASE_CARDS)
+
+            with gr.Tab("Help"):
+                gr.Markdown(HELP_MD)
 
             with gr.Tab("Hopf Visualizer"):
                 gr.Markdown(
@@ -117,6 +129,11 @@ def build_app() -> gr.Blocks:
                 with gr.Row():
                     show_base = gr.Checkbox(value=True, label="Show S² base sphere")
                     show_highlight = gr.Checkbox(value=True, label="Highlight single fiber")
+                gr.Markdown("**Try a preset** — loads parameters, then click *Update visualization*.")
+                with gr.Row():
+                    preset_btns = [
+                        gr.Button(name, size="sm") for name in HOPF_PRESETS
+                    ]
                 hopf_plot = gr.Plot(label="Hopf Fibration")
                 refresh = gr.Button("Update visualization", variant="primary")
                 hopf_inputs = [
@@ -131,6 +148,16 @@ def build_app() -> gr.Blocks:
                 ]
                 refresh.click(render_hopf_visualizer, inputs=hopf_inputs, outputs=hopf_plot)
                 demo.load(render_hopf_visualizer, inputs=hopf_inputs, outputs=hopf_plot)
+
+                def apply_preset(name: str):
+                    n_f, n_p, e, x, s = HOPF_PRESETS[name]
+                    return n_f, n_p, e, x, s
+
+                for preset_name, btn in zip(HOPF_PRESETS, preset_btns):
+                    btn.click(
+                        fn=lambda name=preset_name: apply_preset(name),
+                        outputs=[n_fibers, n_points, eta, xi1, scale],
+                    )
 
             with gr.Tab("The Model"):
                 gr.Markdown(THEORY_MD)
@@ -163,7 +190,7 @@ def build_app() -> gr.Blocks:
                     """
                 )
 
-        gr.HTML(FOOTER_HTML)
+        gr.HTML(footer_html(get_build_label()))
 
     return demo
 

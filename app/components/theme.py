@@ -56,14 +56,19 @@ HERO_HTML = """
 <div class="kc-hero">
   <h1>Kingdom Come</h1>
   <p>A topological foundation for emergent physics via the Hopf Fibration
-     and gauged flux lattices — Aaron's Theory of Everything.</p>
+     and gauged flux lattices — Aaron Michael Kinder's Theory of Everything.</p>
+  <p style="font-size:0.95rem;margin-top:0.75rem;">
+    <strong>Start here:</strong> Hopf Visualizer → <em>Classic Hopf</em> preset → Update visualization
+  </p>
 </div>
 """
 
-FOOTER_HTML = """
+def footer_html(build_label: str = "Kingdom Come v0.1.0") -> str:
+    return f"""
 <div class="kc-footer">
-  Kingdom Come · Aaron's Hopf Fibration TOE ·
-  <a href="https://huggingface.co/kinaar111" target="_blank">Hugging Face</a> ·
-  <a href="https://github.com/kinaar8340" target="_blank">GitHub</a>
+  {build_label} · Aaron's Hopf Fibration TOE ·
+  <a href="https://huggingface.co/spaces/kinaar111/kingdom" target="_blank">Space</a> ·
+  <a href="https://github.com/kinaar8340/kingdom_come" target="_blank">GitHub</a> ·
+  <a href="https://huggingface.co/kinaar111" target="_blank">HF Profile</a>
 </div>
 """
