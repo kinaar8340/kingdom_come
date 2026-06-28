@@ -33,6 +33,14 @@ tags:
 <p align="center"><em>Demo GIF: highlight fiber ξ₁ phase sweep — each loop is one fiber of the Hopf fibration.</em></p>
 
 <p align="center">
+  <img src="app/assets/flux_flywheel_demo.gif"
+       alt="Flux Flywheel element tour: Helium, Iron, Gold, and Z=129 with Grok Imagine artwork, electron shells, and gold flux ring"
+       width="100%" style="max-width: 720px; border-radius: 12px;" />
+</p>
+
+<p align="center"><em>Flux Flywheel demo: He → Fe → Au → Z=129 — Imagine art, shell clouds, and stability metrics.</em></p>
+
+<p align="center">
   <img src="app/assets/hopf_preview.png" alt="Hopf fibration stereographic preview — linked fibers" width="100%" style="max-width: 720px; border-radius: 12px;" />
 </p>
 
