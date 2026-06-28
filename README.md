@@ -62,7 +62,7 @@ This is a **Gradio** Space (not Docker). Open the **App** tab above — no insta
 | **Lattice Simulator** | **Run lattice comparison** | Stable vs chaotic gauge pointer, twist, identity preservation |
 | **The Model** | Read overview + derivation accordion | Core TOE postulates and Hopf→quaternion math |
 | **Flux Flywheel** | Slide **Z** (try He=2, Ne=10) | Element card, electron cloud, chemistry vs TOE flux |
-| **Showcase** | Browse links | Six related HF Spaces + GitHub repos |
+| **Showcase** | Browse links | Seven [kinaar111 HF Spaces](https://huggingface.co/kinaar111/spaces) |
 | **Help** | Full walkthrough | Controls, limitations, tech stack |
 
 ---
@@ -98,59 +98,68 @@ via Magic Island stability sweeps).
 
 ---
 
-## Related Spaces & repos (Showcase)
+## Related Spaces (Showcase)
 
 <p align="center">
-  <em>Each card has a distinct thumbnail — same artwork as the in-app Showcase tab.</em>
+  <em>Matches <a href="https://huggingface.co/kinaar111/spaces">kinaar111/spaces</a> — same thumbnails as the in-app Showcase tab.</em>
 </p>
 
 <table>
 <tr>
 <td width="50%" align="center" valign="top">
+  <a href="https://huggingface.co/spaces/kinaar111/kingdom">
+    <img src="app/assets/showcase/kingdom.png" alt="Kingdom Come thumbnail" width="100%" style="max-width:360px;border-radius:10px;" />
+  </a><br/>
+  <strong>Kingdom Come 👑</strong> · <a href="https://huggingface.co/spaces/kinaar111/kingdom">HF Space</a> · you are here<br/>
+  <sub>Hopf fibration TOE portal &amp; visualizers</sub>
+</td>
+<td width="50%" align="center" valign="top">
+  <a href="https://huggingface.co/spaces/kinaar111/6-string-optimizer">
+    <img src="app/assets/showcase/six_string_optimizer.png" alt="6-String Optimizer thumbnail" width="100%" style="max-width:360px;border-radius:10px;" />
+  </a><br/>
+  <strong>6-String Optimizer 🎸</strong> · <a href="https://huggingface.co/spaces/kinaar111/6-string-optimizer">HF Space</a><br/>
+  <sub>Riemannian S³ burst optimizer + guitar audio showcase</sub>
+</td>
+</tr>
+<tr>
+<td width="50%" align="center" valign="top">
+  <a href="https://huggingface.co/spaces/kinaar111/staging">
+    <img src="app/assets/showcase/staging.png" alt="6-String Optimizer Staging thumbnail" width="100%" style="max-width:360px;border-radius:10px;" />
+  </a><br/>
+  <strong>6-String Optimizer Staging 🎸</strong> · <a href="https://huggingface.co/spaces/kinaar111/staging">HF Space</a><br/>
+  <sub>Six-string S³ burst optimizer + real-audio spectrum</sub>
+</td>
+<td width="50%" align="center" valign="top">
+  <a href="https://huggingface.co/spaces/kinaar111/qvpic">
+    <img src="app/assets/showcase/qvpic.png" alt="QVPIC Identity Conduit thumbnail" width="100%" style="max-width:360px;border-radius:10px;" />
+  </a><br/>
+  <strong>QVPIC Identity Conduit 🌀</strong> · <a href="https://huggingface.co/spaces/kinaar111/qvpic">HF Space</a><br/>
+  <sub>Quaternion vortex persistent identity — browser demo</sub>
+</td>
+</tr>
+<tr>
+<td width="50%" align="center" valign="top">
   <a href="https://huggingface.co/spaces/kinaar111/hopf-flux-bubble">
     <img src="app/assets/showcase/hopf_flux_bubble.png" alt="Hopf Flux Bubble thumbnail" width="100%" style="max-width:360px;border-radius:10px;" />
   </a><br/>
-  <strong>Hopf Flux Bubble</strong> · <a href="https://huggingface.co/spaces/kinaar111/hopf-flux-bubble">HF Space</a><br/>
-  <sub>Flux metrics, Hopfion textures, analog gravity</sub>
+  <strong>Hopf Flux Bubble 🫧</strong> · <a href="https://huggingface.co/spaces/kinaar111/hopf-flux-bubble">HF Space</a><br/>
+  <sub>Analog flux bubble metrics — browser demo</sub>
 </td>
 <td width="50%" align="center" valign="top">
   <a href="https://huggingface.co/spaces/kinaar111/orbital-braille-vqc">
     <img src="app/assets/showcase/orbital_braille_vqc.png" alt="Orbital Braille VQC thumbnail" width="100%" style="max-width:360px;border-radius:10px;" />
   </a><br/>
-  <strong>Orbital Braille VQC</strong> · <a href="https://huggingface.co/spaces/kinaar111/orbital-braille-vqc">HF Space</a><br/>
-  <sub>Quaternion OAM · helix-within-helix beams</sub>
+  <strong>Orbital Braille VQC 🔤</strong> · <a href="https://huggingface.co/spaces/kinaar111/orbital-braille-vqc">HF Space</a><br/>
+  <sub>Orbital Braille VQC Typehead — browser demo</sub>
 </td>
 </tr>
 <tr>
-<td width="50%" align="center" valign="top">
-  <a href="https://github.com/kinaar8340/qvpic">
-    <img src="app/assets/showcase/qvpic.png" alt="QVpic thumbnail" width="100%" style="max-width:360px;border-radius:10px;" />
+<td width="50%" align="center" valign="top" colspan="2">
+  <a href="https://huggingface.co/spaces/kinaar111/mystery">
+    <img src="app/assets/showcase/mystery.png" alt="Mystery thumbnail" width="100%" style="max-width:360px;border-radius:10px;" />
   </a><br/>
-  <strong>QVpic</strong> · <a href="https://github.com/kinaar8340/qvpic">GitHub</a><br/>
-  <sub>Magic Island sweeps · z-flywheel · lattice swarm</sub>
-</td>
-<td width="50%" align="center" valign="top">
-  <a href="https://github.com/kinaar8340/toe">
-    <img src="app/assets/showcase/toe.png" alt="toe lattice thumbnail" width="100%" style="max-width:360px;border-radius:10px;" />
-  </a><br/>
-  <strong>toe</strong> · <a href="https://github.com/kinaar8340/toe">GitHub</a><br/>
-  <sub>Two-gyro gauged lattice · RubikCone conduit</sub>
-</td>
-</tr>
-<tr>
-<td width="50%" align="center" valign="top">
-  <a href="https://github.com/kinaar8340/vqc_sims_public">
-    <img src="app/assets/showcase/vqc_sims_public.png" alt="vqc_sims_public thumbnail" width="100%" style="max-width:360px;border-radius:10px;" />
-  </a><br/>
-  <strong>vqc_sims_public</strong> · <a href="https://github.com/kinaar8340/vqc_sims_public">GitHub</a><br/>
-  <sub>OAM knots · quaternion encode/decode</sub>
-</td>
-<td width="50%" align="center" valign="top">
-  <a href="https://github.com/kinaar8340/kingdom_come">
-    <img src="app/assets/showcase/kingdom_come.png" alt="Kingdom Come thumbnail" width="100%" style="max-width:360px;border-radius:10px;" />
-  </a><br/>
-  <strong>kingdom_come</strong> · <a href="https://github.com/kinaar8340/kingdom_come">GitHub</a> · you are here<br/>
-  <sub>TOE portal · Hopf · flux flywheel · lattice</sub>
+  <strong>Mystery 🔮</strong> · <a href="https://huggingface.co/spaces/kinaar111/mystery">HF Space</a><br/>
+  <sub>φ²+e²≈π² emergent signature — CLI terminal + keypad UI</sub>
 </td>
 </tr>
 </table>

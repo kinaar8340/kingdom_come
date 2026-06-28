@@ -21,7 +21,7 @@ portal** for a Hopf-fibration-based Theory of Everything (TOE). It combines:
 
 - **Visual intuition** — linked Hopf fibers, S² base maps, flux stability charts
 - **Theory & derivations** — postulates, equations, step-by-step modules
-- **Project showcase** — links to six related Hugging Face Spaces and GitHub repos
+- **Project showcase** — links to all seven [kinaar111 Hugging Face Spaces](https://huggingface.co/kinaar111/spaces)
 
 > **Not a game** — this is a scientific visualization and physics record platform.
 
@@ -35,7 +35,7 @@ Enter at any level:
 | **Lattice Simulator** | Two-gyro gauged quaternion lattice (stable vs chaotic) |
 | **The Model** | Core postulates: flux flywheels, gauged lattice, porous vacuum |
 | **Derivations** | Step-by-step math → code → physics |
-| **Showcase** | Six Hugging Face Spaces + GitHub repos |
+| **Showcase** | Seven Hugging Face Spaces ([kinaar111/spaces](https://huggingface.co/kinaar111/spaces)) |
 
 ### Core Postulates
 
@@ -46,10 +46,10 @@ Enter at any level:
 
 ### Quick Links
 
+- [kinaar111/spaces](https://huggingface.co/kinaar111/spaces) — all seven HF Spaces
+- [6-String Optimizer](https://huggingface.co/spaces/kinaar111/6-string-optimizer)
+- [QVPIC Identity Conduit](https://huggingface.co/spaces/kinaar111/qvpic)
 - [Hopf Flux Bubble](https://huggingface.co/spaces/kinaar111/hopf-flux-bubble)
-- [Orbital Braille VQC](https://huggingface.co/spaces/kinaar111/orbital-braille-vqc)
-- [QVpic](https://github.com/kinaar8340/qvpic)
-- [TOE repo](https://github.com/kinaar8340/toe)
 """
 
 SHOWCASE_CARDS = """
@@ -62,7 +62,7 @@ SHOWCASE_CARDS = """
   <p>Quaternion-encoded OAM propagation — quaternion → helix-within-helix beams.</p>
 </div>
 <div class="kc-card">
-  <h3>QVpic / TOE Swarm</h3>
-  <p>Lattice demos, magic-island stability sweeps, periodic-table emergence.</p>
+  <h3>QVPIC Identity Conduit</h3>
+  <p>Quaternion vortex persistent identity — lattice swarm and z-flywheel demos.</p>
 </div>
 """

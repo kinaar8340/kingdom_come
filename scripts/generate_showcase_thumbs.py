@@ -8,7 +8,7 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib.patches import Circle, FancyArrowPatch, Rectangle
+from matplotlib.patches import Circle, Rectangle
 from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -65,8 +65,51 @@ def orbital_braille_vqc() -> Path:
     return _save(fig, "orbital_braille_vqc.png")
 
 
+def six_string_optimizer() -> Path:
+    fig, ax = _base_fig("6-String Optimizer")
+    frets = np.linspace(1.0, 9.0, 7)
+    for i, x in enumerate(frets):
+        ax.plot([x, x], [0.7, 4.3], color="#5c4033", lw=3, alpha=0.85)
+        ax.scatter([x], [4.45], s=18, c="#c9a227", edgecolors="#fff", linewidths=0.3)
+    t = np.linspace(0, 3 * np.pi, 200)
+    ax.plot(5 + 1.8 * np.cos(t), 2.5 + 0.9 * np.sin(2 * t), color="#ef553b", lw=2.5, alpha=0.9)
+    ax.fill_between([0.5, 9.5], [0.5, 0.5], [0.65, 0.65], color="#1e3a5f", alpha=0.6)
+    ax.text(0.35, 0.35, "Riemannian S³ burst · guitar audio spectrum", color=SUB, fontsize=7)
+    return _save(fig, "six_string_optimizer.png")
+
+
+def staging() -> Path:
+    fig, ax = _base_fig("6-String Staging")
+    x = np.linspace(1.0, 9.0, 80)
+    for band, color, alpha in (
+        (np.sin(3 * x) * 0.4 + 2.8, "#1a8fe3", 0.35),
+        (np.sin(5 * x + 0.5) * 0.35 + 2.2, "#00c9b7", 0.45),
+        (np.sin(7 * x + 1.2) * 0.3 + 1.6, "#c9a227", 0.55),
+    ):
+        ax.fill_between(x, band - 0.15, band + 0.15, color=color, alpha=alpha)
+    ax.plot([1, 9], [0.55, 0.55], color="#8ecae6", lw=1.5, linestyle="--", alpha=0.7)
+    ax.text(0.35, 0.35, "staging build · real-audio spectrum · S³ burst", color=SUB, fontsize=7)
+    return _save(fig, "staging.png")
+
+
+def mystery() -> Path:
+    fig, ax = _base_fig("Mystery — φ e π")
+    phi = (1 + 5**0.5) / 2
+    labels = ("φ", "e", "π")
+    vals = (phi, np.e, np.pi)
+    colors = ("#c9a227", "#00c9b7", "#1a8fe3")
+    for i, (lab, val, col) in enumerate(zip(labels, vals, colors)):
+        bx = 1.5 + i * 2.8
+        h = 2.2 * val / np.pi
+        ax.add_patch(Rectangle((bx, 0.9), 1.6, h, facecolor=col, edgecolor="#e8f4ff", lw=1, alpha=0.85))
+        ax.text(bx + 0.8, 0.65, lab, color=FG, fontsize=10, ha="center", fontweight="bold")
+    ax.text(5, 4.1, "φ² + e² ≈ π²", color=FG, fontsize=9, ha="center", fontweight="bold")
+    ax.text(0.35, 0.35, "emergent signature · CLI terminal · keypad UI", color=SUB, fontsize=7)
+    return _save(fig, "mystery.png")
+
+
 def qvpic() -> Path:
-    fig, ax = _base_fig("QVpic")
+    fig, ax = _base_fig("QVPIC Identity Conduit")
     for row in range(4):
         for col in range(8):
             x, y = 1.0 + col * 1.05, 3.6 - row * 0.75
@@ -79,37 +122,7 @@ def qvpic() -> Path:
     return _save(fig, "qvpic.png")
 
 
-def toe() -> Path:
-    fig, ax = _base_fig("toe — gauged lattice")
-    sites = np.linspace(1.2, 8.8, 14)
-    for s in sites:
-        ax.plot([s, s], [0.9, 4.1], color="#1e3a5f", lw=1, alpha=0.6)
-    ax.plot(sites, [2.5] * len(sites), color="#1a8fe3", lw=1.5, alpha=0.5)
-    ax.add_patch(FancyArrowPatch((3.2, 2.5), (4.4, 3.35), arrowstyle="-|>", mutation_scale=14, color="#c9a227", lw=2.5))
-    ax.add_patch(FancyArrowPatch((6.8, 2.5), (7.9, 1.45), arrowstyle="-|>", mutation_scale=14, color="#ef553b", lw=2.5))
-    ax.text(2.8, 3.55, "stable", color="#c9a227", fontsize=7)
-    ax.text(6.4, 1.15, "chaotic", color="#ef553b", fontsize=7)
-    ax.text(0.35, 0.35, "two-gyro lattice · RubikCone conduit", color=SUB, fontsize=7)
-    return _save(fig, "toe.png")
-
-
-def vqc_sims_public() -> Path:
-    fig, ax = _base_fig("vqc_sims_public")
-    t = np.linspace(0, 2 * np.pi, 400)
-    p, q = 2, 3
-    r = 0.9
-    R = 2.0
-    x = 5 + (R + r * np.cos(q * t)) * np.cos(p * t)
-    y = 2.5 + (R + r * np.cos(q * t)) * np.sin(p * t)
-    phase = np.sin(3 * t)
-    for i in range(len(t) - 1):
-        ax.plot(x[i : i + 2], y[i : i + 2], color=plt.cm.twilight(0.5 + 0.4 * phase[i]), lw=2)
-    ax.plot(5 + R * np.cos(t), 2.5 + R * np.sin(t), color="#00c9b7", lw=1, alpha=0.35)
-    ax.text(0.35, 0.35, "OAM knots · quaternion encode/decode", color=SUB, fontsize=7)
-    return _save(fig, "vqc_sims_public.png")
-
-
-def kingdom_come() -> Path:
+def kingdom() -> Path:
     """Portal card — Hopf fibers + flux ring (distinct from hopf_flux_bubble sphere)."""
     sys.path.insert(0, str(ROOT / "src"))
     from kingdom.core.hopf import sample_fiber_family
@@ -125,17 +138,18 @@ def kingdom_come() -> Path:
     theta = np.linspace(0, 2 * np.pi, 100)
     ax.plot(8.0 + 0.55 * np.cos(theta), 1.2 + 0.55 * np.sin(theta), color="#c9a227", lw=3)
     ax.text(0.35, 0.35, "TOE portal · Hopf · flux flywheel · lattice", color=SUB, fontsize=7)
-    return _save(fig, "kingdom_come.png")
+    return _save(fig, "kingdom.png")
 
 
 def main() -> None:
     paths = [
+        kingdom(),
+        six_string_optimizer(),
+        staging(),
+        qvpic(),
         hopf_flux_bubble(),
         orbital_braille_vqc(),
-        qvpic(),
-        toe(),
-        vqc_sims_public(),
-        kingdom_come(),
+        mystery(),
     ]
     for p in paths:
         print(f"Wrote {p} ({p.stat().st_size // 1024} KB)")
