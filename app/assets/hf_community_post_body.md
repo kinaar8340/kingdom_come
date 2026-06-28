@@ -1,0 +1,29 @@
+We just shipped a major visual upgrade to **Kingdom Come** — our Hopf-fibration Theory of Everything portal on Hugging Face Spaces.
+
+![Flux Flywheel demo: He → Fe → Au → Z=129](https://huggingface.co/spaces/kinaar111/kingdom/resolve/main/app/assets/flux_flywheel_demo.gif)
+
+### What's new
+
+- **180/180 Grok Imagine electron-cloud artworks** — every known element (Z=1–118) plus theoretical superheavy sweep (Z=119–180)
+- **Flux Flywheel tab** — cinematic element cards, electron-shell cloud + gold flux ring, Chemistry vs TOE bar, Magic Island heatmap
+- **Clickable periodic table** — filterable dropdown, Z slider, noble-gas quick-jump (He → Og)
+
+### Try these stops
+
+1. **Z = 2 (Helium)** — Magic Island physical anchor (stability score 8.0, flux lock)
+2. **Z = 79 (Gold)** — closed-shell transition metal with strong flux metrics
+3. **Z = 129 (Unbiennium)** — theoretical superheavy sweep ID
+4. Click any cell on the periodic table grid and watch the hero row update
+
+*(GIF above tours He → Fe → Au → Z=129.)*
+
+### Links
+
+- **Live Space:** https://huggingface.co/spaces/kinaar111/kingdom
+- **GitHub:** https://github.com/kinaar8340/kingdom_come
+
+This is an **educational scientific visualization** — mapping periodic-table shell structure onto a Hopf lattice / flux flywheel stability model. Not a game; not a claim of experimental validation for superheavy elements.
+
+Feedback, bug reports, and collaboration ideas welcome!
+
+#science #chemistry #periodictable #visualization #opensource #gradio #physics
