@@ -12,7 +12,11 @@ from kingdom.core.hopf import (
     stereographic_project,
 )
 from kingdom.core.quaternion import Quaternion
-from kingdom.viz.hopf_plotly import build_hopf_fibration_figure
+from kingdom.viz.hopf_plotly import (
+    build_hopf_fibration_figure,
+    build_hopf_fibration_figure_2d,
+    build_hopf_fibration_figure_auto,
+)
 
 
 def test_hopf_coordinates_on_unit_sphere():
@@ -58,3 +62,18 @@ def test_linking_two_linked_rings():
 def test_plotly_figure_builds():
     fig = build_hopf_fibration_figure(n_fibers=4, n_points=80)
     assert len(fig.data) >= 4
+
+
+def test_plotly_2d_figure_builds_without_webgl():
+    fig = build_hopf_fibration_figure_2d(n_fibers=4, n_points=80)
+    assert len(fig.data) >= 4
+    assert all(trace.type == "scatter" for trace in fig.data)
+
+
+def test_plotly_auto_selects_2d_on_hf():
+    import os
+
+    os.environ["SPACE_ID"] = "kinaar111/kingdom"
+    fig = build_hopf_fibration_figure_auto(view_mode="auto", n_fibers=3, n_points=60)
+    assert all(trace.type == "scatter" for trace in fig.data)
+    del os.environ["SPACE_ID"]

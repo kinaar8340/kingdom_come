@@ -13,7 +13,7 @@ sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "src"))
 
 from kingdom.core.flux_flywheel import map_z_to_flywheel
-from kingdom.viz.hopf_plotly import build_hopf_fibration_figure
+from kingdom.viz.hopf_plotly import build_hopf_fibration_figure_auto, default_view_mode, is_hf_space
 
 from app.components.theme import FOOTER_HTML, HERO_HTML, KINGDOM_CSS
 from app.pages.home import HOME_MD, SHOWCASE_CARDS
@@ -28,8 +28,10 @@ def render_hopf_visualizer(
     show_base: bool,
     show_highlight: bool,
     scale: float,
+    view_mode: str,
 ):
-    return build_hopf_fibration_figure(
+    return build_hopf_fibration_figure_auto(
+        view_mode=view_mode,
         n_fibers=int(n_fibers),
         n_points=int(n_points),
         eta=float(eta),
@@ -84,9 +86,28 @@ def build_app() -> gr.Blocks:
             with gr.Tab("Hopf Visualizer"):
                 gr.Markdown(
                     "Explore linked Hopf fibers stereographically projected to ℝ³, "
-                    "with the S² base space alongside. Drag to rotate; scroll to zoom."
+                    "with the S² base chart alongside. "
+                    + (
+                        "**2D projections** are used here (Hugging Face iframes often block WebGL). "
+                        if is_hf_space()
+                        else "Choose **2D** for compatibility or **3D** for interactive rotation."
+                    )
+                )
+                view_choices = [
+                    "2D projections (recommended)",
+                    "3D interactive (WebGL)",
+                ]
+                default_view = (
+                    "2D projections (recommended)"
+                    if default_view_mode() == "2d"
+                    else "3D interactive (WebGL)"
                 )
                 with gr.Row():
+                    view_mode = gr.Radio(
+                        view_choices,
+                        value=default_view,
+                        label="View mode",
+                    )
                     n_fibers = gr.Slider(3, 16, value=8, step=1, label="Number of fibers")
                     n_points = gr.Slider(60, 300, value=160, step=20, label="Points per fiber")
                     scale = gr.Slider(0.5, 2.0, value=1.0, step=0.1, label="Projection scale")
@@ -98,16 +119,18 @@ def build_app() -> gr.Blocks:
                     show_highlight = gr.Checkbox(value=True, label="Highlight single fiber")
                 hopf_plot = gr.Plot(label="Hopf Fibration")
                 refresh = gr.Button("Update visualization", variant="primary")
-                refresh.click(
-                    render_hopf_visualizer,
-                    inputs=[n_fibers, n_points, eta, xi1, show_base, show_highlight, scale],
-                    outputs=hopf_plot,
-                )
-                demo.load(
-                    render_hopf_visualizer,
-                    inputs=[n_fibers, n_points, eta, xi1, show_base, show_highlight, scale],
-                    outputs=hopf_plot,
-                )
+                hopf_inputs = [
+                    n_fibers,
+                    n_points,
+                    eta,
+                    xi1,
+                    show_base,
+                    show_highlight,
+                    scale,
+                    view_mode,
+                ]
+                refresh.click(render_hopf_visualizer, inputs=hopf_inputs, outputs=hopf_plot)
+                demo.load(render_hopf_visualizer, inputs=hopf_inputs, outputs=hopf_plot)
 
             with gr.Tab("The Model"):
                 gr.Markdown(THEORY_MD)

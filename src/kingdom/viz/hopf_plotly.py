@@ -2,12 +2,16 @@
 
 from __future__ import annotations
 
-from typing import Any
+import os
+from typing import Any, Literal
 
 import numpy as np
 import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 
 from kingdom.core.hopf import base_sphere_mesh, sample_fiber, sample_fiber_family
+
+ViewMode = Literal["2d", "3d"]
 
 # Kingdom Come palette: deep blues/teals for topology, warm accents for flux
 FIBER_COLORS = (
@@ -27,6 +31,14 @@ FIBER_COLORS = (
 ACCENT_GOLD = "#c9a227"
 BG_DARK = "#0a1628"
 GRID = "#1e3a5f"
+
+
+def is_hf_space() -> bool:
+    return bool(os.environ.get("SPACE_ID"))
+
+
+def default_view_mode() -> ViewMode:
+    return "2d" if is_hf_space() else "3d"
 
 
 def kingdom_dark_theme() -> dict[str, Any]:
@@ -199,3 +211,216 @@ def build_hopf_fibration_figure(
         ),
     )
     return fig
+
+
+def _axis_style() -> dict[str, Any]:
+    return dict(
+        gridcolor=GRID,
+        zerolinecolor=GRID,
+        linecolor=GRID,
+        tickfont=dict(color="#8ecae6"),
+        title=dict(font=dict(color="#d4e4f7")),
+    )
+
+
+def build_hopf_fibration_figure_2d(
+    n_fibers: int = 8,
+    n_points: int = 160,
+    eta: float = 0.6,
+    xi1: float = 1.2,
+    show_base_sphere: bool = True,
+    show_single_fiber_highlight: bool = True,
+    projection_scale: float = 1.0,
+    height: int = 620,
+) -> go.Figure:
+    """
+    WebGL-free Hopf visualizer using 2D Plotly scatter projections.
+
+    HF Spaces iframes often block WebGL; this view works everywhere.
+    """
+    fibers = sample_fiber_family(n_fibers=n_fibers, n_points=n_points)
+    highlight = sample_fiber(eta, xi1, n_points=n_points) if show_single_fiber_highlight else None
+    theme = kingdom_dark_theme()
+
+    fig = make_subplots(
+        rows=2,
+        cols=2,
+        subplot_titles=(
+            "Stereographic xy — linked fibers in ℝ³",
+            "Stereographic xz — side projection",
+            "S² base — stereographic chart",
+            "Highlight fiber — phase ξ₂ color map",
+        ),
+        horizontal_spacing=0.1,
+        vertical_spacing=0.14,
+    )
+
+    for i, fiber in enumerate(fibers):
+        color = FIBER_COLORS[i % len(FIBER_COLORS)]
+        px = np.asarray(fiber["px"]) * projection_scale
+        py = np.asarray(fiber["py"]) * projection_scale
+        pz = np.asarray(fiber["pz"]) * projection_scale
+
+        fig.add_trace(
+            go.Scatter(
+                x=px,
+                y=py,
+                mode="lines",
+                name=f"Fiber {i + 1}",
+                legendgroup=f"fiber-{i}",
+                line=dict(color=color, width=2.5),
+                showlegend=i == 0,
+            ),
+            row=1,
+            col=1,
+        )
+        fig.add_trace(
+            go.Scatter(
+                x=px,
+                y=pz,
+                mode="lines",
+                legendgroup=f"fiber-{i}",
+                line=dict(color=color, width=2.5),
+                showlegend=False,
+            ),
+            row=1,
+            col=2,
+        )
+
+        if show_base_sphere:
+            y1, y2, y3 = fiber["base_y1"], fiber["base_y2"], fiber["base_y3"]
+            denom = max(1.0 - y3, 1e-6)
+            fig.add_trace(
+                go.Scatter(
+                    x=[0.55 * y1 / denom],
+                    y=[0.55 * y2 / denom],
+                    mode="markers",
+                    legendgroup=f"fiber-{i}",
+                    marker=dict(color=color, size=7, line=dict(width=0.5, color="#0a1628")),
+                    showlegend=False,
+                ),
+                row=2,
+                col=1,
+            )
+
+    if show_base_sphere:
+        theta = np.linspace(0.0, 2.0 * np.pi, 120)
+        fig.add_trace(
+            go.Scatter(
+                x=0.55 * np.cos(theta),
+                y=0.55 * np.sin(theta),
+                mode="lines",
+                line=dict(color="#1a8fe3", width=1, dash="dot"),
+                showlegend=False,
+                hoverinfo="skip",
+            ),
+            row=2,
+            col=1,
+        )
+
+    if highlight is not None:
+        hx = np.asarray(highlight["px"]) * projection_scale
+        hy = np.asarray(highlight["py"]) * projection_scale
+        hz = np.asarray(highlight["pz"]) * projection_scale
+        xi2 = np.asarray(highlight["xi2"])
+
+        fig.add_trace(
+            go.Scatter(
+                x=hx,
+                y=hy,
+                mode="lines",
+                name=f"Highlight η={eta:.2f}",
+                line=dict(color=ACCENT_GOLD, width=4),
+            ),
+            row=1,
+            col=1,
+        )
+        fig.add_trace(
+            go.Scatter(
+                x=hx,
+                y=hz,
+                mode="lines",
+                line=dict(color=ACCENT_GOLD, width=4),
+                showlegend=False,
+            ),
+            row=1,
+            col=2,
+        )
+
+        fig.add_trace(
+            go.Scatter(
+                x=hx,
+                y=hy,
+                mode="markers",
+                marker=dict(
+                    size=6,
+                    color=xi2,
+                    colorscale="Turbo",
+                    showscale=True,
+                    colorbar=dict(title="ξ₂", len=0.45, y=0.2),
+                ),
+                showlegend=False,
+            ),
+            row=2,
+            col=2,
+        )
+
+        if show_base_sphere:
+            hy1, hy2, hy3 = highlight["y1"][0], highlight["y2"][0], highlight["y3"][0]
+            denom = max(1.0 - hy3, 1e-6)
+            fig.add_trace(
+                go.Scatter(
+                    x=[0.55 * hy1 / denom],
+                    y=[0.55 * hy2 / denom],
+                    mode="markers",
+                    marker=dict(size=12, color=ACCENT_GOLD, symbol="diamond"),
+                    showlegend=False,
+                ),
+                row=2,
+                col=1,
+            )
+
+    axis = _axis_style()
+    fig.update_xaxes(**axis)
+    fig.update_yaxes(**axis)
+    fig.update_xaxes(scaleanchor="y", scaleratio=1, row=1, col=1)
+    fig.update_xaxes(scaleanchor="y", scaleratio=1, row=1, col=2)
+    fig.update_xaxes(scaleanchor="y", scaleratio=1, row=2, col=1)
+    fig.update_xaxes(scaleanchor="y", scaleratio=1, row=2, col=2)
+
+    fig.update_layout(
+        **theme,
+        height=height,
+        title=dict(
+            text="Hopf Fibration — 2D projections (WebGL-free, HF-safe)",
+            x=0.5,
+            xanchor="center",
+            font=dict(size=15, color="#e8f4ff"),
+        ),
+        legend=dict(
+            bgcolor="rgba(10, 22, 40, 0.7)",
+            bordercolor="rgba(255,255,255,0.12)",
+            borderwidth=1,
+        ),
+    )
+    fig.update_annotations(font=dict(color="#8ecae6", size=11))
+    return fig
+
+
+def build_hopf_fibration_figure_auto(
+    view_mode: ViewMode | str = "auto",
+    **kwargs: Any,
+) -> go.Figure:
+    mode: ViewMode
+    if view_mode == "auto":
+        mode = default_view_mode()
+    elif view_mode in ("2d", "3d"):
+        mode = view_mode  # type: ignore[assignment]
+    elif str(view_mode).lower().startswith("2"):
+        mode = "2d"
+    else:
+        mode = "3d"
+
+    if mode == "2d":
+        return build_hopf_fibration_figure_2d(**kwargs)
+    return build_hopf_fibration_figure(**kwargs)
