@@ -89,3 +89,14 @@ def test_synthetic_z_129():
     payload = explore_flux_element(129)
     assert payload["is_pseudo_z"] is True
     assert payload["element"] is None
+
+
+def test_all_elements_z_1_to_118_populate():
+    """Every known element should render without error."""
+    for z in range(1, 119):
+        payload = explore_flux_element(z)
+        el = payload["element"]
+        assert el is not None, f"Z={z} missing"
+        assert el.z == z
+        assert len(payload["cloud_fig"].data) >= 3
+        assert len(payload["compare_fig"].data) >= 1

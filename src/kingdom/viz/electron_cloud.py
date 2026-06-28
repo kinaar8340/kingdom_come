@@ -64,7 +64,7 @@ def build_electron_cloud_figure(
                 y=radii * np.sin(angles),
                 mode="markers",
                 name=f"Shell n={shell_n} ({count} e⁻)",
-                marker=dict(size=4, color=color, opacity=0.35 + 0.04 * count),
+                marker=dict(size=4, color=color, opacity=min(0.85, 0.35 + 0.04 * count)),
             )
         )
 
