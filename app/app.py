@@ -12,7 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "src"))
 
-from kingdom.core.flux_explorer import explore_flux_element, flux_metrics_table
+from kingdom.core.flux_explorer import explore_flux_element
 from kingdom.simulations.lattice import build_lattice_figure, run_lattice_comparison
 from kingdom.viz.hopf_plotly import build_hopf_fibration_figure_auto, default_view_mode, is_hf_space
 
@@ -20,9 +20,10 @@ from app.build_info import get_build_label
 from app.components.neon import (
     NEON_CSS,
     element_card_html,
-    synthetic_toe_html,
+    flux_metrics_cards_html,
+    synthetic_toe_strip_html,
     synthetic_z_html,
-    toe_interpretation_html,
+    toe_strip_html,
 )
 from app.components.theme import HERO_HTML, KINGDOM_CSS, footer_html
 from app.pages.help import HELP_MD, QUICKSTART_MD
@@ -92,18 +93,18 @@ def render_flux_explorer(z: int):
     payload = explore_flux_element(int(z))
     element = payload["element"]
     fly = payload["flywheel"]
+    art = payload["noble_gas_art"]
     if element is not None:
-        card = element_card_html(element, fly)
-        toe = toe_interpretation_html(element, fly)
+        card = element_card_html(element, fly, art_path=art)
+        toe = toe_strip_html(element, fly)
     else:
         card = synthetic_z_html(int(z), fly)
-        toe = synthetic_toe_html(int(z), fly)
+        toe = synthetic_toe_strip_html(int(z), fly)
     return (
         card,
-        payload["noble_gas_art"],
         payload["cloud_fig"],
         payload["compare_fig"],
-        flux_metrics_table(fly),
+        flux_metrics_cards_html(fly),
         toe,
         payload["magic_island"],
     )
@@ -247,44 +248,30 @@ def build_app() -> gr.Blocks:
 
             with gr.Tab("Flux Flywheel"):
                 gr.Markdown(
-                    "Hybrid **element explorer + flux flywheel** visualizer — noble gases and "
-                    "magic numbers highlighted. Z > 118 / Z = 129 are theoretical TOE extensions."
+                    "**Element explorer + flux flywheel** — noble gases glow at ultra-stable locks. "
+                    "Z > 118 / Z = 129 = theoretical TOE extensions."
                 )
-                # Hero row: controls + compact card (left) · main electron cloud (right, 2× width)
+                z_slider = gr.Slider(1, 180, value=2, step=1, label="Atomic number Z")
+                # Hero: element card (left) · electron cloud plot (right, 2× width)
                 with gr.Row():
-                    with gr.Column(scale=1, min_width=260):
-                        z_slider = gr.Slider(1, 180, value=2, step=1, label="Atomic number Z")
+                    with gr.Column(scale=1, min_width=240):
                         element_card = gr.HTML(label="Element")
-                        noble_gas_art = gr.Image(
-                            label="Noble gas artwork",
-                            type="filepath",
-                            height=140,
-                        )
                     with gr.Column(scale=2):
                         electron_plot = gr.Plot(label="Electron cloud + flux ring")
-                # Secondary row: chemistry comparison · flux metrics table
+                # Secondary: bar chart · compact metric cards
                 with gr.Row():
                     with gr.Column(scale=1):
                         compare_plot = gr.Plot(label="Chemistry vs TOE flux")
                     with gr.Column(scale=1):
-                        flux_metrics_df = gr.Dataframe(
-                            label="Flux metrics",
-                            headers=["Metric", "Value"],
-                            datatype=["str", "str"],
-                            interactive=False,
-                            wrap=True,
-                        )
-                # Collapsed by default — keeps the tab on one screen
-                with gr.Accordion("TOE interpretation", open=False):
-                    toe_panel = gr.HTML()
+                        flux_metrics_panel = gr.HTML(label="Flux metrics")
+                toe_panel = gr.HTML(label="TOE interpretation")
                 with gr.Accordion("Magic Island heatmap", open=False):
                     magic_island_plot = gr.Plot()
                 flux_outputs = [
                     element_card,
-                    noble_gas_art,
                     electron_plot,
                     compare_plot,
-                    flux_metrics_df,
+                    flux_metrics_panel,
                     toe_panel,
                     magic_island_plot,
                 ]

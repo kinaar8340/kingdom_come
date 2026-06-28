@@ -16,7 +16,7 @@ def build_electron_cloud_figure(
     *,
     n_cloud_points: int = 400,
     stability_score: float = 5.0,
-    height: int = 380,
+    height: int = 340,
 ) -> go.Figure:
     """2D stylized electron density cross-section with optional flux flywheel ring."""
     shells = shell_occupancies(element.z)
@@ -143,7 +143,7 @@ def build_chemistry_vs_toe_figure(element: Element, stability_score: float) -> g
     theme = kingdom_dark_theme()
     fig.update_layout(
         **theme,
-        height=180,
+        height=165,
         title=dict(text="Standard chemistry vs Hopf flux stability", font=dict(size=12, color="#e8f4ff")),
         yaxis=dict(range=[0, 10.5], gridcolor=GRID, tickfont=dict(color="#8ecae6")),
     )

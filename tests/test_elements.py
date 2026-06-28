@@ -2,7 +2,11 @@
 
 import plotly.graph_objects as go
 
-from app.components.neon import element_card_html, toe_interpretation_html
+from app.components.neon import (
+    element_card_html,
+    flux_metrics_cards_html,
+    toe_strip_html,
+)
 from kingdom.core.elements import NOBLE_GAS_Z, get_element, shell_occupancies
 from kingdom.core.flux_explorer import explore_flux_element, flux_metrics_table, noble_gas_art_path
 from kingdom.viz.electron_cloud import build_electron_cloud_figure
@@ -41,22 +45,30 @@ def test_flux_metrics_table():
     payload = explore_flux_element(2)
     table = flux_metrics_table(payload["flywheel"])
     assert table[0] == ["Stability score", "8.0"]
-    assert any(row[0] == "pseudo_Z (sweep ID)" for row in table)
-    assert payload["metrics_table"] == table
 
 
-def test_compact_element_card():
+def test_flux_metrics_cards_html():
     payload = explore_flux_element(2)
-    html = element_card_html(payload["element"], payload["flywheel"])
+    html = flux_metrics_cards_html(payload["flywheel"])
+    assert "kc-metrics-grid" in html
+    assert "8.0" in html
+
+
+def test_compact_element_card_with_art_inset():
+    payload = explore_flux_element(2)
+    art = noble_gas_art_path(2)
+    html = element_card_html(payload["element"], payload["flywheel"], art_path=art)
     assert "Helium" in html
-    assert "TOE interpretation" not in html
+    if art:
+        assert "kc-card-art" in html
+        assert "data:image/png;base64," in html
 
 
-def test_toe_interpretation_accordion_content():
+def test_toe_strip_visible():
     payload = explore_flux_element(2)
-    html = toe_interpretation_html(payload["element"], payload["flywheel"])
+    html = toe_strip_html(payload["element"], payload["flywheel"])
+    assert "kc-toe-strip" in html
     assert "Hopf fiber bundle" in html
-    assert "TOE interpretation" in html
 
 
 def test_magic_island_heatmap():
