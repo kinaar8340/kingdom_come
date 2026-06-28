@@ -86,6 +86,89 @@ KINGDOM_CSS = """
   background: rgba(26, 143, 227, 0.2);
   color: var(--kc-blue);
 }
+.kc-paper-index {
+  margin: 0.75rem 0 1.25rem;
+}
+.kc-paper-index-lead {
+  color: #8ecae6;
+  font-size: 0.9rem;
+  margin: 0 0 0.75rem;
+}
+.kc-paper-card {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  padding: 0.75rem 1rem;
+  margin: 0.4rem 0;
+  background: rgba(18, 36, 61, 0.85);
+  border: 1px solid rgba(26, 143, 227, 0.2);
+  border-radius: 10px;
+  text-decoration: none;
+  color: var(--kc-text);
+  transition: border-color 0.2s;
+}
+.kc-paper-card:hover {
+  border-color: var(--kc-teal);
+}
+.kc-paper-card-icon {
+  font-size: 1.25rem;
+  line-height: 1.2;
+}
+.kc-paper-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.kc-paper-card-body strong {
+  color: var(--kc-teal);
+  font-size: 0.95rem;
+}
+.kc-paper-card-body em {
+  color: #8ecae6;
+  font-size: 0.82rem;
+  font-style: normal;
+  line-height: 1.4;
+}
+.kc-paper-viewer {
+  margin-top: 0.5rem;
+}
+.kc-paper-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 0.5rem;
+  background: rgba(18, 36, 61, 0.9);
+  border: 1px solid rgba(26, 143, 227, 0.2);
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+.kc-paper-toolbar a {
+  color: var(--kc-blue);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.kc-paper-toolbar a:hover {
+  color: var(--kc-teal);
+}
+.kc-paper-frame {
+  width: 100%;
+  height: min(78vh, 900px);
+  min-height: 480px;
+  border: 1px solid rgba(26, 143, 227, 0.25);
+  border-radius: 8px;
+  background: #0d1f35;
+}
+.kc-paper-fallback {
+  text-align: center;
+  font-size: 0.82rem;
+  color: #5a7a9a;
+  margin: 0.5rem 0 0;
+}
+.kc-paper-fallback a {
+  color: var(--kc-blue);
+}
 .kc-footer {
   text-align: center;
   font-size: 0.85rem;
