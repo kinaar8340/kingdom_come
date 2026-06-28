@@ -25,6 +25,12 @@ from app.components.neon import (
     synthetic_z_html,
     toe_strip_html,
 )
+from app.components.periodic_picker import (
+    PERIODIC_CSS,
+    element_picker_choices,
+    periodic_table_html,
+    picker_label_for_z,
+)
 from app.components.theme import HERO_HTML, KINGDOM_CSS, footer_html
 from app.pages.help import HELP_MD, QUICKSTART_MD
 from app.pages.home import HOME_MD, ONBOARDING_MD, SHOWCASE_CARDS
@@ -89,8 +95,14 @@ def render_lattice_sim(frames: int, n_sites: int, gauge: float):
     return build_lattice_figure(stable, chaotic), summary
 
 
-def render_flux_explorer(z: int):
-    payload = explore_flux_element(int(z))
+_PICKER_LABEL_TO_Z: dict[str, int] = dict(element_picker_choices())
+NOBLE_GAS_JUMP = ((2, "He"), (10, "Ne"), (18, "Ar"), (36, "Kr"), (54, "Xe"), (86, "Rn"), (118, "Og"))
+
+
+def _flux_panels(z: int):
+    """Render all Flux Flywheel panels for atomic number Z."""
+    z = max(1, min(180, int(z)))
+    payload = explore_flux_element(z)
     element = payload["element"]
     fly = payload["flywheel"]
     art = payload["element_art"]
@@ -98,9 +110,11 @@ def render_flux_explorer(z: int):
         card = element_card_html(element, fly, art_path=art)
         toe = toe_strip_html(element, fly)
     else:
-        card = synthetic_z_html(int(z), fly)
-        toe = synthetic_toe_strip_html(int(z), fly)
+        card = synthetic_z_html(z, fly)
+        toe = synthetic_toe_strip_html(z, fly)
     return (
+        picker_label_for_z(z),
+        periodic_table_html(z),
         card,
         payload["cloud_fig"],
         payload["compare_fig"],
@@ -108,6 +122,21 @@ def render_flux_explorer(z: int):
         toe,
         payload["magic_island"],
     )
+
+
+def select_flux_z(z: int):
+    """Jump to Z — updates slider, dropdown, and all panels."""
+    z = max(1, min(180, int(z)))
+    return (z,) + _flux_panels(z)
+
+
+def on_flux_slider(z: int):
+    return _flux_panels(z)
+
+
+def on_flux_dropdown(label: str):
+    z = _PICKER_LABEL_TO_Z.get(label, 2)
+    return select_flux_z(z)
 
 
 _KINGDOM_THEME = gr.themes.Base(
@@ -248,17 +277,27 @@ def build_app() -> gr.Blocks:
 
             with gr.Tab("Flux Flywheel"):
                 gr.Markdown(
-                    "**Element explorer + flux flywheel** — noble gases glow at ultra-stable locks. "
-                    "Z = 1–118 known elements · Z = 119–180 superheavy theoretical zone · Z = 129 Magic Island ID."
+                    "**Element explorer + flux flywheel** — pick any Z from the table or dropdown. "
+                    "Z = 1–118 known · Z = 119–180 superheavy (predicted) · Z = 129 Magic Island ID."
                 )
-                z_slider = gr.Slider(1, 180, value=2, step=1, label="Atomic number Z")
+                with gr.Row():
+                    z_dropdown = gr.Dropdown(
+                        choices=[label for label, _ in element_picker_choices()],
+                        value=picker_label_for_z(2),
+                        label="Jump to element",
+                        filterable=True,
+                        scale=2,
+                    )
+                    z_slider = gr.Slider(1, 180, value=2, step=1, label="Atomic number Z", scale=2)
+                with gr.Accordion("Periodic table", open=True):
+                    periodic_table = gr.HTML()
+                    noble_jump_row = gr.Row()
                 # Hero: element card (left) · electron cloud plot (right, 2× width)
                 with gr.Row():
                     with gr.Column(scale=1, min_width=240):
                         element_card = gr.HTML(label="Element")
                     with gr.Column(scale=2):
                         electron_plot = gr.Plot(label="Electron cloud + flux ring")
-                # Secondary: bar chart · compact metric cards
                 with gr.Row():
                     with gr.Column(scale=1):
                         compare_plot = gr.Plot(label="Chemistry vs TOE flux")
@@ -267,7 +306,9 @@ def build_app() -> gr.Blocks:
                 toe_panel = gr.HTML(label="TOE interpretation")
                 with gr.Accordion("Magic Island heatmap", open=False):
                     magic_island_plot = gr.Plot()
-                flux_outputs = [
+                flux_panel_outputs = [
+                    z_dropdown,
+                    periodic_table,
                     element_card,
                     electron_plot,
                     compare_plot,
@@ -275,8 +316,18 @@ def build_app() -> gr.Blocks:
                     toe_panel,
                     magic_island_plot,
                 ]
-                z_slider.change(render_flux_explorer, inputs=z_slider, outputs=flux_outputs)
-                demo.load(render_flux_explorer, inputs=z_slider, outputs=flux_outputs)
+                flux_jump_outputs = [z_slider, *flux_panel_outputs]
+                with noble_jump_row:
+                    gr.Markdown("**Noble gas quick-jump:**")
+                    for z_val, sym in NOBLE_GAS_JUMP:
+                        btn = gr.Button(sym, size="sm", min_width=48)
+                        btn.click(
+                            fn=lambda z=z_val: select_flux_z(z),
+                            outputs=flux_jump_outputs,
+                        )
+                z_slider.change(on_flux_slider, inputs=z_slider, outputs=flux_panel_outputs)
+                z_dropdown.change(on_flux_dropdown, inputs=z_dropdown, outputs=flux_jump_outputs)
+                demo.load(on_flux_slider, inputs=z_slider, outputs=flux_panel_outputs)
 
             with gr.Tab("Showcase"):
                 gr.Markdown(
@@ -301,7 +352,7 @@ def main() -> None:
     demo.launch(
         server_name="0.0.0.0",
         server_port=port,
-        css=KINGDOM_CSS + NEON_CSS,
+        css=KINGDOM_CSS + NEON_CSS + PERIODIC_CSS,
         theme=_KINGDOM_THEME,
         inbrowser=not on_hf,
     )

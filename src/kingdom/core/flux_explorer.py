@@ -14,6 +14,8 @@ from kingdom.viz.hopf_plotly import kingdom_dark_theme
 from kingdom.viz.magic_island import build_magic_island_heatmap
 
 _ASSETS = Path(__file__).resolve().parents[3] / "app" / "assets" / "elements"
+_SUPERHEAVY_ASSETS = Path(__file__).resolve().parents[3] / "app" / "assets" / "superheavy"
+_IMAGINE_ASSETS = Path(__file__).resolve().parents[3] / "app" / "assets" / "elements_imagine"
 _LEGACY_ASSETS = Path(__file__).resolve().parents[3] / "app" / "assets" / "noble_gases"
 
 
@@ -81,7 +83,11 @@ def element_art_path(z: int) -> str | None:
     el = get_element(z)
     if el is None:
         return None
-    for folder in (_ASSETS, _LEGACY_ASSETS):
+    folders: list[Path] = []
+    if el.is_synthetic:
+        folders.extend([_IMAGINE_ASSETS / "superheavy", _SUPERHEAVY_ASSETS])
+    folders.extend([_IMAGINE_ASSETS, _ASSETS, _LEGACY_ASSETS])
+    for folder in folders:
         for name in (el.symbol.lower(), el.symbol):
             path = folder / f"{name}.png"
             if path.is_file():

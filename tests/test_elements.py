@@ -3,6 +3,7 @@
 import plotly.graph_objects as go
 
 from app.components.neon import element_card_html, flux_metrics_cards_html, toe_strip_html
+from app.components.periodic_picker import element_picker_choices, periodic_table_html, picker_label_for_z
 from kingdom.core.elements import EXPLORER_Z_MAX, get_element, shell_occupancies
 from kingdom.core.flux_explorer import element_art_path, explore_flux_element, flux_metrics_table
 from kingdom.core.superheavy import systematic_name_symbol
@@ -118,3 +119,27 @@ def test_explorer_z_range():
     assert get_element(0) is None
     assert get_element(EXPLORER_Z_MAX) is not None
     assert get_element(EXPLORER_Z_MAX + 1) is None
+
+
+def test_element_picker_choices_count():
+    choices = element_picker_choices()
+    assert len(choices) == EXPLORER_Z_MAX
+    assert picker_label_for_z(79).startswith("Z= 79")
+    assert "Au" in picker_label_for_z(79)
+
+
+def test_periodic_table_html_highlights():
+    html = periodic_table_html(26)
+    assert "kc-pt-active" in html
+    assert "Fe" in html
+    html_sh = periodic_table_html(129)
+    assert "Superheavy zone" in html_sh
+
+
+def test_superheavy_art_paths_exist_after_generation():
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    sh = root / "app" / "assets" / "superheavy"
+    if sh.is_dir():
+        assert any(sh.glob("*.png"))
