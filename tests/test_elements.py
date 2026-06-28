@@ -138,6 +138,14 @@ def test_periodic_table_html_highlights():
     assert "Superheavy zone" in html_sh
 
 
+def test_periodic_table_js_wires_pick_event():
+    from app.components.periodic_picker import PERIODIC_TABLE_JS
+
+    assert "trigger('pick'" in PERIODIC_TABLE_JS
+    assert "data-kc-z" in PERIODIC_TABLE_JS
+    assert "watch('value'" in PERIODIC_TABLE_JS
+
+
 def test_magic_number_toe_narrative():
     el = get_element(28)
     assert el is not None

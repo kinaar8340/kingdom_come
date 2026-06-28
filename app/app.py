@@ -27,6 +27,7 @@ from app.components.neon import (
 )
 from app.components.periodic_picker import (
     PERIODIC_CSS,
+    PERIODIC_TABLE_JS,
     element_picker_choices,
     periodic_table_html,
     picker_label_for_z,
@@ -137,6 +138,11 @@ def on_flux_slider(z: int):
 def on_flux_dropdown(label: str):
     z = _PICKER_LABEL_TO_Z.get(label, 2)
     return select_flux_z(z)
+
+
+def on_periodic_pick(evt: gr.EventData):
+    """Handle periodic-table cell click from gr.HTML js_on_load trigger."""
+    return select_flux_z(int(evt.z))
 
 
 _KINGDOM_THEME = gr.themes.Base(
@@ -289,9 +295,8 @@ def build_app() -> gr.Blocks:
                         scale=2,
                     )
                     z_slider = gr.Slider(1, 180, value=2, step=1, label="Atomic number Z", scale=2)
-                z_table_pick = gr.Number(value=2, visible=False, elem_id="kc_z_pick")
                 with gr.Accordion("Periodic table (click any element)", open=True):
-                    periodic_table = gr.HTML()
+                    periodic_table = gr.HTML(js_on_load=PERIODIC_TABLE_JS)
                     noble_jump_row = gr.Row()
                 # Hero: element card (left) · electron cloud plot (right, 2× width)
                 with gr.Row():
@@ -328,28 +333,8 @@ def build_app() -> gr.Blocks:
                         )
                 z_slider.change(on_flux_slider, inputs=z_slider, outputs=flux_panel_outputs)
                 z_dropdown.change(on_flux_dropdown, inputs=z_dropdown, outputs=flux_jump_outputs)
-                z_table_pick.change(select_flux_z, inputs=z_table_pick, outputs=flux_jump_outputs)
+                periodic_table.pick(on_periodic_pick, outputs=flux_jump_outputs)
                 demo.load(on_flux_slider, inputs=z_slider, outputs=flux_panel_outputs)
-                demo.load(
-                    None,
-                    None,
-                    None,
-                    js="""
-() => {
-  if (window._kcPtTableWired) return;
-  window._kcPtTableWired = true;
-  document.body.addEventListener('click', (e) => {
-    const cell = e.target.closest('[data-kc-z]');
-    if (!cell) return;
-    const input = document.querySelector('#kc_z_pick input')
-      || document.querySelector('#kc_z_pick textarea');
-    if (!input) return;
-    input.value = cell.dataset.kcZ;
-    input.dispatchEvent(new Event('input', { bubbles: true }));
-  });
-}
-""",
-                )
 
             with gr.Tab("Showcase"):
                 gr.Markdown(

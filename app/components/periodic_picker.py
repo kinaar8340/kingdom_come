@@ -76,6 +76,22 @@ button.kc-pt-cell:focus-visible {
 }
 """
 
+PERIODIC_TABLE_JS = """
+function wirePtClicks() {
+  element.querySelectorAll('[data-kc-z]').forEach((btn) => {
+    if (btn.dataset.kcWired === '1') return;
+    btn.dataset.kcWired = '1';
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const z = parseInt(btn.getAttribute('data-kc-z'), 10);
+      if (!Number.isNaN(z)) trigger('pick', { z });
+    });
+  });
+}
+wirePtClicks();
+watch('value', wirePtClicks);
+"""
+
 _CATEGORY_COLORS = {
     "noble gas": "rgba(0,201,183,0.22)",
     "alkali metal": "rgba(239,85,59,0.15)",
