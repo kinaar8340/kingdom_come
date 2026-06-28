@@ -1,11 +1,17 @@
 """Observations tab content."""
 
+from pathlib import Path
+
 from app.pages.observations import (
+    CATATUMBO_IMAGE,
     INVESTIGATION_1_MD,
     INVESTIGATION_2_MD,
+    JUPITER_GRS_IMAGE,
     OBSERVATIONS_FOOTER_MD,
     OBSERVATIONS_INTRO_MD,
 )
+
+ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_observations_intro_mentions_winding():
@@ -18,14 +24,20 @@ def test_investigation_1_catatumbo_content():
     assert "Catatumbo" in INVESTIGATION_1_MD
     assert "9.344" in INVESTIGATION_1_MD
     assert "Hopfion" in INVESTIGATION_1_MD
-    assert "![Catatumbo" in INVESTIGATION_1_MD
+    assert "upload.wikimedia.org" not in INVESTIGATION_1_MD
 
 
 def test_investigation_2_jupiter_content():
     assert "Great Red Spot" in INVESTIGATION_2_MD
     assert "22" in INVESTIGATION_2_MD
     assert "macroscopic Hopfion" in INVESTIGATION_2_MD
-    assert "![Jupiter" in INVESTIGATION_2_MD
+    assert "upload.wikimedia.org" not in INVESTIGATION_2_MD
+
+
+def test_observation_images_exist():
+    for path in (CATATUMBO_IMAGE, JUPITER_GRS_IMAGE):
+        assert path.is_file(), f"missing {path}"
+        assert path.stat().st_size > 5000
 
 
 def test_observations_footer_living_document():

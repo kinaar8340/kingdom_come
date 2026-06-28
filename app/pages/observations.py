@@ -1,5 +1,12 @@
 """Observations tab — natural synchronicities mappable to the Hopf-lattice TOE."""
 
+from pathlib import Path
+
+OBSERVATIONS_ASSET = "app/assets/observations"
+OBSERVATIONS_DIR = Path(__file__).resolve().parents[1] / "assets" / "observations"
+CATATUMBO_IMAGE = OBSERVATIONS_DIR / "catatumbo_lightning.jpg"
+JUPITER_GRS_IMAGE = OBSERVATIONS_DIR / "jupiter_great_red_spot.jpg"
+
 OBSERVATIONS_INTRO_MD = """
 ## Observations: Synchronicities in Nature
 
@@ -20,8 +27,6 @@ the highest lightning-density region on Earth (up to ~250 flashes/km²/year).
 
 **Phenomenon:** Persistent nocturnal thunderstorms producing lightning on 140–300 nights
 per year, often 9+ hours per night.
-
-![Catatumbo lightning over Lake Maracaibo](https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Catatumbo_lightning.jpg/640px-Catatumbo_lightning.jpg)
 
 #### Key measurements
 
@@ -61,8 +66,6 @@ in Jupiter's southern hemisphere.
 **Phenomenon:** Largest and longest-lived vortex in the Solar System (observed for
 centuries), ~1.3× Earth's diameter, with winds up to ~700 km/h. Self-sustaining
 between opposing zonal jet streams.
-
-![Jupiter's Great Red Spot (Hubble)](https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Jupiter_Great_Red_Spot.jpg/640px-Jupiter_Great_Red_Spot.jpg)
 
 #### Key measurements
 

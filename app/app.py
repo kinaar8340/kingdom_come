@@ -37,8 +37,10 @@ from app.pages.help import HELP_MD, QUICKSTART_MD
 from app.pages.home import HOME_MD, ONBOARDING_MD, SHOWCASE_CARDS
 from app.pages.hopf_guide import HF_VIEW_MODE_MD, HOPF_INTRO_MD, HOPF_PANEL_GUIDE_MD
 from app.pages.observations import (
+    CATATUMBO_IMAGE,
     INVESTIGATION_1_MD,
     INVESTIGATION_2_MD,
+    JUPITER_GRS_IMAGE,
     OBSERVATIONS_FOOTER_MD,
     OBSERVATIONS_INTRO_MD,
 )
@@ -53,6 +55,7 @@ from app.pages.showcase import SHOWCASE_HTML
 from app.pages.theory import DERIVATION_HOPF_MD, THEORY_MD
 
 PAPERS_DIR = ROOT / "app" / "assets" / "papers"
+OBSERVATIONS_DIR = ROOT / "app" / "assets" / "observations"
 
 HOPF_PRESETS: dict[str, tuple[int, int, float, float, float]] = {
     "Classic Hopf": (8, 160, 0.6, 1.2, 1.0),
@@ -379,11 +382,23 @@ def build_app() -> gr.Blocks:
                     "Investigation 1: Catatumbo Lightning Hotspot — Earth",
                     open=True,
                 ):
+                    gr.Image(
+                        str(CATATUMBO_IMAGE),
+                        label="Catatumbo lightning over Lake Maracaibo",
+                        interactive=False,
+                        show_download_button=False,
+                    )
                     gr.Markdown(INVESTIGATION_1_MD)
                 with gr.Accordion(
                     "Investigation 2: Great Red Spot — Jupiter",
                     open=True,
                 ):
+                    gr.Image(
+                        str(JUPITER_GRS_IMAGE),
+                        label="Jupiter's Great Red Spot (NASA/ESA Hubble)",
+                        interactive=False,
+                        show_download_button=False,
+                    )
                     gr.Markdown(INVESTIGATION_2_MD)
                 gr.Markdown(OBSERVATIONS_FOOTER_MD)
 
@@ -412,7 +427,7 @@ def main() -> None:
         server_port=port,
         css=KINGDOM_CSS + NEON_CSS + PERIODIC_CSS,
         theme=_KINGDOM_THEME,
-        allowed_paths=[str(PAPERS_DIR)],
+        allowed_paths=[str(PAPERS_DIR), str(OBSERVATIONS_DIR)],
         inbrowser=not on_hf,
         # HF sets GRADIO_SSR_MODE=true by default; the Node SSR proxy can emit
         # harmless asyncio __del__ noise on Python 3.12. Client-side mode is
