@@ -36,6 +36,12 @@ from app.components.theme import HERO_HTML, KINGDOM_CSS, footer_html
 from app.pages.help import HELP_MD, QUICKSTART_MD
 from app.pages.home import HOME_MD, ONBOARDING_MD, SHOWCASE_CARDS
 from app.pages.hopf_guide import HF_VIEW_MODE_MD, HOPF_INTRO_MD, HOPF_PANEL_GUIDE_MD
+from app.pages.observations import (
+    INVESTIGATION_1_MD,
+    INVESTIGATION_2_MD,
+    OBSERVATIONS_FOOTER_MD,
+    OBSERVATIONS_INTRO_MD,
+)
 from app.pages.papers import (
     PAPERS_INTRO_MD,
     default_paper_key,
@@ -366,6 +372,20 @@ def build_app() -> gr.Blocks:
                 z_dropdown.change(on_flux_dropdown, inputs=z_dropdown, outputs=flux_jump_outputs)
                 periodic_table.pick(on_periodic_pick, outputs=flux_jump_outputs)
                 demo.load(on_flux_slider, inputs=z_slider, outputs=flux_panel_outputs)
+
+            with gr.Tab("Observations"):
+                gr.Markdown(OBSERVATIONS_INTRO_MD)
+                with gr.Accordion(
+                    "Investigation 1: Catatumbo Lightning Hotspot — Earth",
+                    open=True,
+                ):
+                    gr.Markdown(INVESTIGATION_1_MD)
+                with gr.Accordion(
+                    "Investigation 2: Great Red Spot — Jupiter",
+                    open=True,
+                ):
+                    gr.Markdown(INVESTIGATION_2_MD)
+                gr.Markdown(OBSERVATIONS_FOOTER_MD)
 
             with gr.Tab("Showcase"):
                 gr.Markdown(

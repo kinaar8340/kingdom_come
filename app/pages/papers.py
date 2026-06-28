@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import base64
 from dataclasses import dataclass
+from functools import lru_cache
 from pathlib import Path
 from urllib.parse import quote
 
@@ -98,18 +100,27 @@ def paper_file_url(path: Path) -> str:
     return f"/gradio_api/file={quote(str(path.resolve()), safe='/')}"
 
 
+@lru_cache(maxsize=16)
+def _pdf_data_uri(filename: str) -> str:
+    """Base64 data URI — reliable inline PDF rendering inside HF Space iframes."""
+    path = PAPERS_DIR / filename
+    encoded = base64.b64encode(path.read_bytes()).decode("ascii")
+    return f"data:application/pdf;base64,{encoded}"
+
+
 def paper_viewer_html(entry: PaperEntry) -> str:
     """Inline PDF viewer with fallback download link."""
+    data_uri = _pdf_data_uri(entry.filename)
     url = paper_file_url(entry.path)
     return f"""
 <div class="kc-paper-viewer">
   <div class="kc-paper-toolbar">
     <strong>{entry.title}</strong>
-    <a href="{url}" target="_blank" rel="noopener">Open in new tab ↗</a>
+    <a href="{url}" target="_blank" rel="noopener">Download PDF ↗</a>
   </div>
-  <iframe class="kc-paper-frame" src="{url}" title="{entry.title}"></iframe>
+  <embed class="kc-paper-frame" src="{data_uri}" type="application/pdf" title="{entry.title}" />
   <p class="kc-paper-fallback">
-    PDF not rendering? <a href="{url}" target="_blank" rel="noopener">Open or download {entry.title}</a>.
+    PDF not rendering? Use <strong>Download PDF</strong> above or the file widget below.
   </p>
 </div>
 """

@@ -35,7 +35,7 @@ def test_paper_viewer_html_and_file_path():
     path, html, description = load_paper(key)
     assert path.endswith("Aaron's_TOE_Complete.pdf")
     assert "kc-paper-frame" in html
-    assert "/gradio_api/file=" in html
+    assert "data:application/pdf;base64," in html
     assert "Theory of Everything" in description
 
 
@@ -48,5 +48,7 @@ def test_paper_file_url_encodes_apostrophe():
 def test_papers_index_lists_all_entries():
     html = papers_index_html()
     assert html.count('class="kc-paper-card"') == len(PAPER_ENTRIES)
+    assert "text-align: left" not in html  # alignment via CSS class
+    assert "kc-paper-card-body" in html
     for entry in PAPER_ENTRIES:
         assert entry.title in html

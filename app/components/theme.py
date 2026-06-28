@@ -118,16 +118,35 @@ KINGDOM_CSS = """
   display: flex;
   flex-direction: column;
   gap: 0.2rem;
+  flex: 1;
+  text-align: left;
+  align-items: flex-start;
 }
 .kc-paper-card-body strong {
   color: var(--kc-teal);
   font-size: 0.95rem;
+  text-align: left;
+  display: block;
+  width: 100%;
 }
 .kc-paper-card-body em {
   color: #8ecae6;
   font-size: 0.82rem;
   font-style: normal;
   line-height: 1.4;
+  text-align: left;
+  display: block;
+  width: 100%;
+}
+.kc-obs-footer {
+  text-align: center;
+  font-size: 0.88rem;
+  color: #5a7a9a;
+  margin-top: 1.5rem;
+  font-style: italic;
+}
+.kc-obs-footer em {
+  color: #8ecae6;
 }
 .kc-paper-viewer {
   margin-top: 0.5rem;
@@ -152,7 +171,9 @@ KINGDOM_CSS = """
 .kc-paper-toolbar a:hover {
   color: var(--kc-teal);
 }
-.kc-paper-frame {
+.kc-paper-frame,
+embed.kc-paper-frame {
+  display: block;
   width: 100%;
   height: min(78vh, 900px);
   min-height: 480px;
