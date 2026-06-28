@@ -374,6 +374,24 @@ class Element:
     is_known: bool
 
     @property
+    def toe_narrative(self) -> str:
+        """One-line TOE narrative for the element card."""
+        if self.is_noble_gas:
+            return (
+                "This configuration corresponds to a closed Hopf fiber bundle with "
+                "maximal topological protection — a flux flywheel ultra-stable lock."
+            )
+        if self.is_magic_number:
+            return (
+                "Shell closure aligns with a nuclear magic number — enhanced flux "
+                "coherence and identity preservation on the gauged lattice."
+            )
+        return (
+            "Open or partially filled shells map to detuned flux flywheels — "
+            "stability varies with distance from the Magic Island anchor."
+        )
+
+    @property
     def toe_stability_note(self) -> str:
         if self.is_noble_gas:
             return (

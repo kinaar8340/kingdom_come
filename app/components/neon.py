@@ -60,6 +60,17 @@ NEON_CSS = """
   color: #d4e4f7;
   font-size: 0.88rem;
 }
+.kc-toe-narrative {
+  color: #c9a227;
+  font-style: italic;
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+.kc-synthetic-banner {
+  color: #ef553b;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
 @keyframes kc-neon-pulse {
   0%, 100% { box-shadow: 0 0 6px rgba(0,201,183,0.5), 0 0 14px rgba(26,143,227,0.3); }
   50% { box-shadow: 0 0 12px rgba(0,201,183,0.85), 0 0 22px rgba(26,143,227,0.5); }
@@ -91,6 +102,7 @@ def element_card_html(element, flywheel: dict) -> str:
     <strong>e⁻ config:</strong> {element.electron_config}
   </div>
   <div class="kc-element-toe">
+    <em class="kc-toe-narrative">{element.toe_narrative}</em><br/><br/>
     <strong>TOE interpretation:</strong> {element.toe_stability_note}<br/>
     <strong>Flywheel class:</strong> {flywheel["stability_class"]}
     (score {flywheel["stability_score"]})<br/>
@@ -102,12 +114,24 @@ def element_card_html(element, flywheel: dict) -> str:
 
 
 def synthetic_z_html(z: int, flywheel: dict) -> str:
+    label = (
+        "Beyond known elements — theoretical TOE extension"
+        if z > 118
+        else "Synthetic probe — outside periodic table"
+    )
+    extra = ""
+    if z == 129:
+        extra = (
+            "<br/><strong>pseudo_Z = 129</strong> is the Magic Island sweep discovery ID "
+            "(not a real element). Use Z = 2 for the physical noble-gas anchor."
+        )
     return f"""
 <div class="kc-element-card">
-  <h2>Z = {z} — beyond known elements</h2>
+  <h2>Z = {z}</h2>
+  <p class="kc-synthetic-banner">{label}</p>
   <div class="kc-element-meta">
     No standard periodic-table entry (Z &gt; 118 or &lt; 1).
-    Flux flywheel model still applies as a <em>synthetic</em> stability probe.
+    Flux flywheel model applies as a <em>theoretical</em> stability probe.{extra}
   </div>
   <div class="kc-element-toe">
     <strong>Flywheel class:</strong> {flywheel["stability_class"]}

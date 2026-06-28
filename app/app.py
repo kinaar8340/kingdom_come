@@ -89,11 +89,14 @@ def render_flux_explorer(z: int):
         card = element_card_html(element, payload["flywheel"])
     else:
         card = synthetic_z_html(int(z), payload["flywheel"])
+    art = payload["noble_gas_art"]
     return (
         card,
         payload["metrics_md"],
+        art,
         payload["cloud_fig"],
         payload["compare_fig"],
+        payload["magic_island"],
     )
 
 
@@ -237,17 +240,32 @@ def build_app() -> gr.Blocks:
                 gr.Markdown(
                     "Hybrid **element explorer + flux flywheel** visualizer. "
                     "Slide to any Z — noble gases (He, Ne, Ar, Kr, Xe, Rn, Og) glow with "
-                    "ultra-stable flux locks. Magic numbers (2, 8, 20, 28, 50, 82) highlighted."
+                    "ultra-stable flux locks. Magic numbers (2, 8, 20, 28, 50, 82) highlighted. "
+                    "Z > 118 and Z = 129 are **theoretical TOE extensions** beyond known elements."
                 )
                 z_slider = gr.Slider(1, 180, value=2, step=1, label="Atomic number Z")
                 with gr.Row():
                     with gr.Column(scale=1):
                         element_card = gr.HTML(label="Element")
                         flywheel_metrics = gr.Markdown(label="Flux metrics")
+                        magic_island_plot = gr.Plot(label="Magic Island heatmap")
                     with gr.Column(scale=1):
+                        noble_gas_art = gr.Image(
+                            label="Noble gas artwork",
+                            type="filepath",
+                            height=280,
+                            visible=True,
+                        )
                         electron_plot = gr.Plot(label="Electron cloud + flux ring")
                         compare_plot = gr.Plot(label="Chemistry vs TOE flux")
-                flux_outputs = [element_card, flywheel_metrics, electron_plot, compare_plot]
+                flux_outputs = [
+                    element_card,
+                    flywheel_metrics,
+                    noble_gas_art,
+                    electron_plot,
+                    compare_plot,
+                    magic_island_plot,
+                ]
                 z_slider.change(render_flux_explorer, inputs=z_slider, outputs=flux_outputs)
                 demo.load(render_flux_explorer, inputs=z_slider, outputs=flux_outputs)
 
