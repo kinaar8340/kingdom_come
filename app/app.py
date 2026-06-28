@@ -20,6 +20,7 @@ from app.build_info import get_build_label
 from app.components.theme import HERO_HTML, KINGDOM_CSS, footer_html
 from app.pages.help import HELP_MD, QUICKSTART_MD
 from app.pages.home import HOME_MD, ONBOARDING_MD, SHOWCASE_CARDS
+from app.pages.hopf_guide import HF_VIEW_MODE_MD, HOPF_INTRO_MD, HOPF_PANEL_GUIDE_MD
 from app.pages.showcase import SHOWCASE_HTML
 from app.pages.theory import DERIVATION_HOPF_MD, THEORY_MD
 
@@ -128,22 +129,16 @@ def build_app() -> gr.Blocks:
                 gr.Markdown(HELP_MD)
 
             with gr.Tab("Hopf Visualizer"):
-                gr.Markdown(
-                    "Explore linked Hopf fibers stereographically projected to ℝ³, "
-                    "with the S² base chart alongside. "
-                    + (
-                        "**2D projections** are used here (Hugging Face iframes often block WebGL). "
-                        if is_hf_space()
-                        else "Choose **2D** for compatibility or **3D** for interactive rotation."
+                gr.Markdown(HOPF_INTRO_MD)
+                if is_hf_space():
+                    gr.Markdown(HF_VIEW_MODE_MD)
+                else:
+                    gr.Markdown(
+                        "Choose **2D** for maximum compatibility or **3D** for interactive WebGL rotation (local)."
                     )
-                )
                 _on_hf = is_hf_space()
                 with gr.Row():
                     if _on_hf:
-                        gr.Markdown(
-                            "**View mode:** 2D projections only "
-                            "_(WebGL is blocked inside Hugging Face iframes)_"
-                        )
                         view_mode = gr.State("2D projections (recommended)")
                     else:
                         view_mode = gr.Radio(
@@ -166,6 +161,8 @@ def build_app() -> gr.Blocks:
                         gr.Button(name, size="sm") for name in HOPF_PRESETS
                     ]
                     reset_btn = gr.Button("Reset defaults", size="sm")
+                with gr.Accordion("What you're looking at — panels ①–④", open=True):
+                    gr.Markdown(HOPF_PANEL_GUIDE_MD)
                 hopf_plot = gr.Plot(label="Hopf Fibration")
                 with gr.Row():
                     refresh = gr.Button("Update visualization", variant="primary")

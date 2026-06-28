@@ -25,8 +25,12 @@ tags:
 # Kingdom Come — Live Portal
 
 <p align="center">
-  <img src="app/assets/kingdom_demo.gif" alt="Kingdom Come demo — Hopf fiber ξ₁ sweep animation" width="100%" style="max-width: 720px; border-radius: 12px;" />
+  <img src="app/assets/kingdom_demo.gif"
+       alt="Animated Kingdom Come demo: gold Hopf fiber sweeps through ξ₁ phase while teal linked fibers remain fixed — stereographic xy projection of S³ fibers to ℝ³"
+       width="100%" style="max-width: 720px; border-radius: 12px;" />
 </p>
+
+<p align="center"><em>Demo GIF: highlight fiber ξ₁ phase sweep — each loop is one fiber of the Hopf fibration.</em></p>
 
 <p align="center">
   <img src="app/assets/hopf_preview.png" alt="Hopf fibration stereographic preview — linked fibers" width="100%" style="max-width: 720px; border-radius: 12px;" />
@@ -114,6 +118,8 @@ python app/app.py
 
 | Version | Notes |
 |---------|-------|
+| **v0.1.4** | Panel guide accordion, clearer HF 2D messaging, GIF alt text |
+| **v0.1.3** | WebGL hotfix — force 2D-only on Hugging Face |
 | **v0.1.2** | Visual polish, onboarding accordion, showcase cards, reset + auto-update presets |
 | **v0.1.1** | Demo GIF; Lattice Simulator tab (toe two-gyro integration) |
 | **v0.1.0** | Initial portal: Hopf visualizer, theory, flux flywheel, showcase |
