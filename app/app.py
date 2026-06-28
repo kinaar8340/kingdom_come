@@ -362,6 +362,10 @@ def main() -> None:
         css=KINGDOM_CSS + NEON_CSS + PERIODIC_CSS,
         theme=_KINGDOM_THEME,
         inbrowser=not on_hf,
+        # HF sets GRADIO_SSR_MODE=true by default; the Node SSR proxy can emit
+        # harmless asyncio __del__ noise on Python 3.12. Client-side mode is
+        # stable for our Plotly-heavy app and avoids the dual-port proxy.
+        ssr_mode=False,
     )
 
 
