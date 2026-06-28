@@ -112,13 +112,22 @@ def paper_viewer_html(entry: PaperEntry) -> str:
     """Inline PDF viewer with fallback download link."""
     data_uri = _pdf_data_uri(entry.filename)
     url = paper_file_url(entry.path)
+    # srcdoc iframe isolates the PDF embed from HF Space's outer iframe sandbox.
+    srcdoc = (
+        "<!DOCTYPE html><html><head><meta charset='utf-8'>"
+        "<style>html,body{margin:0;height:100%;overflow:hidden;background:#0d1f35;}"
+        "embed{width:100%;height:100%;border:0;}</style></head><body>"
+        f"<embed src='{data_uri}' type='application/pdf' title='{entry.title}' />"
+        "</body></html>"
+    )
+    safe_srcdoc = srcdoc.replace("&", "&amp;").replace('"', "&quot;")
     return f"""
 <div class="kc-paper-viewer">
   <div class="kc-paper-toolbar">
     <strong>{entry.title}</strong>
     <a href="{url}" target="_blank" rel="noopener">Download PDF ↗</a>
   </div>
-  <embed class="kc-paper-frame" src="{data_uri}" type="application/pdf" title="{entry.title}" />
+  <iframe class="kc-paper-frame" srcdoc="{safe_srcdoc}" title="{entry.title}"></iframe>
   <p class="kc-paper-fallback">
     PDF not rendering? Use <strong>Download PDF</strong> above or the file widget below.
   </p>

@@ -172,6 +172,7 @@ KINGDOM_CSS = """
   color: var(--kc-teal);
 }
 .kc-paper-frame,
+iframe.kc-paper-frame,
 embed.kc-paper-frame {
   display: block;
   width: 100%;
