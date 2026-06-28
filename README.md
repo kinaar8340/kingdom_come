@@ -53,7 +53,7 @@ This is a **Gradio** Space (not Docker). Open the **App** tab above — no insta
 | **Hopf Visualizer** | Click **Classic Hopf** preset → **Update visualization** | 4-panel 2D view: linked fibers (xy/xz), S² base chart, phase map |
 | **Lattice Simulator** | **Run lattice comparison** | Stable vs chaotic gauge pointer, twist, identity preservation |
 | **The Model** | Read overview + derivation accordion | Core TOE postulates and Hopf→quaternion math |
-| **Flux Flywheel** | Slide atomic number **Z** | Stability class, detuning, Magic Island parameters |
+| **Flux Flywheel** | Slide **Z** (try He=2, Ne=10) | Element card, electron cloud, chemistry vs TOE flux |
 | **Showcase** | Browse links | Six related HF Spaces + GitHub repos |
 | **Help** | Full walkthrough | Controls, limitations, tech stack |
 
@@ -118,6 +118,7 @@ python app/app.py
 
 | Version | Notes |
 |---------|-------|
+| **v0.2.0** | Flux Flywheel element explorer, electron clouds, neon badge plugin |
 | **v0.1.4** | Panel guide accordion, clearer HF 2D messaging, GIF alt text |
 | **v0.1.3** | WebGL hotfix — force 2D-only on Hugging Face |
 | **v0.1.2** | Visual polish, onboarding accordion, showcase cards, reset + auto-update presets |

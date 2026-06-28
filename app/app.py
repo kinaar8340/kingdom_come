@@ -12,11 +12,12 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "src"))
 
-from kingdom.core.flux_flywheel import map_z_to_flywheel
+from kingdom.core.flux_explorer import explore_flux_element
 from kingdom.simulations.lattice import build_lattice_figure, run_lattice_comparison
 from kingdom.viz.hopf_plotly import build_hopf_fibration_figure_auto, default_view_mode, is_hf_space
 
 from app.build_info import get_build_label
+from app.components.neon import NEON_CSS, element_card_html, synthetic_z_html
 from app.components.theme import HERO_HTML, KINGDOM_CSS, footer_html
 from app.pages.help import HELP_MD, QUICKSTART_MD
 from app.pages.home import HOME_MD, ONBOARDING_MD, SHOWCASE_CARDS
@@ -81,22 +82,19 @@ def render_lattice_sim(frames: int, n_sites: int, gauge: float):
     return build_lattice_figure(stable, chaotic), summary
 
 
-def render_flywheel(z: int) -> str:
-    result = map_z_to_flywheel(int(z))
-    lines = [f"**Z = {result['Z']}** — {result['stability_class']}", ""]
-    for key in (
-        "stability_score",
-        "delta_omega",
-        "omega_L",
-        "omega_R",
-        "gauge_strength",
-        "num_layers",
-        "num_polarities",
-        "pseudo_Z",
-        "notes",
-    ):
-        lines.append(f"- **{key}**: {result[key]}")
-    return "\n".join(lines)
+def render_flux_explorer(z: int):
+    payload = explore_flux_element(int(z))
+    element = payload["element"]
+    if element is not None:
+        card = element_card_html(element, payload["flywheel"])
+    else:
+        card = synthetic_z_html(int(z), payload["flywheel"])
+    return (
+        card,
+        payload["metrics_md"],
+        payload["cloud_fig"],
+        payload["compare_fig"],
+    )
 
 
 _KINGDOM_THEME = gr.themes.Base(
@@ -236,11 +234,22 @@ def build_app() -> gr.Blocks:
                 )
 
             with gr.Tab("Flux Flywheel"):
-                gr.Markdown("Map atomic number **Z** to flux flywheel stability (Magic Island calibration).")
+                gr.Markdown(
+                    "Hybrid **element explorer + flux flywheel** visualizer. "
+                    "Slide to any Z — noble gases (He, Ne, Ar, Kr, Xe, Rn, Og) glow with "
+                    "ultra-stable flux locks. Magic numbers (2, 8, 20, 28, 50, 82) highlighted."
+                )
                 z_slider = gr.Slider(1, 180, value=2, step=1, label="Atomic number Z")
-                flywheel_out = gr.Markdown()
-                z_slider.change(render_flywheel, inputs=z_slider, outputs=flywheel_out)
-                demo.load(render_flywheel, inputs=z_slider, outputs=flywheel_out)
+                with gr.Row():
+                    with gr.Column(scale=1):
+                        element_card = gr.HTML(label="Element")
+                        flywheel_metrics = gr.Markdown(label="Flux metrics")
+                    with gr.Column(scale=1):
+                        electron_plot = gr.Plot(label="Electron cloud + flux ring")
+                        compare_plot = gr.Plot(label="Chemistry vs TOE flux")
+                flux_outputs = [element_card, flywheel_metrics, electron_plot, compare_plot]
+                z_slider.change(render_flux_explorer, inputs=z_slider, outputs=flux_outputs)
+                demo.load(render_flux_explorer, inputs=z_slider, outputs=flux_outputs)
 
             with gr.Tab("Showcase"):
                 gr.Markdown(
@@ -265,7 +274,7 @@ def main() -> None:
     demo.launch(
         server_name="0.0.0.0",
         server_port=port,
-        css=KINGDOM_CSS,
+        css=KINGDOM_CSS + NEON_CSS,
         theme=_KINGDOM_THEME,
         inbrowser=not on_hf,
     )

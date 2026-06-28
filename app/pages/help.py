@@ -14,7 +14,7 @@ workbench linking topology, quaternions, flux lattices, and emergent matter mode
 3. Read the four panels: linked fibers (xy/xz), S² base chart, phase-colored highlight.
 4. Open **Lattice Simulator** → **Run lattice comparison** (stable vs chaotic).
 5. Open **The Model** for core postulates.
-6. Try **Flux Flywheel** at Z = 2 (magic-island anchor) and Z = 129 (sweep ID).
+6. Try **Flux Flywheel** at Z = 2 (He — noble gas lock), Z = 10 (Ne), or Z = 129 (synthetic sweep ID).
 
 ### Hopf Visualizer controls
 
