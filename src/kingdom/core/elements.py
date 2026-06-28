@@ -1,12 +1,17 @@
-"""Periodic table element data for Flux Flywheel explorer."""
+"""Periodic table element data for Flux Flywheel explorer (Z = 1–180)."""
 
 from __future__ import annotations
 
 from dataclasses import dataclass
 
+from kingdom.core.periodic_meta import period_group_category
+from kingdom.core.superheavy import superheavy_period_group, systematic_name_symbol
+
 # Noble gases + nuclear magic numbers (TOE stability anchors)
 NOBLE_GAS_Z: frozenset[int] = frozenset({2, 10, 18, 36, 54, 86, 118})
 MAGIC_NUMBER_Z: frozenset[int] = frozenset({2, 8, 20, 28, 50, 82})
+KNOWN_ELEMENT_MAX = 118
+EXPLORER_Z_MAX = 180
 
 _NAMES = (
     "",
@@ -252,106 +257,94 @@ _SYMBOLS = (
     "Og",
 )
 
-# period, group (0 = f-block placeholder), category
-_META: dict[int, tuple[int, int, str]] = {
-    1: (1, 1, "nonmetal"),
-    2: (1, 18, "noble gas"),
-    10: (2, 18, "noble gas"),
-    18: (3, 18, "noble gas"),
-    36: (4, 18, "noble gas"),
-    54: (5, 18, "noble gas"),
-    86: (6, 18, "noble gas"),
-    118: (7, 18, "noble gas"),
-}
+_SUBSHELLS: list[tuple[str, int]] = [
+    ("1s", 2),
+    ("2s", 2),
+    ("2p", 6),
+    ("3s", 2),
+    ("3p", 6),
+    ("4s", 2),
+    ("3d", 10),
+    ("4p", 6),
+    ("5s", 2),
+    ("4d", 10),
+    ("5p", 6),
+    ("6s", 2),
+    ("4f", 14),
+    ("5d", 10),
+    ("6p", 6),
+    ("7s", 2),
+    ("5f", 14),
+    ("6d", 10),
+    ("7p", 6),
+    # Theoretical superheavy extension (Z > 118)
+    ("8s", 2),
+    ("5g", 18),
+    ("6f", 14),
+    ("7d", 10),
+    ("8p", 6),
+    ("9s", 2),
+    ("6g", 18),
+    ("7f", 14),
+    ("8d", 10),
+    ("9p", 6),
+]
 
-
-def _period_group_category(z: int) -> tuple[int, int, str]:
-    if z in _META:
-        return _META[z]
-    if z in NOBLE_GAS_Z:
-        return (1, 18, "noble gas")
-    if z <= 2:
-        return (1, z, "nonmetal")
-    if z <= 10:
-        return (2, z if z <= 2 else (z - 2 if z <= 4 else (z - 10 if z >= 13 else z)), "nonmetal")
-    # simplified fallback
-    if z <= 18:
-        return (3, min(18, max(1, z - 10)), "nonmetal" if z < 13 else "halogen")
-    if z <= 36:
-        return (4, 1 if z == 19 else (2 if z == 20 else 0), "metal")
-    if z <= 54:
-        return (5, 1, "metal")
-    if z <= 86:
-        return (6, 0, "metal")
-    if z <= 118:
-        return (7, 0, "metal")
-    return (0, 0, "synthetic")
+_SHELL_ORDER: list[tuple[int, int]] = [
+    (1, 2),
+    (2, 8),
+    (3, 8),
+    (4, 2),
+    (3, 10),
+    (4, 6),
+    (5, 2),
+    (4, 10),
+    (5, 6),
+    (6, 2),
+    (4, 14),
+    (5, 10),
+    (6, 6),
+    (7, 2),
+    (5, 14),
+    (6, 10),
+    (7, 6),
+    (8, 2),
+    (5, 18),
+    (6, 14),
+    (7, 10),
+    (8, 6),
+    (9, 2),
+    (6, 18),
+    (7, 14),
+    (8, 10),
+    (9, 6),
+]
 
 
 def _aufbau_config(z: int) -> str:
-    """Build electron configuration string via aufbau filling."""
-    if z <= 0 or z > 118:
+    """Build electron configuration via aufbau filling (extended for superheavy Z)."""
+    if z <= 0 or z > EXPLORER_Z_MAX:
         return "—"
-    subshells = [
-        ("1s", 2),
-        ("2s", 2),
-        ("2p", 6),
-        ("3s", 2),
-        ("3p", 6),
-        ("4s", 2),
-        ("3d", 10),
-        ("4p", 6),
-        ("5s", 2),
-        ("4d", 10),
-        ("5p", 6),
-        ("6s", 2),
-        ("4f", 14),
-        ("5d", 10),
-        ("6p", 6),
-        ("7s", 2),
-        ("5f", 14),
-        ("6d", 10),
-        ("7p", 6),
-    ]
     remaining = z
     parts: list[str] = []
-    for label, cap in subshells:
+    for label, cap in _SUBSHELLS:
         if remaining <= 0:
             break
         fill = min(remaining, cap)
         if fill:
             parts.append(f"{label}{fill if fill < 10 else fill}")
         remaining -= fill
-    return " ".join(parts)
+    suffix = " (predicted)" if z > KNOWN_ELEMENT_MAX else ""
+    return " ".join(parts) + suffix
 
 
 def shell_occupancies(z: int) -> list[tuple[int, int]]:
     """Electrons per principal shell n=1,2,3,... for cloud visualization."""
-    if z <= 0 or z > 118:
+    if z <= 0 or z > EXPLORER_Z_MAX:
         return []
-    caps = {1: 2, 2: 8, 3: 18, 4: 32, 5: 32, 6: 18, 7: 8}
-    order = [
-        (1, 2),
-        (2, 8),
-        (3, 8),
-        (4, 2),
-        (3, 10),
-        (4, 6),
-        (5, 2),
-        (4, 10),
-        (5, 6),
-        (6, 2),
-        (4, 14),
-        (5, 10),
-        (6, 6),
-        (7, 2),
-        (5, 14),
-        (6, 10),
-        (7, 6),
-    ]
     shells: dict[int, int] = {}
     rem = z
-    for shell, cap in order:
+    for shell, cap in _SHELL_ORDER:
         if rem <= 0:
             break
         fill = min(rem, cap)
@@ -372,10 +365,20 @@ class Element:
     is_noble_gas: bool
     is_magic_number: bool
     is_known: bool
+    is_synthetic: bool
 
     @property
     def toe_narrative(self) -> str:
-        """One-line TOE narrative for the element card."""
+        if self.is_synthetic:
+            if self.z == 129:
+                return (
+                    "Magic Island sweep discovery ID (pseudo_Z = 129) — theoretical "
+                    "ultra-stable detuning anchor on the Hopf flux lattice."
+                )
+            return (
+                "Superheavy theoretical extension — extrapolated shell structure mapped "
+                "onto the flux flywheel stability model beyond the known periodic table."
+            )
         if self.is_noble_gas:
             return (
                 "This configuration corresponds to a closed Hopf fiber bundle with "
@@ -393,6 +396,11 @@ class Element:
 
     @property
     def toe_stability_note(self) -> str:
+        if self.is_synthetic:
+            return (
+                "IUPAC systematic / theoretical nomenclature. Electron configuration and "
+                "shell clouds are predicted via extended aufbau — not experimentally confirmed."
+            )
         if self.is_noble_gas:
             return (
                 "Closed electron shell ↔ topologically protected flux flywheel lock. "
@@ -411,24 +419,41 @@ class Element:
 
 
 def get_element(z: int) -> Element | None:
-    if z < 1 or z > 118:
+    """Return element record for Z = 1–180 (known + superheavy theoretical)."""
+    if z < 1 or z > EXPLORER_Z_MAX:
         return None
-    period, group, category = _period_group_category(z)
-    if z in NOBLE_GAS_Z:
-        category = "noble gas"
+
+    if z <= KNOWN_ELEMENT_MAX:
+        period, group, category = period_group_category(z)
+        if z in NOBLE_GAS_Z:
+            category = "noble gas"
+        name, symbol = _NAMES[z], _SYMBOLS[z]
+        is_known = True
+        is_synthetic = False
+    else:
+        period, group, category = superheavy_period_group(z)
+        name, symbol = systematic_name_symbol(z)
+        is_known = False
+        is_synthetic = True
+
     return Element(
         z=z,
-        name=_NAMES[z],
-        symbol=_SYMBOLS[z],
+        name=name,
+        symbol=symbol,
         period=period,
         group=group,
         category=category,
         electron_config=_aufbau_config(z),
         is_noble_gas=z in NOBLE_GAS_Z,
         is_magic_number=z in MAGIC_NUMBER_Z,
-        is_known=True,
+        is_known=is_known,
+        is_synthetic=is_synthetic,
     )
 
 
 def is_real_element(z: int) -> bool:
-    return 1 <= z <= 118
+    return 1 <= z <= KNOWN_ELEMENT_MAX
+
+
+def is_explorable_element(z: int) -> bool:
+    return 1 <= z <= EXPLORER_Z_MAX

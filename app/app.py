@@ -93,7 +93,7 @@ def render_flux_explorer(z: int):
     payload = explore_flux_element(int(z))
     element = payload["element"]
     fly = payload["flywheel"]
-    art = payload["noble_gas_art"]
+    art = payload["element_art"]
     if element is not None:
         card = element_card_html(element, fly, art_path=art)
         toe = toe_strip_html(element, fly)
@@ -249,7 +249,7 @@ def build_app() -> gr.Blocks:
             with gr.Tab("Flux Flywheel"):
                 gr.Markdown(
                     "**Element explorer + flux flywheel** — noble gases glow at ultra-stable locks. "
-                    "Z > 118 / Z = 129 = theoretical TOE extensions."
+                    "Z = 1–118 known elements · Z = 119–180 superheavy theoretical zone · Z = 129 Magic Island ID."
                 )
                 z_slider = gr.Slider(1, 180, value=2, step=1, label="Atomic number Z")
                 # Hero: element card (left) · electron cloud plot (right, 2× width)

@@ -99,12 +99,17 @@ def build_electron_cloud_figure(
         )
     )
 
-    noble_note = " — noble gas lock" if element.is_noble_gas else ""
+    notes: list[str] = []
+    if element.is_noble_gas:
+        notes.append("noble gas lock")
+    if element.is_synthetic:
+        notes.append("predicted superheavy")
+    note = f" — {' · '.join(notes)}" if notes else ""
     fig.update_layout(
         **theme,
         height=height,
         title=dict(
-            text=f"{element.name} ({element.symbol}) — electron shells + flux flywheel{noble_note}",
+            text=f"{element.name} ({element.symbol}) — electron shells + flux flywheel{note}",
             x=0.5,
             font=dict(size=13, color="#e8f4ff"),
         ),

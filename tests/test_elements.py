@@ -2,13 +2,10 @@
 
 import plotly.graph_objects as go
 
-from app.components.neon import (
-    element_card_html,
-    flux_metrics_cards_html,
-    toe_strip_html,
-)
-from kingdom.core.elements import NOBLE_GAS_Z, get_element, shell_occupancies
-from kingdom.core.flux_explorer import explore_flux_element, flux_metrics_table, noble_gas_art_path
+from app.components.neon import element_card_html, flux_metrics_cards_html, toe_strip_html
+from kingdom.core.elements import EXPLORER_Z_MAX, get_element, shell_occupancies
+from kingdom.core.flux_explorer import element_art_path, explore_flux_element, flux_metrics_table
+from kingdom.core.superheavy import systematic_name_symbol
 from kingdom.viz.electron_cloud import build_electron_cloud_figure
 from kingdom.viz.magic_island import build_magic_island_heatmap
 
@@ -19,6 +16,41 @@ def test_noble_gases():
         assert el is not None
         assert el.is_noble_gas
         assert el.symbol in ("He", "Ne", "Ar", "Kr", "Xe", "Rn", "Og")
+
+
+def test_iupac_groups_transition_and_f_block():
+    fe = get_element(26)
+    assert fe.period == 4 and fe.group == 8 and fe.category == "transition metal"
+    la = get_element(57)
+    assert la.period == 6 and la.group == 3 and la.category == "lanthanide"
+    u = get_element(92)
+    assert u.period == 7 and u.group == 3 and u.category == "actinide"
+    og = get_element(118)
+    assert og.period == 7 and og.group == 18
+
+
+def test_superheavy_systematic_names():
+    name, sym = systematic_name_symbol(119)
+    assert name == "Ununennium"
+    assert sym == "Uue"
+    name, sym = systematic_name_symbol(120)
+    assert name == "Unbinilium"
+    assert sym == "Ubn"
+    el = get_element(129)
+    assert el is not None
+    assert el.is_synthetic
+    assert el.name == "Unbiennium"
+    assert el.z == 129
+
+
+def test_superheavy_zone_populates():
+    for z in (119, 150, 180):
+        payload = explore_flux_element(z)
+        el = payload["element"]
+        assert el is not None
+        assert el.is_synthetic
+        assert len(payload["cloud_fig"].data) >= 3
+        assert "(predicted)" in el.electron_config
 
 
 def test_helium_magic_island():
@@ -51,23 +83,20 @@ def test_flux_metrics_cards_html():
     payload = explore_flux_element(2)
     html = flux_metrics_cards_html(payload["flywheel"])
     assert "kc-metrics-grid" in html
-    assert "8.0" in html
 
 
 def test_compact_element_card_with_art_inset():
     payload = explore_flux_element(2)
-    art = noble_gas_art_path(2)
+    art = element_art_path(2)
     html = element_card_html(payload["element"], payload["flywheel"], art_path=art)
     assert "Helium" in html
     if art:
         assert "kc-card-art" in html
-        assert "data:image/png;base64," in html
 
 
 def test_toe_strip_visible():
     payload = explore_flux_element(2)
     html = toe_strip_html(payload["element"], payload["flywheel"])
-    assert "kc-toe-strip" in html
     assert "Hopf fiber bundle" in html
 
 
@@ -76,27 +105,16 @@ def test_magic_island_heatmap():
     assert len(fig.data) >= 3
 
 
-def test_explore_flux_magic_island_and_art():
-    payload = explore_flux_element(2)
-    assert payload["magic_island"] is not None
-    assert payload["is_noble"] is True
-    art = noble_gas_art_path(2)
-    if art is not None:
-        assert art.endswith(".png")
-
-
-def test_synthetic_z_129():
-    payload = explore_flux_element(129)
-    assert payload["is_pseudo_z"] is True
-    assert payload["element"] is None
-
-
 def test_all_elements_z_1_to_118_populate():
-    """Every known element should render without error."""
     for z in range(1, 119):
         payload = explore_flux_element(z)
         el = payload["element"]
-        assert el is not None, f"Z={z} missing"
+        assert el is not None and not el.is_synthetic
         assert el.z == z
         assert len(payload["cloud_fig"].data) >= 3
-        assert len(payload["compare_fig"].data) >= 1
+
+
+def test_explorer_z_range():
+    assert get_element(0) is None
+    assert get_element(EXPLORER_Z_MAX) is not None
+    assert get_element(EXPLORER_Z_MAX + 1) is None

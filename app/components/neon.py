@@ -125,6 +125,15 @@ NEON_CSS = """
   color: #1a8fe3;
   font-size: 0.78rem;
 }
+.kc-neon-synthetic {
+  display: inline-block;
+  padding: 0.18rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.72rem;
+  color: #ffb4a2;
+  border: 1px solid rgba(239, 85, 59, 0.45);
+  background: rgba(239, 85, 59, 0.12);
+}
 .kc-synthetic-banner {
   color: #ef553b;
   font-weight: 600;
@@ -158,6 +167,8 @@ def element_card_html(element, flywheel: dict, *, art_path: str | None = None) -
         badges.append('<span class="kc-neon-noble">✦ NOBLE GAS · FLUX FLYWHEEL LOCK</span>')
     if element.is_magic_number:
         badges.append('<span class="kc-neon-magic">Magic number</span>')
+    if element.is_synthetic:
+        badges.append('<span class="kc-neon-synthetic">Theoretical superheavy</span>')
     badge_row = " ".join(badges)
     art = _art_inset_html(art_path)
 
@@ -174,6 +185,7 @@ def element_card_html(element, flywheel: dict, *, art_path: str | None = None) -
         <strong>Z</strong> = {element.z} &nbsp;·&nbsp;
         Period {element.period} &nbsp;·&nbsp;
         Group {element.group if element.group else "—"} &nbsp;·&nbsp;
+        {("Predicted" if element.is_synthetic else "Known")} &nbsp;·&nbsp;
         {element.category.title()}<br/>
         <strong>e⁻ config:</strong> {element.electron_config}
       </div>
