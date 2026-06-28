@@ -145,6 +145,17 @@ def test_magic_number_toe_narrative():
     assert "28" in el.toe_narrative
 
 
+def test_imagine_inbox_complete():
+    from pathlib import Path
+
+    manifest = Path(__file__).resolve().parents[1] / "app/assets/elements_imagine/batch_manifest.json"
+    if manifest.is_file():
+        import json
+
+        data = json.loads(manifest.read_text(encoding="utf-8"))
+        assert data["inbox_ready"] == data["total"] == EXPLORER_Z_MAX
+
+
 def test_superheavy_art_paths_exist_after_generation():
     from pathlib import Path
 

@@ -1,0 +1,1807 @@
+{
+  "total": 180,
+  "inbox_ready": 180,
+  "pending": 0,
+  "entries": [
+    {
+      "z": 1,
+      "symbol": "H",
+      "name": "Hydrogen",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Hydrogen, Z=1. glowing soft cyan probability density forming one perfect spherical shell. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/h.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 2,
+      "symbol": "He",
+      "name": "Helium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Helium, Z=2. glowing soft cyan probability density forming one perfect spherical shell. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/he.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 3,
+      "symbol": "Li",
+      "name": "Lithium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Lithium, Z=3. glowing soft cyan probability density forming 2 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/li.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 4,
+      "symbol": "Be",
+      "name": "Beryllium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Beryllium, Z=4. glowing soft cyan probability density forming 2 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/be.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 5,
+      "symbol": "B",
+      "name": "Boron",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Boron, Z=5. glowing soft cyan probability density forming 2 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/b.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 6,
+      "symbol": "C",
+      "name": "Carbon",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Carbon, Z=6. glowing soft cyan probability density forming 2 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/c.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 7,
+      "symbol": "N",
+      "name": "Nitrogen",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Nitrogen, Z=7. glowing soft cyan probability density forming 2 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/n.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 8,
+      "symbol": "O",
+      "name": "Oxygen",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Oxygen, Z=8. glowing soft cyan probability density forming 2 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/o.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 9,
+      "symbol": "F",
+      "name": "Fluorine",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Fluorine, Z=9. glowing soft cyan probability density forming 2 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/f.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 10,
+      "symbol": "Ne",
+      "name": "Neon",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Neon, Z=10. glowing soft cyan probability density forming 2 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/ne.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 11,
+      "symbol": "Na",
+      "name": "Sodium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Sodium, Z=11. glowing soft cyan probability density forming 3 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/na.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 12,
+      "symbol": "Mg",
+      "name": "Magnesium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Magnesium, Z=12. glowing soft cyan probability density forming 3 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/mg.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 13,
+      "symbol": "Al",
+      "name": "Aluminium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Aluminium, Z=13. glowing soft cyan probability density forming 3 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/al.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 14,
+      "symbol": "Si",
+      "name": "Silicon",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Silicon, Z=14. glowing soft cyan probability density forming 3 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/si.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 15,
+      "symbol": "P",
+      "name": "Phosphorus",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Phosphorus, Z=15. glowing soft cyan probability density forming 3 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/p.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 16,
+      "symbol": "S",
+      "name": "Sulfur",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Sulfur, Z=16. glowing soft cyan probability density forming 3 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/s.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 17,
+      "symbol": "Cl",
+      "name": "Chlorine",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Chlorine, Z=17. glowing soft cyan probability density forming 3 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/cl.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 18,
+      "symbol": "Ar",
+      "name": "Argon",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Argon, Z=18. glowing soft cyan probability density forming 3 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/ar.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 19,
+      "symbol": "K",
+      "name": "Potassium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Potassium, Z=19. glowing soft cyan probability density forming 4 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/k.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 20,
+      "symbol": "Ca",
+      "name": "Calcium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Calcium, Z=20. glowing soft cyan probability density forming 4 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/ca.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 21,
+      "symbol": "Sc",
+      "name": "Scandium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Scandium, Z=21. glowing soft cyan probability density forming 4 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/sc.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 22,
+      "symbol": "Ti",
+      "name": "Titanium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Titanium, Z=22. glowing soft cyan probability density forming 4 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/ti.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 23,
+      "symbol": "V",
+      "name": "Vanadium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Vanadium, Z=23. glowing soft cyan probability density forming 4 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/v.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 24,
+      "symbol": "Cr",
+      "name": "Chromium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Chromium, Z=24. glowing soft cyan probability density forming 4 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/cr.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 25,
+      "symbol": "Mn",
+      "name": "Manganese",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Manganese, Z=25. glowing soft cyan probability density forming 4 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/mn.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 26,
+      "symbol": "Fe",
+      "name": "Iron",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Iron, Z=26. glowing soft cyan probability density forming 4 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/fe.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 27,
+      "symbol": "Co",
+      "name": "Cobalt",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Cobalt, Z=27. glowing soft cyan probability density forming 4 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/co.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 28,
+      "symbol": "Ni",
+      "name": "Nickel",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Nickel, Z=28. glowing soft cyan probability density forming 4 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/ni.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 29,
+      "symbol": "Cu",
+      "name": "Copper",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Copper, Z=29. glowing soft cyan probability density forming 4 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/cu.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 30,
+      "symbol": "Zn",
+      "name": "Zinc",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Zinc, Z=30. glowing soft cyan probability density forming 4 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/zn.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 31,
+      "symbol": "Ga",
+      "name": "Gallium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Gallium, Z=31. glowing soft cyan probability density forming 4 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/ga.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 32,
+      "symbol": "Ge",
+      "name": "Germanium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Germanium, Z=32. glowing soft cyan probability density forming 4 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/ge.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 33,
+      "symbol": "As",
+      "name": "Arsenic",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Arsenic, Z=33. glowing soft cyan probability density forming 4 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/as.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 34,
+      "symbol": "Se",
+      "name": "Selenium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Selenium, Z=34. glowing soft cyan probability density forming 4 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/se.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 35,
+      "symbol": "Br",
+      "name": "Bromine",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Bromine, Z=35. glowing soft cyan probability density forming 4 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/br.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 36,
+      "symbol": "Kr",
+      "name": "Krypton",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Krypton, Z=36. glowing soft cyan probability density forming 4 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/kr.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 37,
+      "symbol": "Rb",
+      "name": "Rubidium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Rubidium, Z=37. glowing soft cyan probability density forming 5 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/rb.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 38,
+      "symbol": "Sr",
+      "name": "Strontium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Strontium, Z=38. glowing soft cyan probability density forming 5 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/sr.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 39,
+      "symbol": "Y",
+      "name": "Yttrium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Yttrium, Z=39. glowing soft cyan probability density forming 5 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/y.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 40,
+      "symbol": "Zr",
+      "name": "Zirconium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Zirconium, Z=40. glowing soft cyan probability density forming 5 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/zr.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 41,
+      "symbol": "Nb",
+      "name": "Niobium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Niobium, Z=41. glowing soft cyan probability density forming 5 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/nb.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 42,
+      "symbol": "Mo",
+      "name": "Molybdenum",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Molybdenum, Z=42. glowing soft cyan probability density forming 5 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/mo.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 43,
+      "symbol": "Tc",
+      "name": "Technetium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Technetium, Z=43. glowing soft cyan probability density forming 5 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/tc.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 44,
+      "symbol": "Ru",
+      "name": "Ruthenium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Ruthenium, Z=44. glowing soft cyan probability density forming 5 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/ru.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 45,
+      "symbol": "Rh",
+      "name": "Rhodium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Rhodium, Z=45. glowing soft cyan probability density forming 5 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/rh.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 46,
+      "symbol": "Pd",
+      "name": "Palladium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Palladium, Z=46. glowing soft cyan probability density forming 5 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/pd.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 47,
+      "symbol": "Ag",
+      "name": "Silver",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Silver, Z=47. glowing soft cyan probability density forming 5 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/ag.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 48,
+      "symbol": "Cd",
+      "name": "Cadmium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Cadmium, Z=48. glowing soft cyan probability density forming 5 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/cd.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 49,
+      "symbol": "In",
+      "name": "Indium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Indium, Z=49. glowing soft cyan probability density forming 5 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/in.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 50,
+      "symbol": "Sn",
+      "name": "Tin",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Tin, Z=50. glowing soft cyan probability density forming 5 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/sn.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 51,
+      "symbol": "Sb",
+      "name": "Antimony",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Antimony, Z=51. glowing soft cyan probability density forming 5 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/sb.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 52,
+      "symbol": "Te",
+      "name": "Tellurium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Tellurium, Z=52. glowing soft cyan probability density forming 5 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/te.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 53,
+      "symbol": "I",
+      "name": "Iodine",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Iodine, Z=53. glowing soft cyan probability density forming 5 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/i.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 54,
+      "symbol": "Xe",
+      "name": "Xenon",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Xenon, Z=54. glowing soft cyan probability density forming 5 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/xe.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 55,
+      "symbol": "Cs",
+      "name": "Caesium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Caesium, Z=55. glowing soft cyan probability density forming 6 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/cs.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 56,
+      "symbol": "Ba",
+      "name": "Barium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Barium, Z=56. glowing soft cyan probability density forming 6 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/ba.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 57,
+      "symbol": "La",
+      "name": "Lanthanum",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Lanthanum, Z=57. glowing soft cyan probability density forming 6 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/la.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 58,
+      "symbol": "Ce",
+      "name": "Cerium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Cerium, Z=58. glowing soft cyan probability density forming 6 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/ce.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 59,
+      "symbol": "Pr",
+      "name": "Praseodymium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Praseodymium, Z=59. glowing soft cyan probability density forming 6 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/pr.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 60,
+      "symbol": "Nd",
+      "name": "Neodymium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Neodymium, Z=60. glowing soft cyan probability density forming 6 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/nd.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 61,
+      "symbol": "Pm",
+      "name": "Promethium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Promethium, Z=61. glowing soft cyan probability density forming 6 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/pm.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 62,
+      "symbol": "Sm",
+      "name": "Samarium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Samarium, Z=62. glowing soft cyan probability density forming 6 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/sm.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 63,
+      "symbol": "Eu",
+      "name": "Europium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Europium, Z=63. glowing soft cyan probability density forming 6 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/eu.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 64,
+      "symbol": "Gd",
+      "name": "Gadolinium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Gadolinium, Z=64. glowing soft cyan probability density forming 6 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/gd.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 65,
+      "symbol": "Tb",
+      "name": "Terbium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Terbium, Z=65. glowing soft cyan probability density forming 6 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/tb.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 66,
+      "symbol": "Dy",
+      "name": "Dysprosium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Dysprosium, Z=66. glowing soft cyan probability density forming 6 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/dy.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 67,
+      "symbol": "Ho",
+      "name": "Holmium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Holmium, Z=67. glowing soft cyan probability density forming 6 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/ho.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 68,
+      "symbol": "Er",
+      "name": "Erbium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Erbium, Z=68. glowing soft cyan probability density forming 6 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/er.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 69,
+      "symbol": "Tm",
+      "name": "Thulium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Thulium, Z=69. glowing soft cyan probability density forming 6 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/tm.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 70,
+      "symbol": "Yb",
+      "name": "Ytterbium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Ytterbium, Z=70. glowing soft cyan probability density forming 6 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/yb.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 71,
+      "symbol": "Lu",
+      "name": "Lutetium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Lutetium, Z=71. glowing soft cyan probability density forming 6 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/lu.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 72,
+      "symbol": "Hf",
+      "name": "Hafnium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Hafnium, Z=72. glowing soft cyan probability density forming 6 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/hf.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 73,
+      "symbol": "Ta",
+      "name": "Tantalum",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Tantalum, Z=73. glowing soft cyan probability density forming 6 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/ta.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 74,
+      "symbol": "W",
+      "name": "Tungsten",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Tungsten, Z=74. glowing soft cyan probability density forming 6 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/w.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 75,
+      "symbol": "Re",
+      "name": "Rhenium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Rhenium, Z=75. glowing soft cyan probability density forming 6 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/re.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 76,
+      "symbol": "Os",
+      "name": "Osmium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Osmium, Z=76. glowing soft cyan probability density forming 6 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/os.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 77,
+      "symbol": "Ir",
+      "name": "Iridium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Iridium, Z=77. glowing soft cyan probability density forming 6 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/ir.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 78,
+      "symbol": "Pt",
+      "name": "Platinum",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Platinum, Z=78. glowing soft cyan probability density forming 6 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/pt.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 79,
+      "symbol": "Au",
+      "name": "Gold",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Gold, Z=79. glowing soft cyan probability density forming 6 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/au.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 80,
+      "symbol": "Hg",
+      "name": "Mercury",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Mercury, Z=80. glowing soft cyan probability density forming 6 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/hg.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 81,
+      "symbol": "Tl",
+      "name": "Thallium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Thallium, Z=81. glowing soft cyan probability density forming 6 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/tl.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 82,
+      "symbol": "Pb",
+      "name": "Lead",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Lead, Z=82. glowing soft cyan probability density forming 6 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/pb.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 83,
+      "symbol": "Bi",
+      "name": "Bismuth",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Bismuth, Z=83. glowing soft cyan probability density forming 6 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/bi.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 84,
+      "symbol": "Po",
+      "name": "Polonium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Polonium, Z=84. glowing soft cyan probability density forming 6 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/po.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 85,
+      "symbol": "At",
+      "name": "Astatine",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Astatine, Z=85. glowing soft cyan probability density forming 6 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/at.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 86,
+      "symbol": "Rn",
+      "name": "Radon",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Radon, Z=86. glowing soft cyan probability density forming 6 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/rn.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 87,
+      "symbol": "Fr",
+      "name": "Francium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Francium, Z=87. glowing soft cyan probability density forming 7 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/fr.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 88,
+      "symbol": "Ra",
+      "name": "Radium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Radium, Z=88. glowing soft cyan probability density forming 7 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/ra.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 89,
+      "symbol": "Ac",
+      "name": "Actinium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Actinium, Z=89. glowing soft cyan probability density forming 7 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/ac.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 90,
+      "symbol": "Th",
+      "name": "Thorium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Thorium, Z=90. glowing soft cyan probability density forming 7 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/th.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 91,
+      "symbol": "Pa",
+      "name": "Protactinium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Protactinium, Z=91. glowing soft cyan probability density forming 7 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/pa.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 92,
+      "symbol": "U",
+      "name": "Uranium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Uranium, Z=92. glowing soft cyan probability density forming 7 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/u.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 93,
+      "symbol": "Np",
+      "name": "Neptunium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Neptunium, Z=93. glowing soft cyan probability density forming 7 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/np.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 94,
+      "symbol": "Pu",
+      "name": "Plutonium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Plutonium, Z=94. glowing soft cyan probability density forming 7 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/pu.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 95,
+      "symbol": "Am",
+      "name": "Americium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Americium, Z=95. glowing soft cyan probability density forming 7 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/am.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 96,
+      "symbol": "Cm",
+      "name": "Curium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Curium, Z=96. glowing soft cyan probability density forming 7 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/cm.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 97,
+      "symbol": "Bk",
+      "name": "Berkelium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Berkelium, Z=97. glowing soft cyan probability density forming 7 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/bk.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 98,
+      "symbol": "Cf",
+      "name": "Californium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Californium, Z=98. glowing soft cyan probability density forming 7 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/cf.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 99,
+      "symbol": "Es",
+      "name": "Einsteinium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Einsteinium, Z=99. glowing soft cyan probability density forming 7 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/es.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 100,
+      "symbol": "Fm",
+      "name": "Fermium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Fermium, Z=100. glowing soft cyan probability density forming 7 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/fm.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 101,
+      "symbol": "Md",
+      "name": "Mendelevium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Mendelevium, Z=101. glowing soft cyan probability density forming 7 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/md.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 102,
+      "symbol": "No",
+      "name": "Nobelium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Nobelium, Z=102. glowing soft cyan probability density forming 7 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/no.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 103,
+      "symbol": "Lr",
+      "name": "Lawrencium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Lawrencium, Z=103. glowing soft cyan probability density forming 7 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/lr.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 104,
+      "symbol": "Rf",
+      "name": "Rutherfordium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Rutherfordium, Z=104. glowing soft cyan probability density forming 7 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/rf.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 105,
+      "symbol": "Db",
+      "name": "Dubnium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Dubnium, Z=105. glowing soft cyan probability density forming 7 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/db.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 106,
+      "symbol": "Sg",
+      "name": "Seaborgium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Seaborgium, Z=106. glowing soft cyan probability density forming 7 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/sg.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 107,
+      "symbol": "Bh",
+      "name": "Bohrium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Bohrium, Z=107. glowing soft cyan probability density forming 7 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/bh.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 108,
+      "symbol": "Hs",
+      "name": "Hassium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Hassium, Z=108. glowing soft cyan probability density forming 7 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/hs.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 109,
+      "symbol": "Mt",
+      "name": "Meitnerium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Meitnerium, Z=109. glowing soft cyan probability density forming 7 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/mt.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 110,
+      "symbol": "Ds",
+      "name": "Darmstadtium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Darmstadtium, Z=110. glowing soft cyan probability density forming 7 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/ds.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 111,
+      "symbol": "Rg",
+      "name": "Roentgenium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Roentgenium, Z=111. glowing soft cyan probability density forming 7 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/rg.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 112,
+      "symbol": "Cn",
+      "name": "Copernicium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Copernicium, Z=112. glowing soft cyan probability density forming 7 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/cn.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 113,
+      "symbol": "Nh",
+      "name": "Nihonium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Nihonium, Z=113. glowing soft cyan probability density forming 7 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/nh.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 114,
+      "symbol": "Fl",
+      "name": "Flerovium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Flerovium, Z=114. glowing soft cyan probability density forming 7 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/fl.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 115,
+      "symbol": "Mc",
+      "name": "Moscovium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Moscovium, Z=115. glowing soft cyan probability density forming 7 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/mc.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 116,
+      "symbol": "Lv",
+      "name": "Livermorium",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Livermorium, Z=116. glowing soft cyan probability density forming 7 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/lv.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 117,
+      "symbol": "Ts",
+      "name": "Tennessine",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Tennessine, Z=117. glowing soft cyan probability density forming 7 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/ts.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 118,
+      "symbol": "Og",
+      "name": "Oganesson",
+      "synthetic": false,
+      "prompt": "Dark scientific illustration of the electron cloud for Oganesson, Z=118. glowing soft cyan probability density forming 7 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/og.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 119,
+      "symbol": "Uue",
+      "name": "Ununennium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Ununennium, Z=119. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 8 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/uue.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 120,
+      "symbol": "Ubn",
+      "name": "Unbinilium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Unbinilium, Z=120. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 8 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/ubn.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 121,
+      "symbol": "Ubu",
+      "name": "Unbiunium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Unbiunium, Z=121. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 8 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/ubu.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 122,
+      "symbol": "Ubb",
+      "name": "Unbibiium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Unbibiium, Z=122. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 8 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/ubb.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 123,
+      "symbol": "Ubt",
+      "name": "Unbitriium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Unbitriium, Z=123. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 8 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/ubt.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 124,
+      "symbol": "Ubq",
+      "name": "Unbiquadium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Unbiquadium, Z=124. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 8 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/ubq.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 125,
+      "symbol": "Ubp",
+      "name": "Unbipentium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Unbipentium, Z=125. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 8 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/ubp.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 126,
+      "symbol": "Ubh",
+      "name": "Unbihexium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Unbihexium, Z=126. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 8 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/ubh.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 127,
+      "symbol": "Ubs",
+      "name": "Unbiseptium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Unbiseptium, Z=127. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 8 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/ubs.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 128,
+      "symbol": "Ubo",
+      "name": "Unbioctium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Unbioctium, Z=128. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 8 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/ubo.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 129,
+      "symbol": "Ube",
+      "name": "Unbiennium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Unbiennium, Z=129. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 8 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/ube.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 130,
+      "symbol": "Utn",
+      "name": "Untrinilium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Untrinilium, Z=130. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 8 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/utn.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 131,
+      "symbol": "Utu",
+      "name": "Untriunium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Untriunium, Z=131. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 8 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/utu.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 132,
+      "symbol": "Utb",
+      "name": "Untribiium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Untribiium, Z=132. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 8 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/utb.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 133,
+      "symbol": "Utt",
+      "name": "Untritriium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Untritriium, Z=133. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 8 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/utt.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 134,
+      "symbol": "Utq",
+      "name": "Untriquadium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Untriquadium, Z=134. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 8 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/utq.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 135,
+      "symbol": "Utp",
+      "name": "Untripentium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Untripentium, Z=135. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 8 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/utp.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 136,
+      "symbol": "Uth",
+      "name": "Untrihexium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Untrihexium, Z=136. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 8 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/uth.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 137,
+      "symbol": "Uts",
+      "name": "Untriseptium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Untriseptium, Z=137. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 8 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/uts.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 138,
+      "symbol": "Uto",
+      "name": "Untrioctium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Untrioctium, Z=138. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 8 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/uto.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 139,
+      "symbol": "Ute",
+      "name": "Untriennium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Untriennium, Z=139. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 8 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/ute.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 140,
+      "symbol": "Uqn",
+      "name": "Unquadnilium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Unquadnilium, Z=140. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 8 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/uqn.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 141,
+      "symbol": "Uqu",
+      "name": "Unquadunium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Unquadunium, Z=141. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 8 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/uqu.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 142,
+      "symbol": "Uqb",
+      "name": "Unquadbiium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Unquadbiium, Z=142. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 8 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/uqb.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 143,
+      "symbol": "Uqt",
+      "name": "Unquadtriium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Unquadtriium, Z=143. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 8 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/uqt.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 144,
+      "symbol": "Uqq",
+      "name": "Unquadquadium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Unquadquadium, Z=144. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 8 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/uqq.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 145,
+      "symbol": "Uqp",
+      "name": "Unquadpentium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Unquadpentium, Z=145. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 8 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/uqp.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 146,
+      "symbol": "Uqh",
+      "name": "Unquadhexium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Unquadhexium, Z=146. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 8 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/uqh.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 147,
+      "symbol": "Uqs",
+      "name": "Unquadseptium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Unquadseptium, Z=147. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 8 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/uqs.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 148,
+      "symbol": "Uqo",
+      "name": "Unquadoctium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Unquadoctium, Z=148. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 8 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/uqo.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 149,
+      "symbol": "Uqe",
+      "name": "Unquadennium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Unquadennium, Z=149. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 8 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/uqe.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 150,
+      "symbol": "Upn",
+      "name": "Unpentnilium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Unpentnilium, Z=150. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 8 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/upn.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 151,
+      "symbol": "Upu",
+      "name": "Unpentunium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Unpentunium, Z=151. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 8 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/upu.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 152,
+      "symbol": "Upb",
+      "name": "Unpentbiium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Unpentbiium, Z=152. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 8 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/upb.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 153,
+      "symbol": "Upt",
+      "name": "Unpenttriium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Unpenttriium, Z=153. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 8 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/upt.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 154,
+      "symbol": "Upq",
+      "name": "Unpentquadium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Unpentquadium, Z=154. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 8 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/upq.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 155,
+      "symbol": "Upp",
+      "name": "Unpentpentium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Unpentpentium, Z=155. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 8 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/upp.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 156,
+      "symbol": "Uph",
+      "name": "Unpenthexium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Unpenthexium, Z=156. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 8 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/uph.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 157,
+      "symbol": "Ups",
+      "name": "Unpentseptium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Unpentseptium, Z=157. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 8 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/ups.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 158,
+      "symbol": "Upo",
+      "name": "Unpentoctium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Unpentoctium, Z=158. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 8 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/upo.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 159,
+      "symbol": "Upe",
+      "name": "Unpentennium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Unpentennium, Z=159. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 8 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/upe.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 160,
+      "symbol": "Uhn",
+      "name": "Unhexnilium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Unhexnilium, Z=160. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 8 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/uhn.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 161,
+      "symbol": "Uhu",
+      "name": "Unhexunium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Unhexunium, Z=161. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 8 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/uhu.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 162,
+      "symbol": "Uhb",
+      "name": "Unhexbiium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Unhexbiium, Z=162. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 8 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/uhb.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 163,
+      "symbol": "Uht",
+      "name": "Unhextriium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Unhextriium, Z=163. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 8 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/uht.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 164,
+      "symbol": "Uhq",
+      "name": "Unhexquadium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Unhexquadium, Z=164. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 8 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/uhq.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 165,
+      "symbol": "Uhp",
+      "name": "Unhexpentium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Unhexpentium, Z=165. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 8 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/uhp.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 166,
+      "symbol": "Uhh",
+      "name": "Unhexhexium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Unhexhexium, Z=166. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 8 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/uhh.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 167,
+      "symbol": "Uhs",
+      "name": "Unhexseptium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Unhexseptium, Z=167. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 8 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/uhs.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 168,
+      "symbol": "Uho",
+      "name": "Unhexoctium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Unhexoctium, Z=168. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 8 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/uho.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 169,
+      "symbol": "Uhe",
+      "name": "Unhexennium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Unhexennium, Z=169. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 9 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/uhe.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 170,
+      "symbol": "Usn",
+      "name": "Unseptnilium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Unseptnilium, Z=170. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 9 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/usn.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 171,
+      "symbol": "Usu",
+      "name": "Unseptunium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Unseptunium, Z=171. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 9 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/usu.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 172,
+      "symbol": "Usb",
+      "name": "Unseptbiium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Unseptbiium, Z=172. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 9 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/usb.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 173,
+      "symbol": "Ust",
+      "name": "Unsepttriium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Unsepttriium, Z=173. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 9 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/ust.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 174,
+      "symbol": "Usq",
+      "name": "Unseptquadium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Unseptquadium, Z=174. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 9 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/usq.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 175,
+      "symbol": "Usp",
+      "name": "Unseptpentium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Unseptpentium, Z=175. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 9 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/usp.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 176,
+      "symbol": "Ush",
+      "name": "Unsepthexium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Unsepthexium, Z=176. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 9 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/ush.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 177,
+      "symbol": "Uss",
+      "name": "Unseptseptium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Unseptseptium, Z=177. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 9 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/uss.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 178,
+      "symbol": "Uso",
+      "name": "Unseptoctium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Unseptoctium, Z=178. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 9 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/uso.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 179,
+      "symbol": "Use",
+      "name": "Unseptennium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Unseptennium, Z=179. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 9 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/use.png",
+      "inbox_ready": true,
+      "imported": true
+    },
+    {
+      "z": 180,
+      "symbol": "Uon",
+      "name": "Unoctnilium",
+      "synthetic": true,
+      "prompt": "Dark scientific illustration of the electron cloud for Unoctnilium, Z=180. theoretical superheavy violet-magenta probability clouds with unstable golden Hopf fibers forming 9 concentric glowing cyan shells. Subtle golden Hopf fibration fiber texture woven through the cloud. Dark navy background (#0a1628), elegant mathematical aesthetic, high contrast, minimalist. No text, no labels. Cinematic lighting.",
+      "inbox": "app/assets/elements_imagine/superheavy/uon.png",
+      "inbox_ready": true,
+      "imported": true
+    }
+  ]
+}
