@@ -38,23 +38,24 @@ def _placeholder_figure(message: str, height: int = 300) -> go.Figure:
 
 
 @lru_cache(maxsize=256)
-def _cached_electron_cloud(z: int, stability: float) -> dict:
+def _cached_electron_cloud(z: int, stability: float) -> go.Figure:
     element = get_element(z)
     if element is None:
-        fig = _placeholder_figure("No standard element — flux metrics only (Z ∉ 1–118)")
-    else:
-        fig = build_electron_cloud_figure(element, stability_score=stability)
-    return fig.to_dict()
+        return _placeholder_figure("No standard element — flux metrics only (Z ∉ 1–118)")
+    return build_electron_cloud_figure(element, stability_score=stability)
 
 
 @lru_cache(maxsize=256)
-def _cached_compare_figure(z: int, stability: float) -> dict:
+def _cached_compare_figure(z: int, stability: float) -> go.Figure:
     element = get_element(z)
     if element is None:
-        fig = _placeholder_figure("Synthetic Z — no chemistry comparison", height=220)
-    else:
-        fig = build_chemistry_vs_toe_figure(element, stability)
-    return fig.to_dict()
+        return _placeholder_figure("Synthetic Z — no chemistry comparison", height=220)
+    return build_chemistry_vs_toe_figure(element, stability)
+
+
+@lru_cache(maxsize=256)
+def _cached_magic_island(z: int) -> go.Figure:
+    return build_magic_island_heatmap(z)
 
 
 def noble_gas_art_path(z: int) -> str | None:
@@ -98,7 +99,7 @@ def explore_flux_element(z: int) -> dict:
         "metrics_md": metrics_md,
         "cloud_fig": _cached_electron_cloud(z, stability),
         "compare_fig": _cached_compare_figure(z, stability),
-        "magic_island": build_magic_island_heatmap(z).to_dict(),
+        "magic_island": _cached_magic_island(z),
         "noble_gas_art": noble_gas_art_path(z),
         "is_noble": z in NOBLE_GAS_Z,
         "is_magic": element.is_magic_number if element else False,

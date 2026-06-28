@@ -1,5 +1,7 @@
 """Tests for periodic table element data."""
 
+import plotly.graph_objects as go
+
 from kingdom.core.elements import NOBLE_GAS_Z, get_element, shell_occupancies
 from kingdom.core.flux_explorer import explore_flux_element, noble_gas_art_path
 from kingdom.viz.electron_cloud import build_electron_cloud_figure
@@ -18,7 +20,8 @@ def test_helium_magic_island():
     payload = explore_flux_element(2)
     assert payload["flywheel"]["stability_score"] == 8.0
     assert payload["element"].symbol == "He"
-    assert payload["cloud_fig"] is not None
+    assert isinstance(payload["cloud_fig"], go.Figure)
+    assert isinstance(payload["magic_island"], go.Figure)
 
 
 def test_electron_cloud_figure():
