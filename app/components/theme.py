@@ -138,6 +138,15 @@ KINGDOM_CSS = """
   display: block;
   width: 100%;
 }
+.gradio-container .tab-nav,
+.gradio-container .tabs {
+  flex-wrap: wrap !important;
+  overflow-x: auto !important;
+}
+.gradio-container button.tab-nav {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
 .kc-higgs-header table {
   width: 100%;
   margin: 0.75rem 0 1.25rem;

@@ -7,6 +7,7 @@ from app.pages.higgs_observations import (
     HIGGS_SECTION_2_MD,
     HIGGS_SECTION_3_MD,
     HIGGS_SECTION_6_MD,
+    INVESTIGATION_4_MD,
 )
 
 
@@ -40,6 +41,13 @@ def test_higgs_numerical_prototype():
 def test_higgs_limitations():
     assert "Limitations" in HIGGS_SECTION_6_MD
     assert "living document" in HIGGS_SECTION_6_MD
+
+
+def test_investigation_4_combines_all_sections():
+    assert "Investigation 4" in INVESTIGATION_4_MD
+    assert "Experimental Context" in INVESTIGATION_4_MD
+    assert "Implications for VQC" in INVESTIGATION_4_MD
+    assert "Limitations" in INVESTIGATION_4_MD
 
 
 def test_higgs_gallery_images_exist():

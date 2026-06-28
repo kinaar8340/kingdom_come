@@ -35,13 +35,8 @@ from app.components.periodic_picker import (
 from app.components.theme import HERO_HTML, KINGDOM_CSS, footer_html
 from app.pages.higgs_observations import (
     HIGGS_GALLERY,
-    HIGGS_HEADER_MD,
-    HIGGS_SECTION_1_MD,
-    HIGGS_SECTION_2_MD,
-    HIGGS_SECTION_3_MD,
-    HIGGS_SECTION_4_MD,
-    HIGGS_SECTION_5_MD,
-    HIGGS_SECTION_6_MD,
+    INVESTIGATION_4_ACCORDION_TITLE,
+    INVESTIGATION_4_MD,
 )
 from app.pages.help import HELP_MD, QUICKSTART_MD
 from app.pages.home import HOME_MD, ONBOARDING_MD, SHOWCASE_CARDS
@@ -433,25 +428,21 @@ def build_app() -> gr.Blocks:
                                 height=280,
                             )
                     gr.Markdown(INVESTIGATION_3_MD)
+                with gr.Accordion(
+                    INVESTIGATION_4_ACCORDION_TITLE,
+                    open=False,
+                ):
+                    with gr.Row(equal_height=True, elem_classes=["kc-obs-image-row"]):
+                        for image_path, caption in HIGGS_GALLERY:
+                            gr.Image(
+                                str(image_path),
+                                label=caption,
+                                interactive=False,
+                                scale=1,
+                                height=280,
+                            )
+                    gr.Markdown(INVESTIGATION_4_MD)
                 gr.Markdown(OBSERVATIONS_FOOTER_MD)
-
-            with gr.Tab("Observations: Higgs Mode in Perovskite Crystals"):
-                gr.Markdown(HIGGS_HEADER_MD, elem_classes=["kc-higgs-header"])
-                with gr.Row(equal_height=True, elem_classes=["kc-obs-image-row"]):
-                    for image_path, caption in HIGGS_GALLERY:
-                        gr.Image(
-                            str(image_path),
-                            label=caption,
-                            interactive=False,
-                            scale=1,
-                            height=280,
-                        )
-                gr.Markdown(HIGGS_SECTION_1_MD)
-                gr.Markdown(HIGGS_SECTION_2_MD)
-                gr.Markdown(HIGGS_SECTION_3_MD)
-                gr.Markdown(HIGGS_SECTION_4_MD)
-                gr.Markdown(HIGGS_SECTION_5_MD)
-                gr.Markdown(HIGGS_SECTION_6_MD)
 
             with gr.Tab("Showcase"):
                 gr.Markdown(

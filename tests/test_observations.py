@@ -2,6 +2,7 @@
 
 from pathlib import Path
 
+from app.pages.higgs_observations import HIGGS_GALLERY, INVESTIGATION_4_MD
 from app.pages.observations import (
     CATATUMBO_GALLERY,
     INVESTIGATION_1_MD,
@@ -43,8 +44,15 @@ def test_investigation_3_threebody_content():
     assert "Celestial mechanics" in INVESTIGATION_3_MD
 
 
+def test_investigation_4_higgs_content():
+    assert "Higgs Mode" in INVESTIGATION_4_MD
+    assert "Shukla" in INVESTIGATION_4_MD
+    assert "32" in INVESTIGATION_4_MD
+    assert len(HIGGS_GALLERY) == 3
+
+
 def test_observation_galleries_exist():
-    for gallery in (CATATUMBO_GALLERY, JUPITER_GALLERY, THREEBODY_GALLERY):
+    for gallery in (CATATUMBO_GALLERY, JUPITER_GALLERY, THREEBODY_GALLERY, HIGGS_GALLERY):
         assert len(gallery) == 3
         for path, caption in gallery:
             assert path.is_file(), f"missing {path}"

@@ -1,4 +1,4 @@
-"""Higgs Mode in Perovskite Crystals — dedicated Observations report tab."""
+"""Higgs Mode in Perovskite Crystals — Observations Investigation 4 content."""
 
 from pathlib import Path
 
@@ -187,4 +187,32 @@ frequencies are in lattice units and have not yet been rescaled to (BA)₂PbI₄
 
 *This report is a living document. Updates will follow as quantitative closure with Shukla et al.
 (2026) is completed.*
+"""
+
+INVESTIGATION_4_ACCORDION_TITLE = (
+    "Investigation 4: Higgs Mode in Perovskite Crystals — First Optically Driven Higgs Mode"
+)
+
+INVESTIGATION_4_MD = f"""
+### Investigation 4: First Optically Driven Higgs Mode in a 2D Semiconductor
+
+**Connection to the Gauged Two-Gyro Hopf Lattice Model and Shukla et al. (Nature Materials 2026)**
+
+| | |
+|---|---|
+| **Author** | Aaron Kinder (Independent Researcher) |
+| **Date** | June 2026 |
+| **Reference** | Shukla et al., *Nature Materials* (2026), [doi:10.1038/s41563-025-02433-1](https://doi.org/10.1038/s41563-025-02433-1) |
+
+{HIGGS_SECTION_1_MD.strip()}
+
+{HIGGS_SECTION_2_MD.strip()}
+
+{HIGGS_SECTION_3_MD.strip()}
+
+{HIGGS_SECTION_4_MD.strip()}
+
+{HIGGS_SECTION_5_MD.strip()}
+
+{HIGGS_SECTION_6_MD.strip()}
 """
