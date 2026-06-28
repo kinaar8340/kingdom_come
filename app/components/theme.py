@@ -138,6 +138,14 @@ KINGDOM_CSS = """
   display: block;
   width: 100%;
 }
+.kc-obs-image-row .image-container,
+.kc-obs-image-row .wrap {
+  min-height: 0;
+}
+.kc-obs-image-row img {
+  object-fit: contain;
+  background: #0d1f35;
+}
 .kc-obs-footer {
   text-align: center;
   font-size: 0.88rem;

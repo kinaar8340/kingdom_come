@@ -5,7 +5,24 @@ from pathlib import Path
 OBSERVATIONS_ASSET = "app/assets/observations"
 OBSERVATIONS_DIR = Path(__file__).resolve().parents[1] / "assets" / "observations"
 CATATUMBO_IMAGE = OBSERVATIONS_DIR / "catatumbo_lightning.jpg"
-JUPITER_GRS_IMAGE = OBSERVATIONS_DIR / "jupiter_great_red_spot.jpg"
+JUPITER_JUNO_MWR_IMAGE = OBSERVATIONS_DIR / "jupiter_juno_mwr_depth.jpg"
+JUPITER_HUBBLE_TIMELINE_IMAGE = OBSERVATIONS_DIR / "jupiter_hubble_grs_timeline.jpg"
+JUPITER_FULL_DISK_IMAGE = OBSERVATIONS_DIR / "jupiter_full_disk.jpg"
+
+JUPITER_GALLERY: tuple[tuple[Path, str], ...] = (
+    (
+        JUPITER_JUNO_MWR_IMAGE,
+        "Juno microwave radiometer — storm depth to 350 km (NASA)",
+    ),
+    (
+        JUPITER_HUBBLE_TIMELINE_IMAGE,
+        "Hubble Great Red Spot — Dec 2023 to Mar 2024 (NASA/ESA)",
+    ),
+    (
+        JUPITER_FULL_DISK_IMAGE,
+        "Jupiter full disk — Great Red Spot (NASA)",
+    ),
+)
 
 OBSERVATIONS_INTRO_MD = """
 ## Observations: Synchronicities in Nature

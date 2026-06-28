@@ -40,7 +40,7 @@ from app.pages.observations import (
     CATATUMBO_IMAGE,
     INVESTIGATION_1_MD,
     INVESTIGATION_2_MD,
-    JUPITER_GRS_IMAGE,
+    JUPITER_GALLERY,
     OBSERVATIONS_FOOTER_MD,
     OBSERVATIONS_INTRO_MD,
 )
@@ -392,11 +392,15 @@ def build_app() -> gr.Blocks:
                     "Investigation 2: Great Red Spot — Jupiter",
                     open=True,
                 ):
-                    gr.Image(
-                        str(JUPITER_GRS_IMAGE),
-                        label="Jupiter's Great Red Spot (NASA/ESA Hubble)",
-                        interactive=False,
-                    )
+                    with gr.Row(equal_height=True, elem_classes=["kc-obs-image-row"]):
+                        for image_path, caption in JUPITER_GALLERY:
+                            gr.Image(
+                                str(image_path),
+                                label=caption,
+                                interactive=False,
+                                scale=1,
+                                height=280,
+                            )
                     gr.Markdown(INVESTIGATION_2_MD)
                 gr.Markdown(OBSERVATIONS_FOOTER_MD)
 

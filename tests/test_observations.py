@@ -6,7 +6,7 @@ from app.pages.observations import (
     CATATUMBO_IMAGE,
     INVESTIGATION_1_MD,
     INVESTIGATION_2_MD,
-    JUPITER_GRS_IMAGE,
+    JUPITER_GALLERY,
     OBSERVATIONS_FOOTER_MD,
     OBSERVATIONS_INTRO_MD,
 )
@@ -35,7 +35,10 @@ def test_investigation_2_jupiter_content():
 
 
 def test_observation_images_exist():
-    for path in (CATATUMBO_IMAGE, JUPITER_GRS_IMAGE):
+    assert CATATUMBO_IMAGE.is_file()
+    assert CATATUMBO_IMAGE.stat().st_size > 5000
+    assert len(JUPITER_GALLERY) == 3
+    for path, _caption in JUPITER_GALLERY:
         assert path.is_file(), f"missing {path}"
         assert path.stat().st_size > 5000
 
