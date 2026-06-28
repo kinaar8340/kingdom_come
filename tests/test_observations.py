@@ -6,16 +6,11 @@ from app.pages.observations import (
     CATATUMBO_GALLERY,
     INVESTIGATION_1_MD,
     INVESTIGATION_2_MD,
-    INVESTIGATION_3_HOOK_MD,
-    INVESTIGATION_3_NUMERICAL_MD,
-    INVESTIGATION_3_SYNC_MD,
-    INVESTIGATION_3_TOE_MD,
+    INVESTIGATION_3_MD,
     JUPITER_GALLERY,
     OBSERVATIONS_FOOTER_MD,
     OBSERVATIONS_INTRO_MD,
-    THREEBODY_FRAMING_IMAGE,
-    THREEBODY_RESONATORS_IMAGE,
-    THREEBODY_SYNC_IMAGE,
+    THREEBODY_GALLERY,
 )
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -39,28 +34,22 @@ def test_investigation_2_jupiter_content():
 
 
 def test_investigation_3_threebody_content():
-    assert "three-body" in INVESTIGATION_3_HOOK_MD.lower()
-    assert "collective attractors" in INVESTIGATION_3_HOOK_MD
-    assert "T^3" in INVESTIGATION_3_TOE_MD
-    assert "48" in INVESTIGATION_3_NUMERICAL_MD
-    assert "STRONG" in INVESTIGATION_3_NUMERICAL_MD
-    assert "Pointer synchronization" in INVESTIGATION_3_SYNC_MD
-    assert "Celestial mechanics" in INVESTIGATION_3_SYNC_MD
+    assert "three-body" in INVESTIGATION_3_MD.lower()
+    assert "collective attractors" in INVESTIGATION_3_MD
+    assert "T^3" in INVESTIGATION_3_MD
+    assert "48" in INVESTIGATION_3_MD
+    assert "STRONG" in INVESTIGATION_3_MD
+    assert "Pointer synchronization" in INVESTIGATION_3_MD
+    assert "Celestial mechanics" in INVESTIGATION_3_MD
 
 
-def test_observation_images_exist():
-    for gallery in (CATATUMBO_GALLERY, JUPITER_GALLERY):
+def test_observation_galleries_exist():
+    for gallery in (CATATUMBO_GALLERY, JUPITER_GALLERY, THREEBODY_GALLERY):
         assert len(gallery) == 3
-        for path, _caption in gallery:
+        for path, caption in gallery:
             assert path.is_file(), f"missing {path}"
             assert path.stat().st_size > 5000
-    for path in (
-        THREEBODY_FRAMING_IMAGE,
-        THREEBODY_RESONATORS_IMAGE,
-        THREEBODY_SYNC_IMAGE,
-    ):
-        assert path.is_file(), f"missing {path}"
-        assert path.stat().st_size > 5000
+            assert caption
 
 
 def test_observations_footer_living_document():

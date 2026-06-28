@@ -46,6 +46,21 @@ THREEBODY_FRAMING_IMAGE = OBSERVATIONS_DIR / "threebody_framing.jpg"
 THREEBODY_RESONATORS_IMAGE = OBSERVATIONS_DIR / "threebody_resonators.jpg"
 THREEBODY_SYNC_IMAGE = OBSERVATIONS_DIR / "threebody_sync.jpg"
 
+THREEBODY_GALLERY: tuple[tuple[Path, str], ...] = (
+    (
+        THREEBODY_FRAMING_IMAGE,
+        "Figure-8 choreography — helical flux tubes on gauged Hopf lattice",
+    ),
+    (
+        THREEBODY_RESONATORS_IMAGE,
+        "Multi-resonator attractor — three braided flux flywheels",
+    ),
+    (
+        THREEBODY_SYNC_IMAGE,
+        "Pointer synchronization — Clifford torus lattice projection",
+    ),
+)
+
 OBSERVATIONS_INTRO_MD = """
 ## Observations: Synchronicities in Nature
 
@@ -136,7 +151,7 @@ macroscopic scales.
 under active investigation.
 """
 
-INVESTIGATION_3_HOOK_MD = """
+INVESTIGATION_3_MD = """
 ### Investigation 3: Emergent Periodic Orbits in Gravitational Three-Body Systems
 
 The Newtonian three-body problem is famous for chaos — Poincaré showed that generic
@@ -149,9 +164,7 @@ choreography. These are not mathematical curiosities alone; analogues appear in 
 same Gauged Hopf Lattice dynamics that stabilize individual flux-flywheel resonators
 (the periodic table). Matter and gravitational bound states arise from one topological
 rule set.
-"""
 
-INVESTIGATION_3_TOE_MD = """
 #### TOE framing
 
 Three localized high-twist regions — flux flywheels / Hopfions — on the $T^3$ lattice,
@@ -163,9 +176,7 @@ Observer synchronization locks linking phase across sites; topological protectio
 $W_g = 350/\\pi$ prevents premature burst discharge. The result is not three independent
 particles, but a **multi-resonator attractor** — a choreography of braided flux tubes
 executing a closed orbit in configuration space.
-"""
 
-INVESTIGATION_3_NUMERICAL_MD = """
 #### Numerical evidence
 
 | Result | Detail |
@@ -180,9 +191,7 @@ INVESTIGATION_3_NUMERICAL_MD = """
 The canonical bake delivered a **STRONG** verdict: Lagrange, Euler, and figure-8
 configurations sit above the noble-gas stability threshold as collective lattice modes,
 not fine-tuned initial conditions.
-"""
 
-INVESTIGATION_3_SYNC_MD = """
 #### Pointer synchronization & implications
 
 Global pointer feedback $\\alpha(t) = -\\kappa \\bar{\\Theta}(t)$ damps relative phase

@@ -40,16 +40,11 @@ from app.pages.observations import (
     CATATUMBO_GALLERY,
     INVESTIGATION_1_MD,
     INVESTIGATION_2_MD,
-    INVESTIGATION_3_HOOK_MD,
-    INVESTIGATION_3_NUMERICAL_MD,
-    INVESTIGATION_3_SYNC_MD,
-    INVESTIGATION_3_TOE_MD,
+    INVESTIGATION_3_MD,
     JUPITER_GALLERY,
     OBSERVATIONS_FOOTER_MD,
     OBSERVATIONS_INTRO_MD,
-    THREEBODY_FRAMING_IMAGE,
-    THREEBODY_RESONATORS_IMAGE,
-    THREEBODY_SYNC_IMAGE,
+    THREEBODY_GALLERY,
 )
 from app.pages.papers import (
     PAPERS_INTRO_MD,
@@ -417,28 +412,16 @@ def build_app() -> gr.Blocks:
                     "Investigation 3: Emergent Periodic Orbits in Gravitational Three-Body Systems",
                     open=False,
                 ):
-                    gr.Markdown(INVESTIGATION_3_HOOK_MD)
-                    gr.Markdown(INVESTIGATION_3_TOE_MD)
-                    gr.Image(
-                        str(THREEBODY_FRAMING_IMAGE),
-                        label="Figure-8 choreography — helical flux tubes on the gauged Hopf lattice",
-                        interactive=False,
-                        height=320,
-                    )
-                    gr.Markdown(INVESTIGATION_3_NUMERICAL_MD)
-                    gr.Image(
-                        str(THREEBODY_RESONATORS_IMAGE),
-                        label="Multi-resonator attractor — three braided flux flywheels",
-                        interactive=False,
-                        height=320,
-                    )
-                    gr.Markdown(INVESTIGATION_3_SYNC_MD)
-                    gr.Image(
-                        str(THREEBODY_SYNC_IMAGE),
-                        label="Pointer synchronization — Clifford torus lattice projection",
-                        interactive=False,
-                        height=320,
-                    )
+                    with gr.Row(equal_height=True, elem_classes=["kc-obs-image-row"]):
+                        for image_path, caption in THREEBODY_GALLERY:
+                            gr.Image(
+                                str(image_path),
+                                label=caption,
+                                interactive=False,
+                                scale=1,
+                                height=280,
+                            )
+                    gr.Markdown(INVESTIGATION_3_MD)
                 gr.Markdown(OBSERVATIONS_FOOTER_MD)
 
             with gr.Tab("Showcase"):
