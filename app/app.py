@@ -37,7 +37,7 @@ from app.pages.help import HELP_MD, QUICKSTART_MD
 from app.pages.home import HOME_MD, ONBOARDING_MD, SHOWCASE_CARDS
 from app.pages.hopf_guide import HF_VIEW_MODE_MD, HOPF_INTRO_MD, HOPF_PANEL_GUIDE_MD
 from app.pages.observations import (
-    CATATUMBO_IMAGE,
+    CATATUMBO_GALLERY,
     INVESTIGATION_1_MD,
     INVESTIGATION_2_MD,
     JUPITER_GALLERY,
@@ -382,11 +382,15 @@ def build_app() -> gr.Blocks:
                     "Investigation 1: Catatumbo Lightning Hotspot — Earth",
                     open=True,
                 ):
-                    gr.Image(
-                        str(CATATUMBO_IMAGE),
-                        label="Catatumbo lightning over Lake Maracaibo",
-                        interactive=False,
-                    )
+                    with gr.Row(equal_height=True, elem_classes=["kc-obs-image-row"]):
+                        for image_path, caption in CATATUMBO_GALLERY:
+                            gr.Image(
+                                str(image_path),
+                                label=caption,
+                                interactive=False,
+                                scale=1,
+                                height=280,
+                            )
                     gr.Markdown(INVESTIGATION_1_MD)
                 with gr.Accordion(
                     "Investigation 2: Great Red Spot — Jupiter",

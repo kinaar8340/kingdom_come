@@ -3,7 +3,7 @@
 from pathlib import Path
 
 from app.pages.observations import (
-    CATATUMBO_IMAGE,
+    CATATUMBO_GALLERY,
     INVESTIGATION_1_MD,
     INVESTIGATION_2_MD,
     JUPITER_GALLERY,
@@ -35,12 +35,11 @@ def test_investigation_2_jupiter_content():
 
 
 def test_observation_images_exist():
-    assert CATATUMBO_IMAGE.is_file()
-    assert CATATUMBO_IMAGE.stat().st_size > 5000
-    assert len(JUPITER_GALLERY) == 3
-    for path, _caption in JUPITER_GALLERY:
-        assert path.is_file(), f"missing {path}"
-        assert path.stat().st_size > 5000
+    for gallery in (CATATUMBO_GALLERY, JUPITER_GALLERY):
+        assert len(gallery) == 3
+        for path, _caption in gallery:
+            assert path.is_file(), f"missing {path}"
+            assert path.stat().st_size > 5000
 
 
 def test_observations_footer_living_document():

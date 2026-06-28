@@ -4,7 +4,25 @@ from pathlib import Path
 
 OBSERVATIONS_ASSET = "app/assets/observations"
 OBSERVATIONS_DIR = Path(__file__).resolve().parents[1] / "assets" / "observations"
-CATATUMBO_IMAGE = OBSERVATIONS_DIR / "catatumbo_lightning.jpg"
+CATATUMBO_LIGHTNING_1 = OBSERVATIONS_DIR / "catatumbo_lightning_1.png"
+CATATUMBO_LIGHTNING_2 = OBSERVATIONS_DIR / "catatumbo_lightning_2.png"
+CATATUMBO_LIGHTNING_3 = OBSERVATIONS_DIR / "catatumbo_lightning_3.png"
+
+CATATUMBO_GALLERY: tuple[tuple[Path, str], ...] = (
+    (
+        CATATUMBO_LIGHTNING_1,
+        "Catatumbo lightning — Lake Maracaibo panorama",
+    ),
+    (
+        CATATUMBO_LIGHTNING_2,
+        "Catatumbo lightning — multi-strike discharge",
+    ),
+    (
+        CATATUMBO_LIGHTNING_3,
+        "Catatumbo lightning — central bolt and reflection",
+    ),
+)
+
 JUPITER_JUNO_MWR_IMAGE = OBSERVATIONS_DIR / "jupiter_juno_mwr_depth.jpg"
 JUPITER_HUBBLE_TIMELINE_IMAGE = OBSERVATIONS_DIR / "jupiter_hubble_grs_timeline.jpg"
 JUPITER_FULL_DISK_IMAGE = OBSERVATIONS_DIR / "jupiter_full_disk.jpg"
