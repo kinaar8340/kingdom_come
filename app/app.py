@@ -13,6 +13,7 @@ sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "src"))
 
 from kingdom.core.flux_flywheel import map_z_to_flywheel
+from kingdom.simulations.lattice import build_lattice_figure, run_lattice_comparison
 from kingdom.viz.hopf_plotly import build_hopf_fibration_figure_auto, default_view_mode, is_hf_space
 
 from app.build_info import get_build_label
@@ -48,6 +49,21 @@ def render_hopf_visualizer(
         show_single_fiber_highlight=show_highlight,
         projection_scale=float(scale),
     )
+
+
+def render_lattice_sim(frames: int, n_sites: int, gauge: float):
+    stable, chaotic = run_lattice_comparison(
+        frames=int(frames),
+        n_sites=int(n_sites),
+        gauge_stable=float(gauge),
+    )
+    summary = (
+        f"**Stable** — identity score {stable.stability_score:.3f}, "
+        f"bursts {stable.total_bursts} · "
+        f"**Chaotic** — identity score {chaotic.stability_score:.3f}, "
+        f"bursts {chaotic.total_bursts}"
+    )
+    return build_lattice_figure(stable, chaotic), summary
 
 
 def render_flywheel(z: int) -> str:
@@ -163,6 +179,29 @@ def build_app() -> gr.Blocks:
                 gr.Markdown(THEORY_MD)
                 with gr.Accordion("Derivation: Hopf Map via Quaternions", open=True):
                     gr.Markdown(DERIVATION_HOPF_MD)
+
+            with gr.Tab("Lattice Simulator"):
+                gr.Markdown(
+                    "Two-gyro **gauged quaternion lattice** from the toe repo — "
+                    "compare stable (gauge=0.85) vs chaotic (gauge=0.08) flux flywheel dynamics."
+                )
+                with gr.Row():
+                    lat_frames = gr.Slider(60, 400, value=150, step=10, label="Frames")
+                    lat_sites = gr.Slider(24, 128, value=72, step=8, label="Lattice sites")
+                    lat_gauge = gr.Slider(0.5, 0.95, value=0.85, step=0.05, label="Stable gauge strength")
+                lattice_plot = gr.Plot(label="Lattice metrics")
+                lattice_summary = gr.Markdown()
+                lattice_run = gr.Button("Run lattice comparison", variant="primary")
+                lattice_run.click(
+                    render_lattice_sim,
+                    inputs=[lat_frames, lat_sites, lat_gauge],
+                    outputs=[lattice_plot, lattice_summary],
+                )
+                demo.load(
+                    render_lattice_sim,
+                    inputs=[lat_frames, lat_sites, lat_gauge],
+                    outputs=[lattice_plot, lattice_summary],
+                )
 
             with gr.Tab("Flux Flywheel"):
                 gr.Markdown("Map atomic number **Z** to flux flywheel stability (Magic Island calibration).")

@@ -25,6 +25,10 @@ tags:
 # Kingdom Come — Live Portal
 
 <p align="center">
+  <img src="app/assets/kingdom_demo.gif" alt="Kingdom Come demo — Hopf fiber ξ₁ sweep animation" width="100%" style="max-width: 720px; border-radius: 12px;" />
+</p>
+
+<p align="center">
   <img src="app/assets/hopf_preview.png" alt="Hopf fibration stereographic preview — linked fibers" width="100%" style="max-width: 720px; border-radius: 12px;" />
 </p>
 
@@ -43,6 +47,7 @@ This is a **Gradio** Space (not Docker). Open the **App** tab above — no insta
 | Tab | Action | Output |
 |-----|--------|--------|
 | **Hopf Visualizer** | Click **Classic Hopf** preset → **Update visualization** | 4-panel 2D view: linked fibers (xy/xz), S² base chart, phase map |
+| **Lattice Simulator** | **Run lattice comparison** | Stable vs chaotic gauge pointer, twist, identity preservation |
 | **The Model** | Read overview + derivation accordion | Core TOE postulates and Hopf→quaternion math |
 | **Flux Flywheel** | Slide atomic number **Z** | Stability class, detuning, Magic Island parameters |
 | **Showcase** | Browse links | Six related HF Spaces + GitHub repos |
@@ -109,7 +114,8 @@ python app/app.py
 
 | Version | Notes |
 |---------|-------|
-| **v0.1.0** | Initial portal: Hopf visualizer, theory tab, flux flywheel, showcase |
+| **v0.1.1** | Demo GIF; Lattice Simulator tab (toe two-gyro integration) |
+| **v0.1.0** | Initial portal: Hopf visualizer, theory, flux flywheel, showcase |
 | v0.1.0+ | HF-safe 2D projections; Help tab; presets; README polish |
 
 ---

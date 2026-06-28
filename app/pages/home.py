@@ -19,6 +19,7 @@ Enter at any level:
 | Path | Best for |
 |------|----------|
 | **Hopf Visualizer** | Geometric intuition — linked fibers, S² base map |
+| **Lattice Simulator** | Two-gyro gauged quaternion lattice (stable vs chaotic) |
 | **The Model** | Core postulates: flux flywheels, gauged lattice, porous vacuum |
 | **Derivations** | Step-by-step math → code → physics |
 | **Showcase** | Six Hugging Face Spaces + GitHub repos |

@@ -12,8 +12,9 @@ workbench linking topology, quaternions, flux lattices, and emergent matter mode
 1. Open **Hopf Visualizer** → leave **2D projections** selected (HF-safe).
 2. Click **Classic Hopf** preset → **Update visualization**.
 3. Read the four panels: linked fibers (xy/xz), S² base chart, phase-colored highlight.
-4. Open **The Model** for core postulates.
-5. Try **Flux Flywheel** at Z = 2 (magic-island anchor) and Z = 129 (sweep ID).
+4. Open **Lattice Simulator** → **Run lattice comparison** (stable vs chaotic).
+5. Open **The Model** for core postulates.
+6. Try **Flux Flywheel** at Z = 2 (magic-island anchor) and Z = 129 (sweep ID).
 
 ### Hopf Visualizer controls
 
