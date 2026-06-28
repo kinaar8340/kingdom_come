@@ -386,7 +386,6 @@ def build_app() -> gr.Blocks:
                         str(CATATUMBO_IMAGE),
                         label="Catatumbo lightning over Lake Maracaibo",
                         interactive=False,
-                        show_download_button=False,
                     )
                     gr.Markdown(INVESTIGATION_1_MD)
                 with gr.Accordion(
@@ -397,7 +396,6 @@ def build_app() -> gr.Blocks:
                         str(JUPITER_GRS_IMAGE),
                         label="Jupiter's Great Red Spot (NASA/ESA Hubble)",
                         interactive=False,
-                        show_download_button=False,
                     )
                     gr.Markdown(INVESTIGATION_2_MD)
                 gr.Markdown(OBSERVATIONS_FOOTER_MD)
