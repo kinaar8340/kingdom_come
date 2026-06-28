@@ -9,7 +9,7 @@ python_version: '3.12'
 app_file: app/app.py
 pinned: true
 license: mit
-short_description: Hopf Fibration TOE — knowledge portal & interactive visualizers
+short_description: Hopf Fibration TOE portal & 3D visualizers
 tags:
   - physics
   - topology
