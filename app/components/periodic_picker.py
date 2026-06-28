@@ -25,6 +25,18 @@ PERIODIC_CSS = """
   background: rgba(18, 36, 61, 0.75);
   color: #8ecae6;
   line-height: 1.1;
+  cursor: pointer;
+  font-family: inherit;
+  width: 100%;
+}
+button.kc-pt-cell:hover {
+  border-color: #1a8fe3;
+  filter: brightness(1.12);
+  box-shadow: 0 0 8px rgba(26, 143, 227, 0.35);
+}
+button.kc-pt-cell:focus-visible {
+  outline: 2px solid #c9a227;
+  outline-offset: 1px;
 }
 .kc-pt-cell sub {
   display: block;
@@ -139,8 +151,9 @@ def periodic_table_html(current_z: int) -> str:
                 classes.append("kc-pt-magic")
             bg = _CATEGORY_COLORS.get(el.category, "rgba(18,36,61,0.75)")
             cells.append(
-                f'<div class="{" ".join(classes)}" style="background:{bg}" '
-                f'title="{el.name} (Z={z})">{el.symbol}<sub>{z}</sub></div>'
+                f'<button type="button" class="{" ".join(classes)}" style="background:{bg}" '
+                f'data-kc-z="{z}" title="{el.name} (Z={z})">'
+                f"{el.symbol}<sub>{z}</sub></button>"
             )
 
     superheavy = ""
@@ -155,7 +168,7 @@ def periodic_table_html(current_z: int) -> str:
     return f"""
 <div class="kc-pt-wrap">
   <div class="kc-pt-grid">{"".join(cells)}</div>
-  <div class="kc-pt-legend">★ noble gas · ◆ magic number · gold border = current Z</div>
+  <div class="kc-pt-legend">Click any element · ★ noble gas · ◆ magic number · gold = current Z</div>
   {superheavy}
 </div>
 """

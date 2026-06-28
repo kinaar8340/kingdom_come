@@ -132,8 +132,17 @@ def test_periodic_table_html_highlights():
     html = periodic_table_html(26)
     assert "kc-pt-active" in html
     assert "Fe" in html
+    assert 'data-kc-z="26"' in html
+    assert "<button" in html
     html_sh = periodic_table_html(129)
     assert "Superheavy zone" in html_sh
+
+
+def test_magic_number_toe_narrative():
+    el = get_element(28)
+    assert el is not None
+    assert "magic number" in el.toe_narrative.lower()
+    assert "28" in el.toe_narrative
 
 
 def test_superheavy_art_paths_exist_after_generation():

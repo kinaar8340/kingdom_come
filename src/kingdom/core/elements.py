@@ -372,12 +372,14 @@ class Element:
         if self.is_synthetic:
             if self.z == 129:
                 return (
-                    "Magic Island sweep discovery ID (pseudo_Z = 129) — theoretical "
-                    "ultra-stable detuning anchor on the Hopf flux lattice."
+                    "Magic Island sweep discovery ID (pseudo_Z = 129) — the theoretical "
+                    "ultra-stable detuning anchor where the flux flywheel achieves maximal "
+                    "identity preservation on the Hopf lattice (calibration score 8.0)."
                 )
             return (
-                "Superheavy theoretical extension — extrapolated shell structure mapped "
-                "onto the flux flywheel stability model beyond the known periodic table."
+                f"IUPAC systematic superheavy ({self.name}) — predicted electron shells "
+                f"extrapolated via extended aufbau and mapped to flux flywheel detuning "
+                f"on the gauged quaternion lattice. Not experimentally confirmed."
             )
         if self.is_noble_gas:
             return (
@@ -386,8 +388,9 @@ class Element:
             )
         if self.is_magic_number:
             return (
-                "Shell closure aligns with a nuclear magic number — enhanced flux "
-                "coherence and identity preservation on the gauged lattice."
+                f"Nuclear magic number Z = {self.z} — closed subshell geometry enhances "
+                "flux coherence and identity preservation; the gauged lattice analogy "
+                "predicts reduced burst activity and stronger Hopf phase holonomy damping."
             )
         return (
             "Open or partially filled shells map to detuned flux flywheels — "
