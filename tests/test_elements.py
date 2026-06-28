@@ -3,6 +3,7 @@
 import plotly.graph_objects as go
 
 from kingdom.core.elements import NOBLE_GAS_Z, get_element, shell_occupancies
+from app.components.neon import flux_metrics_accordion_html
 from kingdom.core.flux_explorer import explore_flux_element, noble_gas_art_path
 from kingdom.viz.electron_cloud import build_electron_cloud_figure
 from kingdom.viz.magic_island import build_magic_island_heatmap
@@ -34,6 +35,14 @@ def test_shell_occupancy_neon():
     shells = shell_occupancies(10)
     total = sum(c for _, c in shells)
     assert total == 10
+
+
+def test_flux_metrics_accordion():
+    payload = explore_flux_element(2)
+    html = flux_metrics_accordion_html(2, payload["flywheel"])
+    assert "<details" in html
+    assert "Stability score" in html
+    assert "pseudo_Z" in html
 
 
 def test_toe_narrative_noble_gas():

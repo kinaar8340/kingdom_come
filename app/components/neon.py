@@ -71,10 +71,62 @@ NEON_CSS = """
   font-weight: 600;
   font-size: 0.9rem;
 }
+.kc-flux-accordion {
+  margin-top: 0.75rem;
+  padding-top: 0.65rem;
+  border-top: 1px solid rgba(26, 143, 227, 0.2);
+}
+.kc-flux-accordion summary {
+  cursor: pointer;
+  color: #8ecae6;
+  font-size: 0.88rem;
+  font-weight: 600;
+  list-style: none;
+}
+.kc-flux-accordion summary::-webkit-details-marker { display: none; }
+.kc-flux-accordion summary::before {
+  content: "▸ ";
+  color: #1a8fe3;
+}
+.kc-flux-accordion[open] summary::before { content: "▾ "; }
+.kc-flux-metrics-list {
+  margin: 0.55rem 0 0;
+  padding-left: 1.15rem;
+  color: #d4e4f7;
+  font-size: 0.84rem;
+  line-height: 1.55;
+}
+.kc-flux-metrics-note {
+  margin: 0.45rem 0 0;
+  color: #6a9bb8;
+  font-size: 0.8rem;
+  font-style: italic;
+}
 @keyframes kc-neon-pulse {
   0%, 100% { box-shadow: 0 0 6px rgba(0,201,183,0.5), 0 0 14px rgba(26,143,227,0.3); }
   50% { box-shadow: 0 0 12px rgba(0,201,183,0.85), 0 0 22px rgba(26,143,227,0.5); }
 }
+"""
+
+
+def flux_metrics_accordion_html(z: int, flywheel: dict) -> str:
+    """Collapsible flux metrics block for the element card."""
+    stability = flywheel["stability_score"]
+    return f"""
+<details class="kc-flux-accordion">
+  <summary>Flux metrics (Z = {z}) — score {stability}</summary>
+  <ul class="kc-flux-metrics-list">
+    <li><strong>Stability score:</strong> {stability}</li>
+    <li><strong>Class:</strong> {flywheel["stability_class"]}</li>
+    <li><strong>δω:</strong> {flywheel["delta_omega"]} · <strong>ω_L:</strong> {flywheel["omega_L"]} ·
+        <strong>ω_R:</strong> {flywheel["omega_R"]}</li>
+    <li><strong>Gauge:</strong> {flywheel["gauge_strength"]} · <strong>Layers:</strong> {flywheel["num_layers"]} ·
+        <strong>Polarities:</strong> {flywheel["num_polarities"]}</li>
+    <li><strong>pseudo_Z (sweep ID):</strong> {flywheel["pseudo_Z"]}</li>
+    <li><strong>Notes:</strong> {flywheel["notes"]}</li>
+  </ul>
+  <p class="kc-flux-metrics-note">{flywheel["sweep_reference"]}</p>
+</details>
 """
 
 
@@ -109,6 +161,7 @@ def element_card_html(element, flywheel: dict) -> str:
     <strong>δω</strong> = {flywheel["delta_omega"]} &nbsp;·&nbsp;
     gauge = {flywheel["gauge_strength"]}
   </div>
+  {flux_metrics_accordion_html(element.z, flywheel)}
 </div>
 """
 
@@ -137,5 +190,6 @@ def synthetic_z_html(z: int, flywheel: dict) -> str:
     <strong>Flywheel class:</strong> {flywheel["stability_class"]}
     (score {flywheel["stability_score"]})
   </div>
+  {flux_metrics_accordion_html(z, flywheel)}
 </div>
 """

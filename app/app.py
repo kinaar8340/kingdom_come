@@ -92,7 +92,6 @@ def render_flux_explorer(z: int):
     art = payload["noble_gas_art"]
     return (
         card,
-        payload["metrics_md"],
         art,
         payload["cloud_fig"],
         payload["compare_fig"],
@@ -247,20 +246,18 @@ def build_app() -> gr.Blocks:
                 with gr.Row():
                     with gr.Column(scale=1):
                         element_card = gr.HTML(label="Element")
-                        flywheel_metrics = gr.Markdown(label="Flux metrics")
-                        magic_island_plot = gr.Plot(label="Magic Island heatmap")
                     with gr.Column(scale=1):
                         noble_gas_art = gr.Image(
                             label="Noble gas artwork",
                             type="filepath",
-                            height=280,
+                            height=220,
                             visible=True,
                         )
                         electron_plot = gr.Plot(label="Electron cloud + flux ring")
                         compare_plot = gr.Plot(label="Chemistry vs TOE flux")
+                magic_island_plot = gr.Plot(label="Magic Island heatmap")
                 flux_outputs = [
                     element_card,
-                    flywheel_metrics,
                     noble_gas_art,
                     electron_plot,
                     compare_plot,

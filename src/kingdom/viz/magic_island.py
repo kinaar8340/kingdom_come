@@ -15,7 +15,7 @@ _SCORES = np.array([map_z_to_flywheel(int(z))["stability_score"] for z in _Z_RAN
 _DETUNING = np.array([map_z_to_flywheel(int(z))["delta_omega"] for z in _Z_RANGE])
 
 
-def build_magic_island_heatmap(current_z: int = 2, height: int = 260) -> go.Figure:
+def build_magic_island_heatmap(current_z: int = 2, height: int = 200) -> go.Figure:
     """2D stability landscape with noble gas and magic number markers."""
     theme = kingdom_dark_theme()
     fig = go.Figure()
