@@ -158,7 +158,6 @@ def main() -> None:
         server_port=port,
         css=KINGDOM_CSS,
         theme=_KINGDOM_THEME,
-        show_api=False,
         inbrowser=not on_hf,
     )
 
