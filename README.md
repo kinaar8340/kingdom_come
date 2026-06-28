@@ -98,15 +98,62 @@ via Magic Island stability sweeps).
 
 ---
 
-## Related Spaces & repos
+## Related Spaces & repos (Showcase)
 
-| Project | Link |
-|---------|------|
-| Hopf Flux Bubble | [Space](https://huggingface.co/spaces/kinaar111/hopf-flux-bubble) |
-| Orbital Braille VQC | [Space](https://huggingface.co/spaces/kinaar111/orbital-braille-vqc) |
-| QVpic | [GitHub](https://github.com/kinaar8340/qvpic) |
-| TOE / lattice | [GitHub](https://github.com/kinaar8340/toe) |
-| VQC sims | [GitHub](https://github.com/kinaar8340/vqc_sims_public) |
+<p align="center">
+  <em>Each card has a distinct thumbnail — same artwork as the in-app Showcase tab.</em>
+</p>
+
+<table>
+<tr>
+<td width="50%" align="center" valign="top">
+  <a href="https://huggingface.co/spaces/kinaar111/hopf-flux-bubble">
+    <img src="app/assets/showcase/hopf_flux_bubble.png" alt="Hopf Flux Bubble thumbnail" width="100%" style="max-width:360px;border-radius:10px;" />
+  </a><br/>
+  <strong>Hopf Flux Bubble</strong> · <a href="https://huggingface.co/spaces/kinaar111/hopf-flux-bubble">HF Space</a><br/>
+  <sub>Flux metrics, Hopfion textures, analog gravity</sub>
+</td>
+<td width="50%" align="center" valign="top">
+  <a href="https://huggingface.co/spaces/kinaar111/orbital-braille-vqc">
+    <img src="app/assets/showcase/orbital_braille_vqc.png" alt="Orbital Braille VQC thumbnail" width="100%" style="max-width:360px;border-radius:10px;" />
+  </a><br/>
+  <strong>Orbital Braille VQC</strong> · <a href="https://huggingface.co/spaces/kinaar111/orbital-braille-vqc">HF Space</a><br/>
+  <sub>Quaternion OAM · helix-within-helix beams</sub>
+</td>
+</tr>
+<tr>
+<td width="50%" align="center" valign="top">
+  <a href="https://github.com/kinaar8340/qvpic">
+    <img src="app/assets/showcase/qvpic.png" alt="QVpic thumbnail" width="100%" style="max-width:360px;border-radius:10px;" />
+  </a><br/>
+  <strong>QVpic</strong> · <a href="https://github.com/kinaar8340/qvpic">GitHub</a><br/>
+  <sub>Magic Island sweeps · z-flywheel · lattice swarm</sub>
+</td>
+<td width="50%" align="center" valign="top">
+  <a href="https://github.com/kinaar8340/toe">
+    <img src="app/assets/showcase/toe.png" alt="toe lattice thumbnail" width="100%" style="max-width:360px;border-radius:10px;" />
+  </a><br/>
+  <strong>toe</strong> · <a href="https://github.com/kinaar8340/toe">GitHub</a><br/>
+  <sub>Two-gyro gauged lattice · RubikCone conduit</sub>
+</td>
+</tr>
+<tr>
+<td width="50%" align="center" valign="top">
+  <a href="https://github.com/kinaar8340/vqc_sims_public">
+    <img src="app/assets/showcase/vqc_sims_public.png" alt="vqc_sims_public thumbnail" width="100%" style="max-width:360px;border-radius:10px;" />
+  </a><br/>
+  <strong>vqc_sims_public</strong> · <a href="https://github.com/kinaar8340/vqc_sims_public">GitHub</a><br/>
+  <sub>OAM knots · quaternion encode/decode</sub>
+</td>
+<td width="50%" align="center" valign="top">
+  <a href="https://github.com/kinaar8340/kingdom_come">
+    <img src="app/assets/showcase/kingdom_come.png" alt="Kingdom Come thumbnail" width="100%" style="max-width:360px;border-radius:10px;" />
+  </a><br/>
+  <strong>kingdom_come</strong> · <a href="https://github.com/kinaar8340/kingdom_come">GitHub</a> · you are here<br/>
+  <sub>TOE portal · Hopf · flux flywheel · lattice</sub>
+</td>
+</tr>
+</table>
 
 ---
 
