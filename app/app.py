@@ -33,6 +33,16 @@ from app.components.periodic_picker import (
     picker_label_for_z,
 )
 from app.components.theme import HERO_HTML, KINGDOM_CSS, footer_html
+from app.pages.higgs_observations import (
+    HIGGS_GALLERY,
+    HIGGS_HEADER_MD,
+    HIGGS_SECTION_1_MD,
+    HIGGS_SECTION_2_MD,
+    HIGGS_SECTION_3_MD,
+    HIGGS_SECTION_4_MD,
+    HIGGS_SECTION_5_MD,
+    HIGGS_SECTION_6_MD,
+)
 from app.pages.help import HELP_MD, QUICKSTART_MD
 from app.pages.home import HOME_MD, ONBOARDING_MD, SHOWCASE_CARDS
 from app.pages.hopf_guide import HF_VIEW_MODE_MD, HOPF_INTRO_MD, HOPF_PANEL_GUIDE_MD
@@ -58,6 +68,7 @@ from app.pages.theory import DERIVATION_HOPF_MD, THEORY_MD
 
 PAPERS_DIR = ROOT / "app" / "assets" / "papers"
 OBSERVATIONS_DIR = ROOT / "app" / "assets" / "observations"
+HIGGS_DIR = ROOT / "app" / "assets" / "higgs"
 
 HOPF_PRESETS: dict[str, tuple[int, int, float, float, float]] = {
     "Classic Hopf": (8, 160, 0.6, 1.2, 1.0),
@@ -424,6 +435,24 @@ def build_app() -> gr.Blocks:
                     gr.Markdown(INVESTIGATION_3_MD)
                 gr.Markdown(OBSERVATIONS_FOOTER_MD)
 
+            with gr.Tab("Observations: Higgs Mode in Perovskite Crystals"):
+                gr.Markdown(HIGGS_HEADER_MD, elem_classes=["kc-higgs-header"])
+                with gr.Row(equal_height=True, elem_classes=["kc-obs-image-row"]):
+                    for image_path, caption in HIGGS_GALLERY:
+                        gr.Image(
+                            str(image_path),
+                            label=caption,
+                            interactive=False,
+                            scale=1,
+                            height=280,
+                        )
+                gr.Markdown(HIGGS_SECTION_1_MD)
+                gr.Markdown(HIGGS_SECTION_2_MD)
+                gr.Markdown(HIGGS_SECTION_3_MD)
+                gr.Markdown(HIGGS_SECTION_4_MD)
+                gr.Markdown(HIGGS_SECTION_5_MD)
+                gr.Markdown(HIGGS_SECTION_6_MD)
+
             with gr.Tab("Showcase"):
                 gr.Markdown(
                     "Related Hugging Face Spaces in the TOE ecosystem. "
@@ -449,7 +478,7 @@ def main() -> None:
         server_port=port,
         css=KINGDOM_CSS + NEON_CSS + PERIODIC_CSS,
         theme=_KINGDOM_THEME,
-        allowed_paths=[str(PAPERS_DIR), str(OBSERVATIONS_DIR)],
+        allowed_paths=[str(PAPERS_DIR), str(OBSERVATIONS_DIR), str(HIGGS_DIR)],
         inbrowser=not on_hf,
         # HF sets GRADIO_SSR_MODE=true by default; the Node SSR proxy can emit
         # harmless asyncio __del__ noise on Python 3.12. Client-side mode is

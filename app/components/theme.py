@@ -138,6 +138,21 @@ KINGDOM_CSS = """
   display: block;
   width: 100%;
 }
+.kc-higgs-header table {
+  width: 100%;
+  margin: 0.75rem 0 1.25rem;
+  border-collapse: collapse;
+}
+.kc-higgs-header table td {
+  padding: 0.35rem 0.75rem;
+  border: 1px solid rgba(26, 143, 227, 0.2);
+  color: #8ecae6;
+  font-size: 0.9rem;
+}
+.kc-higgs-header h1 {
+  color: var(--kc-teal);
+  margin-bottom: 0.5rem;
+}
 .kc-obs-image-row .image-container,
 .kc-obs-image-row .wrap {
   min-height: 0;
