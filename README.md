@@ -62,7 +62,7 @@ This is a **Gradio** Space (not Docker). Open the **App** tab above — no insta
 | **Lattice Simulator** | **Run lattice comparison** | Stable vs chaotic gauge pointer, twist, identity preservation |
 | **The Model** | Read overview + derivation accordion | Core TOE postulates and Hopf→quaternion math |
 | **Flux Flywheel** | Slide **Z** (try He=2, Ne=10) | Element card, electron cloud, chemistry vs TOE flux |
-| **Showcase** | Browse links | Seven [kinaar111 HF Spaces](https://huggingface.co/kinaar111/spaces) |
+| **Showcase** | Browse links | [kinaar111 HF Spaces](https://huggingface.co/kinaar111/spaces) |
 | **Help** | Full walkthrough | Controls, limitations, tech stack |
 
 ---
@@ -123,21 +123,12 @@ via Magic Island stability sweeps).
 </tr>
 <tr>
 <td width="50%" align="center" valign="top">
-  <a href="https://huggingface.co/spaces/kinaar111/staging">
-    <img src="app/assets/showcase/staging.png" alt="6-String Optimizer Staging thumbnail" width="100%" style="max-width:360px;border-radius:10px;" />
-  </a><br/>
-  <strong>6-String Optimizer Staging 🎸</strong> · <a href="https://huggingface.co/spaces/kinaar111/staging">HF Space</a><br/>
-  <sub>Six-string S³ burst optimizer + real-audio spectrum</sub>
-</td>
-<td width="50%" align="center" valign="top">
   <a href="https://huggingface.co/spaces/kinaar111/qvpic">
     <img src="app/assets/showcase/qvpic.png" alt="QVPIC Identity Conduit thumbnail" width="100%" style="max-width:360px;border-radius:10px;" />
   </a><br/>
   <strong>QVPIC Identity Conduit 🌀</strong> · <a href="https://huggingface.co/spaces/kinaar111/qvpic">HF Space</a><br/>
   <sub>Quaternion vortex persistent identity — browser demo</sub>
 </td>
-</tr>
-<tr>
 <td width="50%" align="center" valign="top">
   <a href="https://huggingface.co/spaces/kinaar111/hopf-flux-bubble">
     <img src="app/assets/showcase/hopf_flux_bubble.png" alt="Hopf Flux Bubble thumbnail" width="100%" style="max-width:360px;border-radius:10px;" />
@@ -154,7 +145,7 @@ via Magic Island stability sweeps).
 </td>
 </tr>
 <tr>
-<td width="50%" align="center" valign="top" colspan="2">
+<td width="50%" align="center" valign="top">
   <a href="https://huggingface.co/spaces/kinaar111/mystery">
     <img src="app/assets/showcase/mystery.png" alt="Mystery thumbnail" width="100%" style="max-width:360px;border-radius:10px;" />
   </a><br/>

@@ -21,7 +21,7 @@ portal** for a Hopf-fibration-based Theory of Everything (TOE). It combines:
 
 - **Visual intuition** — linked Hopf fibers, S² base maps, flux stability charts
 - **Theory & derivations** — postulates, equations, step-by-step modules
-- **Project showcase** — links to all seven [kinaar111 Hugging Face Spaces](https://huggingface.co/kinaar111/spaces)
+- **Project showcase** — links to [kinaar111 Hugging Face Spaces](https://huggingface.co/kinaar111/spaces)
 
 > **Not a game** — this is a scientific visualization and physics record platform.
 
@@ -35,7 +35,7 @@ Enter at any level:
 | **Lattice Simulator** | Two-gyro gauged quaternion lattice (stable vs chaotic) |
 | **The Model** | Core postulates: flux flywheels, gauged lattice, porous vacuum |
 | **Derivations** | Step-by-step math → code → physics |
-| **Showcase** | Seven Hugging Face Spaces ([kinaar111/spaces](https://huggingface.co/kinaar111/spaces)) |
+| **Showcase** | Hugging Face Spaces ([kinaar111/spaces](https://huggingface.co/kinaar111/spaces)) |
 
 ### Core Postulates
 
@@ -46,7 +46,7 @@ Enter at any level:
 
 ### Quick Links
 
-- [kinaar111/spaces](https://huggingface.co/kinaar111/spaces) — all seven HF Spaces
+- [kinaar111/spaces](https://huggingface.co/kinaar111/spaces) — all HF Spaces
 - [6-String Optimizer](https://huggingface.co/spaces/kinaar111/6-string-optimizer)
 - [QVPIC Identity Conduit](https://huggingface.co/spaces/kinaar111/qvpic)
 - [Hopf Flux Bubble](https://huggingface.co/spaces/kinaar111/hopf-flux-bubble)

@@ -78,20 +78,6 @@ def six_string_optimizer() -> Path:
     return _save(fig, "six_string_optimizer.png")
 
 
-def staging() -> Path:
-    fig, ax = _base_fig("6-String Staging")
-    x = np.linspace(1.0, 9.0, 80)
-    for band, color, alpha in (
-        (np.sin(3 * x) * 0.4 + 2.8, "#1a8fe3", 0.35),
-        (np.sin(5 * x + 0.5) * 0.35 + 2.2, "#00c9b7", 0.45),
-        (np.sin(7 * x + 1.2) * 0.3 + 1.6, "#c9a227", 0.55),
-    ):
-        ax.fill_between(x, band - 0.15, band + 0.15, color=color, alpha=alpha)
-    ax.plot([1, 9], [0.55, 0.55], color="#8ecae6", lw=1.5, linestyle="--", alpha=0.7)
-    ax.text(0.35, 0.35, "staging build · real-audio spectrum · S³ burst", color=SUB, fontsize=7)
-    return _save(fig, "staging.png")
-
-
 def mystery() -> Path:
     fig, ax = _base_fig("Mystery — φ e π")
     phi = (1 + 5**0.5) / 2
@@ -145,7 +131,6 @@ def main() -> None:
     paths = [
         kingdom(),
         six_string_optimizer(),
-        staging(),
         qvpic(),
         hopf_flux_bubble(),
         orbital_braille_vqc(),

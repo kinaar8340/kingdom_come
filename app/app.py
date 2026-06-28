@@ -338,8 +338,8 @@ def build_app() -> gr.Blocks:
 
             with gr.Tab("Showcase"):
                 gr.Markdown(
-                    "Related Hugging Face Spaces and GitHub repositories in the TOE ecosystem. "
-                    "Each card links to the live project with a one-line connection to Kingdom Come."
+                    "Related Hugging Face Spaces in the TOE ecosystem. "
+                    "Each card links to a live Space with a one-line connection to Kingdom Come."
                 )
                 gr.HTML(SHOWCASE_HTML)
 

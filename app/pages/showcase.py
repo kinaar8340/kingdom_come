@@ -28,17 +28,6 @@ SHOWCASE_HTML = f"""
     </div>
   </a>
 
-  <a class="kc-showcase-card" href="https://huggingface.co/spaces/kinaar111/staging" target="_blank">
-    <img src="{SHOWCASE_ASSET}/staging.png"
-         alt="6-String Optimizer Staging — S³ burst with real-audio spectrum" loading="lazy" />
-    <div class="kc-showcase-body">
-      <h3>6-String Optimizer Staging 🎸</h3>
-      <p>Staging build of the six-string S³ burst optimizer with real-audio spectrum
-         visualization and optimizer experiments.</p>
-      <span class="kc-tag">HF Space</span>
-    </div>
-  </a>
-
   <a class="kc-showcase-card" href="https://huggingface.co/spaces/kinaar111/qvpic" target="_blank">
     <img src="{SHOWCASE_ASSET}/qvpic.png"
          alt="QVPIC Identity Conduit — quaternion vortex persistent identity" loading="lazy" />
