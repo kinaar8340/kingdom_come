@@ -40,9 +40,16 @@ from app.pages.observations import (
     CATATUMBO_GALLERY,
     INVESTIGATION_1_MD,
     INVESTIGATION_2_MD,
+    INVESTIGATION_3_HOOK_MD,
+    INVESTIGATION_3_NUMERICAL_MD,
+    INVESTIGATION_3_SYNC_MD,
+    INVESTIGATION_3_TOE_MD,
     JUPITER_GALLERY,
     OBSERVATIONS_FOOTER_MD,
     OBSERVATIONS_INTRO_MD,
+    THREEBODY_FRAMING_IMAGE,
+    THREEBODY_RESONATORS_IMAGE,
+    THREEBODY_SYNC_IMAGE,
 )
 from app.pages.papers import (
     PAPERS_INTRO_MD,
@@ -380,7 +387,7 @@ def build_app() -> gr.Blocks:
                 gr.Markdown(OBSERVATIONS_INTRO_MD)
                 with gr.Accordion(
                     "Investigation 1: Catatumbo Lightning Hotspot — Earth",
-                    open=True,
+                    open=False,
                 ):
                     with gr.Row(equal_height=True, elem_classes=["kc-obs-image-row"]):
                         for image_path, caption in CATATUMBO_GALLERY:
@@ -394,7 +401,7 @@ def build_app() -> gr.Blocks:
                     gr.Markdown(INVESTIGATION_1_MD)
                 with gr.Accordion(
                     "Investigation 2: Great Red Spot — Jupiter",
-                    open=True,
+                    open=False,
                 ):
                     with gr.Row(equal_height=True, elem_classes=["kc-obs-image-row"]):
                         for image_path, caption in JUPITER_GALLERY:
@@ -406,6 +413,32 @@ def build_app() -> gr.Blocks:
                                 height=280,
                             )
                     gr.Markdown(INVESTIGATION_2_MD)
+                with gr.Accordion(
+                    "Investigation 3: Emergent Periodic Orbits in Gravitational Three-Body Systems",
+                    open=False,
+                ):
+                    gr.Markdown(INVESTIGATION_3_HOOK_MD)
+                    gr.Markdown(INVESTIGATION_3_TOE_MD)
+                    gr.Image(
+                        str(THREEBODY_FRAMING_IMAGE),
+                        label="Figure-8 choreography — helical flux tubes on the gauged Hopf lattice",
+                        interactive=False,
+                        height=320,
+                    )
+                    gr.Markdown(INVESTIGATION_3_NUMERICAL_MD)
+                    gr.Image(
+                        str(THREEBODY_RESONATORS_IMAGE),
+                        label="Multi-resonator attractor — three braided flux flywheels",
+                        interactive=False,
+                        height=320,
+                    )
+                    gr.Markdown(INVESTIGATION_3_SYNC_MD)
+                    gr.Image(
+                        str(THREEBODY_SYNC_IMAGE),
+                        label="Pointer synchronization — Clifford torus lattice projection",
+                        interactive=False,
+                        height=320,
+                    )
                 gr.Markdown(OBSERVATIONS_FOOTER_MD)
 
             with gr.Tab("Showcase"):
