@@ -33,74 +33,48 @@ NEON_CSS = """
   background: rgba(18, 36, 61, 0.92);
   border: 1px solid rgba(26, 143, 227, 0.3);
   border-radius: 14px;
-  padding: 1.1rem 1.25rem;
-  margin: 0.75rem 0;
+  padding: 0.85rem 1rem;
+  margin: 0.35rem 0;
 }
 .kc-element-card h2 {
-  margin: 0 0 0.35rem;
-  font-size: 1.6rem;
+  margin: 0 0 0.25rem;
+  font-size: 1.45rem;
   color: #e8f4ff;
 }
 .kc-element-symbol {
-  font-size: 2.4rem;
+  font-size: 2rem;
   font-weight: 700;
   color: #00c9b7;
   text-shadow: 0 0 12px rgba(0, 201, 183, 0.5);
-  margin-right: 0.5rem;
+  margin-right: 0.45rem;
 }
 .kc-element-meta {
   color: #8ecae6;
-  font-size: 0.9rem;
-  line-height: 1.5;
+  font-size: 0.86rem;
+  line-height: 1.45;
+}
+.kc-element-summary {
+  margin-top: 0.55rem;
+  color: #d4e4f7;
+  font-size: 0.84rem;
 }
 .kc-element-toe {
-  margin-top: 0.75rem;
-  padding-top: 0.75rem;
-  border-top: 1px solid rgba(26, 143, 227, 0.2);
   color: #d4e4f7;
   font-size: 0.88rem;
+  line-height: 1.5;
 }
 .kc-toe-narrative {
   color: #c9a227;
   font-style: italic;
-  font-size: 0.95rem;
+  font-size: 0.92rem;
   line-height: 1.45;
+  display: block;
+  margin-bottom: 0.65rem;
 }
 .kc-synthetic-banner {
   color: #ef553b;
   font-weight: 600;
   font-size: 0.9rem;
-}
-.kc-flux-accordion {
-  margin-top: 0.75rem;
-  padding-top: 0.65rem;
-  border-top: 1px solid rgba(26, 143, 227, 0.2);
-}
-.kc-flux-accordion summary {
-  cursor: pointer;
-  color: #8ecae6;
-  font-size: 0.88rem;
-  font-weight: 600;
-  list-style: none;
-}
-.kc-flux-accordion summary::-webkit-details-marker { display: none; }
-.kc-flux-accordion summary::before {
-  content: "▸ ";
-  color: #1a8fe3;
-}
-.kc-flux-accordion[open] summary::before { content: "▾ "; }
-.kc-flux-metrics-list {
-  margin: 0.55rem 0 0;
-  padding-left: 1.15rem;
-  color: #d4e4f7;
-  font-size: 0.84rem;
-  line-height: 1.55;
-}
-.kc-flux-metrics-note {
-  margin: 0.45rem 0 0;
-  color: #6a9bb8;
-  font-size: 0.8rem;
-  font-style: italic;
 }
 @keyframes kc-neon-pulse {
   0%, 100% { box-shadow: 0 0 6px rgba(0,201,183,0.5), 0 0 14px rgba(26,143,227,0.3); }
@@ -109,29 +83,8 @@ NEON_CSS = """
 """
 
 
-def flux_metrics_accordion_html(z: int, flywheel: dict) -> str:
-    """Collapsible flux metrics block for the element card."""
-    stability = flywheel["stability_score"]
-    return f"""
-<details class="kc-flux-accordion">
-  <summary>Flux metrics (Z = {z}) — score {stability}</summary>
-  <ul class="kc-flux-metrics-list">
-    <li><strong>Stability score:</strong> {stability}</li>
-    <li><strong>Class:</strong> {flywheel["stability_class"]}</li>
-    <li><strong>δω:</strong> {flywheel["delta_omega"]} · <strong>ω_L:</strong> {flywheel["omega_L"]} ·
-        <strong>ω_R:</strong> {flywheel["omega_R"]}</li>
-    <li><strong>Gauge:</strong> {flywheel["gauge_strength"]} · <strong>Layers:</strong> {flywheel["num_layers"]} ·
-        <strong>Polarities:</strong> {flywheel["num_polarities"]}</li>
-    <li><strong>pseudo_Z (sweep ID):</strong> {flywheel["pseudo_Z"]}</li>
-    <li><strong>Notes:</strong> {flywheel["notes"]}</li>
-  </ul>
-  <p class="kc-flux-metrics-note">{flywheel["sweep_reference"]}</p>
-</details>
-"""
-
-
 def element_card_html(element, flywheel: dict) -> str:
-    """Render element info card with neon badges."""
+    """Compact element card — identity, badges, one-line flywheel summary."""
     badges = []
     if element.is_noble_gas:
         badges.append('<span class="kc-neon-noble">✦ NOBLE GAS · FLUX FLYWHEEL LOCK</span>')
@@ -145,7 +98,7 @@ def element_card_html(element, flywheel: dict) -> str:
     <span class="kc-element-symbol">{element.symbol}</span>
     <h2>{element.name}</h2>
   </div>
-  <div style="margin:0.5rem 0">{badge_row}</div>
+  <div style="margin:0.4rem 0">{badge_row}</div>
   <div class="kc-element-meta">
     <strong>Z</strong> = {element.z} &nbsp;·&nbsp;
     Period {element.period} &nbsp;·&nbsp;
@@ -153,15 +106,25 @@ def element_card_html(element, flywheel: dict) -> str:
     {element.category.title()}<br/>
     <strong>e⁻ config:</strong> {element.electron_config}
   </div>
-  <div class="kc-element-toe">
-    <em class="kc-toe-narrative">{element.toe_narrative}</em><br/><br/>
-    <strong>TOE interpretation:</strong> {element.toe_stability_note}<br/>
-    <strong>Flywheel class:</strong> {flywheel["stability_class"]}
-    (score {flywheel["stability_score"]})<br/>
-    <strong>δω</strong> = {flywheel["delta_omega"]} &nbsp;·&nbsp;
-    gauge = {flywheel["gauge_strength"]}
+  <div class="kc-element-summary">
+    <strong>Flywheel:</strong> {flywheel["stability_class"]}
+    (score {flywheel["stability_score"]}) &nbsp;·&nbsp;
+    δω = {flywheel["delta_omega"]}
   </div>
-  {flux_metrics_accordion_html(element.z, flywheel)}
+</div>
+"""
+
+
+def toe_interpretation_html(element, flywheel: dict) -> str:
+    """Full TOE interpretation — shown inside a collapsed accordion."""
+    return f"""
+<div class="kc-element-toe">
+  <em class="kc-toe-narrative">{element.toe_narrative}</em>
+  <strong>TOE interpretation:</strong> {element.toe_stability_note}<br/><br/>
+  <strong>Flywheel class:</strong> {flywheel["stability_class"]}
+  (score {flywheel["stability_score"]})<br/>
+  <strong>δω</strong> = {flywheel["delta_omega"]} &nbsp;·&nbsp;
+  gauge = {flywheel["gauge_strength"]}
 </div>
 """
 
@@ -186,10 +149,29 @@ def synthetic_z_html(z: int, flywheel: dict) -> str:
     No standard periodic-table entry (Z &gt; 118 or &lt; 1).
     Flux flywheel model applies as a <em>theoretical</em> stability probe.{extra}
   </div>
-  <div class="kc-element-toe">
-    <strong>Flywheel class:</strong> {flywheel["stability_class"]}
+  <div class="kc-element-summary">
+    <strong>Flywheel:</strong> {flywheel["stability_class"]}
     (score {flywheel["stability_score"]})
   </div>
-  {flux_metrics_accordion_html(z, flywheel)}
+</div>
+"""
+
+
+def synthetic_toe_html(z: int, flywheel: dict) -> str:
+    """TOE notes for synthetic / beyond-table Z values."""
+    extra = ""
+    if z == 129:
+        extra = (
+            "<br/><br/><strong>pseudo_Z = 129</strong> marks the Magic Island sweep discovery "
+            "anchor — not a physical element. Z = 2 (He) is the real noble-gas reference."
+        )
+    return f"""
+<div class="kc-element-toe">
+  <em class="kc-toe-narrative">Theoretical flux flywheel probe at Z = {z} — outside the
+  known periodic table but mapped onto the Hopf lattice stability model.</em>{extra}<br/><br/>
+  <strong>Flywheel class:</strong> {flywheel["stability_class"]}
+  (score {flywheel["stability_score"]})<br/>
+  <strong>δω</strong> = {flywheel["delta_omega"]} &nbsp;·&nbsp;
+  gauge = {flywheel["gauge_strength"]}
 </div>
 """

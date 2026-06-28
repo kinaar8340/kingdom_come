@@ -2,9 +2,9 @@
 
 import plotly.graph_objects as go
 
+from app.components.neon import element_card_html, toe_interpretation_html
 from kingdom.core.elements import NOBLE_GAS_Z, get_element, shell_occupancies
-from app.components.neon import flux_metrics_accordion_html
-from kingdom.core.flux_explorer import explore_flux_element, noble_gas_art_path
+from kingdom.core.flux_explorer import explore_flux_element, flux_metrics_table, noble_gas_art_path
 from kingdom.viz.electron_cloud import build_electron_cloud_figure
 from kingdom.viz.magic_island import build_magic_island_heatmap
 
@@ -37,18 +37,26 @@ def test_shell_occupancy_neon():
     assert total == 10
 
 
-def test_flux_metrics_accordion():
+def test_flux_metrics_table():
     payload = explore_flux_element(2)
-    html = flux_metrics_accordion_html(2, payload["flywheel"])
-    assert "<details" in html
-    assert "Stability score" in html
-    assert "pseudo_Z" in html
+    table = flux_metrics_table(payload["flywheel"])
+    assert table[0] == ["Stability score", "8.0"]
+    assert any(row[0] == "pseudo_Z (sweep ID)" for row in table)
+    assert payload["metrics_table"] == table
 
 
-def test_toe_narrative_noble_gas():
-    el = get_element(2)
-    assert el is not None
-    assert "Hopf fiber bundle" in el.toe_narrative
+def test_compact_element_card():
+    payload = explore_flux_element(2)
+    html = element_card_html(payload["element"], payload["flywheel"])
+    assert "Helium" in html
+    assert "TOE interpretation" not in html
+
+
+def test_toe_interpretation_accordion_content():
+    payload = explore_flux_element(2)
+    html = toe_interpretation_html(payload["element"], payload["flywheel"])
+    assert "Hopf fiber bundle" in html
+    assert "TOE interpretation" in html
 
 
 def test_magic_island_heatmap():

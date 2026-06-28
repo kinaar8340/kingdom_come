@@ -58,6 +58,23 @@ def _cached_magic_island(z: int) -> go.Figure:
     return build_magic_island_heatmap(z)
 
 
+def flux_metrics_table(flywheel: dict) -> list[list[str]]:
+    """Key-value rows for the flux metrics Dataframe panel."""
+    return [
+        ["Stability score", str(flywheel["stability_score"])],
+        ["Class", flywheel["stability_class"]],
+        ["δω", str(flywheel["delta_omega"])],
+        ["ω_L", str(flywheel["omega_L"])],
+        ["ω_R", str(flywheel["omega_R"])],
+        ["Gauge strength", str(flywheel["gauge_strength"])],
+        ["Layers", str(flywheel["num_layers"])],
+        ["Polarities", str(flywheel["num_polarities"])],
+        ["pseudo_Z (sweep ID)", str(flywheel["pseudo_Z"])],
+        ["Notes", flywheel["notes"]],
+        ["Reference", flywheel["sweep_reference"]],
+    ]
+
+
 def noble_gas_art_path(z: int) -> str | None:
     """Return path to pre-generated noble-gas artwork, or None."""
     if z not in NOBLE_GAS_Z:
@@ -79,24 +96,11 @@ def explore_flux_element(z: int) -> dict:
     element = get_element(z) if is_real_element(z) else None
     stability = flywheel["stability_score"]
 
-    metrics_md = (
-        f"### Flux metrics (Z = {z})\n\n"
-        f"- **Stability score:** {stability}\n"
-        f"- **Class:** {flywheel['stability_class']}\n"
-        f"- **δω:** {flywheel['delta_omega']} · **ω_L:** {flywheel['omega_L']} · "
-        f"**ω_R:** {flywheel['omega_R']}\n"
-        f"- **Gauge:** {flywheel['gauge_strength']} · **Layers:** {flywheel['num_layers']} · "
-        f"**Polarities:** {flywheel['num_polarities']}\n"
-        f"- **pseudo_Z (sweep ID):** {flywheel['pseudo_Z']}\n"
-        f"- **Notes:** {flywheel['notes']}\n"
-        f"- *{flywheel['sweep_reference']}*\n"
-    )
-
     return {
         "z": z,
         "flywheel": flywheel,
         "element": element,
-        "metrics_md": metrics_md,
+        "metrics_table": flux_metrics_table(flywheel),
         "cloud_fig": _cached_electron_cloud(z, stability),
         "compare_fig": _cached_compare_figure(z, stability),
         "magic_island": _cached_magic_island(z),
