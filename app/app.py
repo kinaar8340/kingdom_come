@@ -50,6 +50,9 @@ def render_hopf_visualizer(
     scale: float,
     view_mode: str,
 ):
+    # Belt-and-suspenders: never attempt WebGL on Hugging Face.
+    if is_hf_space():
+        view_mode = "2D projections (recommended)"
     return build_hopf_fibration_figure_auto(
         view_mode=view_mode,
         n_fibers=int(n_fibers),
@@ -134,21 +137,20 @@ def build_app() -> gr.Blocks:
                         else "Choose **2D** for compatibility or **3D** for interactive rotation."
                     )
                 )
-                view_choices = [
-                    "2D projections (recommended)",
-                    "3D interactive (WebGL)",
-                ]
-                default_view = (
-                    "2D projections (recommended)"
-                    if default_view_mode() == "2d"
-                    else "3D interactive (WebGL)"
-                )
+                _on_hf = is_hf_space()
                 with gr.Row():
-                    view_mode = gr.Radio(
-                        view_choices,
-                        value=default_view,
-                        label="View mode",
-                    )
+                    if _on_hf:
+                        gr.Markdown(
+                            "**View mode:** 2D projections only "
+                            "_(WebGL is blocked inside Hugging Face iframes)_"
+                        )
+                        view_mode = gr.State("2D projections (recommended)")
+                    else:
+                        view_mode = gr.Radio(
+                            ["2D projections (recommended)", "3D interactive (WebGL)"],
+                            value="2D projections (recommended)",
+                            label="View mode",
+                        )
                     n_fibers = gr.Slider(3, 16, value=8, step=1, label="Number of fibers")
                     n_points = gr.Slider(60, 300, value=160, step=20, label="Points per fiber")
                     scale = gr.Slider(0.5, 2.0, value=1.0, step=0.1, label="Projection scale")
@@ -158,7 +160,7 @@ def build_app() -> gr.Blocks:
                 with gr.Row():
                     show_base = gr.Checkbox(value=True, label="Show S² base sphere")
                     show_highlight = gr.Checkbox(value=True, label="Highlight single fiber")
-                gr.Markdown("**Try a preset** — loads parameters, then click *Update visualization*.")
+                gr.Markdown("**Try a preset** — loads parameters and updates the plot automatically.")
                 with gr.Row():
                     preset_btns = [
                         gr.Button(name, size="sm") for name in HOPF_PRESETS
@@ -186,11 +188,6 @@ def build_app() -> gr.Blocks:
 
                 def reset_hopf_defaults():
                     d = HOPF_DEFAULTS
-                    dv = (
-                        "2D projections (recommended)"
-                        if default_view_mode() == "2d"
-                        else "3D interactive (WebGL)"
-                    )
                     return (
                         d["n_fibers"],
                         d["n_points"],
@@ -199,7 +196,7 @@ def build_app() -> gr.Blocks:
                         d["show_base"],
                         d["show_highlight"],
                         d["scale"],
-                        dv,
+                        "2D projections (recommended)",
                     )
 
                 for preset_name, btn in zip(HOPF_PRESETS, preset_btns):

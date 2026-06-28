@@ -34,11 +34,29 @@ GRID = "#1e3a5f"
 
 
 def is_hf_space() -> bool:
-    return bool(os.environ.get("SPACE_ID"))
+    """Detect Hugging Face Spaces runtime (env var or /app root)."""
+    if os.environ.get("SPACE_ID"):
+        return True
+    cwd = os.getcwd()
+    return cwd == "/app" or cwd.startswith("/app/")
 
 
 def default_view_mode() -> ViewMode:
-    return "2d" if is_hf_space() else "3d"
+    """Always prefer 2D — WebGL is unreliable in HF iframes and many browsers."""
+    return "2d"
+
+
+def resolve_view_mode(view_mode: ViewMode | str) -> ViewMode:
+    """Force 2D on Hugging Face regardless of UI selection."""
+    if is_hf_space():
+        return "2d"
+    if view_mode == "auto":
+        return default_view_mode()
+    if view_mode in ("2d", "3d"):
+        return view_mode  # type: ignore[return-value]
+    if str(view_mode).lower().startswith("2"):
+        return "2d"
+    return "3d"
 
 
 def kingdom_dark_theme() -> dict[str, Any]:
@@ -434,16 +452,7 @@ def build_hopf_fibration_figure_auto(
     view_mode: ViewMode | str = "auto",
     **kwargs: Any,
 ) -> go.Figure:
-    mode: ViewMode
-    if view_mode == "auto":
-        mode = default_view_mode()
-    elif view_mode in ("2d", "3d"):
-        mode = view_mode  # type: ignore[assignment]
-    elif str(view_mode).lower().startswith("2"):
-        mode = "2d"
-    else:
-        mode = "3d"
-
+    mode = resolve_view_mode(view_mode)
     if mode == "2d":
         return build_hopf_fibration_figure_2d(**kwargs)
     return build_hopf_fibration_figure(**kwargs)

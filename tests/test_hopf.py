@@ -74,6 +74,12 @@ def test_plotly_auto_selects_2d_on_hf():
     import os
 
     os.environ["SPACE_ID"] = "kinaar111/kingdom"
-    fig = build_hopf_fibration_figure_auto(view_mode="auto", n_fibers=3, n_points=60)
+    fig = build_hopf_fibration_figure_auto(view_mode="3D interactive (WebGL)", n_fibers=3, n_points=60)
     assert all(trace.type == "scatter" for trace in fig.data)
     del os.environ["SPACE_ID"]
+
+
+def test_resolve_view_mode_defaults_2d():
+    from kingdom.viz.hopf_plotly import resolve_view_mode
+
+    assert resolve_view_mode("auto") == "2d"
