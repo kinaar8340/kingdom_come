@@ -242,17 +242,18 @@ def build_hopf_fibration_figure_2d(
     highlight = sample_fiber(eta, xi1, n_points=n_points) if show_single_fiber_highlight else None
     theme = kingdom_dark_theme()
 
+    panel_titles = (
+        "① ℝ³ xy — linked Villarceau circles",
+        "② ℝ³ xz — orthogonal projection",
+        "③ S² base — fiber base points",
+        "④ Highlight — fiber phase ξ₂",
+    )
     fig = make_subplots(
         rows=2,
         cols=2,
-        subplot_titles=(
-            "Stereographic xy — linked fibers in ℝ³",
-            "Stereographic xz — side projection",
-            "S² base — stereographic chart",
-            "Highlight fiber — phase ξ₂ color map",
-        ),
-        horizontal_spacing=0.1,
-        vertical_spacing=0.14,
+        subplot_titles=panel_titles,
+        horizontal_spacing=0.08,
+        vertical_spacing=0.11,
     )
 
     for i, fiber in enumerate(fibers):
@@ -355,9 +356,22 @@ def build_hopf_fibration_figure_2d(
                 marker=dict(
                     size=6,
                     color=xi2,
-                    colorscale="Turbo",
                     showscale=True,
-                    colorbar=dict(title="ξ₂", len=0.45, y=0.2),
+                    colorbar=dict(
+                        title=dict(text="ξ₂", font=dict(color="#d4e4f7")),
+                        len=0.4,
+                        y=0.18,
+                        bgcolor="rgba(10,22,40,0.8)",
+                        bordercolor="rgba(255,255,255,0.12)",
+                        tickfont=dict(color="#8ecae6"),
+                    ),
+                    colorscale=[
+                        [0.0, "#0d2137"],
+                        [0.25, "#1a8fe3"],
+                        [0.5, "#00c9b7"],
+                        [0.75, "#c9a227"],
+                        [1.0, "#ef553b"],
+                    ],
                 ),
                 showlegend=False,
             ),
@@ -381,18 +395,18 @@ def build_hopf_fibration_figure_2d(
             )
 
     axis = _axis_style()
-    fig.update_xaxes(**axis)
-    fig.update_yaxes(**axis)
-    fig.update_xaxes(scaleanchor="y", scaleratio=1, row=1, col=1)
-    fig.update_xaxes(scaleanchor="y", scaleratio=1, row=1, col=2)
-    fig.update_xaxes(scaleanchor="y", scaleratio=1, row=2, col=1)
-    fig.update_xaxes(scaleanchor="y", scaleratio=1, row=2, col=2)
+    for row in (1, 2):
+        for col in (1, 2):
+            fig.update_xaxes(**axis, row=row, col=col, showgrid=True)
+            fig.update_yaxes(**axis, row=row, col=col, showgrid=True)
+    for row, col in ((1, 1), (1, 2), (2, 1), (2, 2)):
+        fig.update_xaxes(scaleanchor="y", scaleratio=1, row=row, col=col)
 
     fig.update_layout(
         **theme,
         height=height,
         title=dict(
-            text="Hopf Fibration — 2D projections (WebGL-free, HF-safe)",
+            text="Hopf Fibration — S³ fibers → ℝ³ projections → S² base",
             x=0.5,
             xanchor="center",
             font=dict(size=15, color="#e8f4ff"),
@@ -403,7 +417,16 @@ def build_hopf_fibration_figure_2d(
             borderwidth=1,
         ),
     )
-    fig.update_annotations(font=dict(color="#8ecae6", size=11))
+    fig.add_annotation(
+        text="Read left→right, top→bottom: stereographic views then Hopf base chart",
+        xref="paper",
+        yref="paper",
+        x=0.5,
+        y=-0.06,
+        showarrow=False,
+        font=dict(size=10, color="#5a7a9a"),
+    )
+    fig.update_annotations(font=dict(color="#8ecae6", size=10))
     return fig
 
 

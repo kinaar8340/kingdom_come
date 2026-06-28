@@ -1,5 +1,18 @@
 """Home / landing page content."""
 
+ONBOARDING_MD = """
+### First-time visitor? (90 seconds)
+
+1. **Hopf Visualizer** → click **Classic Hopf** (parameters load automatically).
+2. Study the **four panels**: ℝ³ xy/xz projections (top), S² base chart (bottom-left),
+   highlight phase ξ₂ (bottom-right). Gold = your selected fiber.
+3. **Lattice Simulator** → **Run lattice comparison** — watch stable vs chaotic gauge pointer.
+4. **The Model** → read the four core postulates.
+5. **Flux Flywheel** → set Z = 2 for the Magic Island anchor.
+
+*Tip: use **Reset defaults** in Hopf Visualizer anytime.*
+"""
+
 HOME_MD = """
 ## What is Kingdom Come?
 

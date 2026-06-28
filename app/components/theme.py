@@ -42,6 +42,50 @@ KINGDOM_CSS = """
   margin: 0.5rem 0;
 }
 .kc-card h3 { color: var(--kc-teal); margin-top: 0; }
+.kc-showcase-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+  margin: 1rem 0;
+}
+.kc-showcase-card {
+  display: block;
+  background: rgba(18, 36, 61, 0.9);
+  border: 1px solid rgba(26, 143, 227, 0.25);
+  border-radius: 12px;
+  overflow: hidden;
+  text-decoration: none;
+  color: var(--kc-text);
+  transition: border-color 0.2s, transform 0.15s;
+}
+.kc-showcase-card:hover {
+  border-color: var(--kc-teal);
+  transform: translateY(-2px);
+}
+.kc-showcase-card img,
+.kc-showcase-thumb {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  display: block;
+  background: #0d1f35;
+}
+.kc-thumb-vqc {
+  background: linear-gradient(135deg, #0a0818 0%, #7c2d12 45%, #ea580c 100%);
+}
+.kc-showcase-body { padding: 0.9rem 1rem 1.1rem; }
+.kc-showcase-body h3 { color: var(--kc-teal); margin: 0 0 0.4rem; font-size: 1.05rem; }
+.kc-showcase-body p { color: #8ecae6; font-size: 0.88rem; line-height: 1.45; margin: 0; }
+.kc-showcase-body.kc-no-img { padding-top: 1.1rem; }
+.kc-tag {
+  display: inline-block;
+  margin-top: 0.6rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  background: rgba(26, 143, 227, 0.2);
+  color: var(--kc-blue);
+}
 .kc-footer {
   text-align: center;
   font-size: 0.85rem;

@@ -19,13 +19,24 @@ from kingdom.viz.hopf_plotly import build_hopf_fibration_figure_auto, default_vi
 from app.build_info import get_build_label
 from app.components.theme import HERO_HTML, KINGDOM_CSS, footer_html
 from app.pages.help import HELP_MD, QUICKSTART_MD
-from app.pages.home import HOME_MD, SHOWCASE_CARDS
+from app.pages.home import HOME_MD, ONBOARDING_MD, SHOWCASE_CARDS
+from app.pages.showcase import SHOWCASE_HTML
 from app.pages.theory import DERIVATION_HOPF_MD, THEORY_MD
 
 HOPF_PRESETS: dict[str, tuple[int, int, float, float, float]] = {
     "Classic Hopf": (8, 160, 0.6, 1.2, 1.0),
     "Dense fiber weave": (14, 200, 0.45, 2.1, 1.2),
     "Wide projection": (6, 120, 0.8, 0.5, 1.8),
+}
+
+HOPF_DEFAULTS = {
+    "n_fibers": 8,
+    "n_points": 160,
+    "eta": 0.6,
+    "xi1": 1.2,
+    "scale": 1.0,
+    "show_base": True,
+    "show_highlight": True,
 }
 
 
@@ -105,6 +116,8 @@ def build_app() -> gr.Blocks:
         with gr.Tabs():
             with gr.Tab("Home"):
                 gr.Markdown(QUICKSTART_MD)
+                with gr.Accordion("First-time visitor? Start here", open=False):
+                    gr.Markdown(ONBOARDING_MD)
                 gr.Markdown(HOME_MD)
                 gr.HTML(SHOWCASE_CARDS)
 
@@ -150,8 +163,10 @@ def build_app() -> gr.Blocks:
                     preset_btns = [
                         gr.Button(name, size="sm") for name in HOPF_PRESETS
                     ]
+                    reset_btn = gr.Button("Reset defaults", size="sm")
                 hopf_plot = gr.Plot(label="Hopf Fibration")
-                refresh = gr.Button("Update visualization", variant="primary")
+                with gr.Row():
+                    refresh = gr.Button("Update visualization", variant="primary")
                 hopf_inputs = [
                     n_fibers,
                     n_points,
@@ -169,11 +184,34 @@ def build_app() -> gr.Blocks:
                     n_f, n_p, e, x, s = HOPF_PRESETS[name]
                     return n_f, n_p, e, x, s
 
+                def reset_hopf_defaults():
+                    d = HOPF_DEFAULTS
+                    dv = (
+                        "2D projections (recommended)"
+                        if default_view_mode() == "2d"
+                        else "3D interactive (WebGL)"
+                    )
+                    return (
+                        d["n_fibers"],
+                        d["n_points"],
+                        d["eta"],
+                        d["xi1"],
+                        d["show_base"],
+                        d["show_highlight"],
+                        d["scale"],
+                        dv,
+                    )
+
                 for preset_name, btn in zip(HOPF_PRESETS, preset_btns):
                     btn.click(
                         fn=lambda name=preset_name: apply_preset(name),
                         outputs=[n_fibers, n_points, eta, xi1, scale],
-                    )
+                    ).then(render_hopf_visualizer, inputs=hopf_inputs, outputs=hopf_plot)
+
+                reset_btn.click(
+                    fn=reset_hopf_defaults,
+                    outputs=hopf_inputs,
+                ).then(render_hopf_visualizer, inputs=hopf_inputs, outputs=hopf_plot)
 
             with gr.Tab("The Model"):
                 gr.Markdown(THEORY_MD)
@@ -212,22 +250,10 @@ def build_app() -> gr.Blocks:
 
             with gr.Tab("Showcase"):
                 gr.Markdown(
-                    """
-## Hugging Face Spaces
-
-| Space | TOE context |
-|-------|-------------|
-| [Hopf Flux Bubble](https://huggingface.co/spaces/kinaar111/hopf-flux-bubble) | Gauged flux topology, Hopfion walls |
-| [Orbital Braille VQC](https://huggingface.co/spaces/kinaar111/orbital-braille-vqc) | Quaternion OAM encoding |
-| [QVpic](https://github.com/kinaar8340/qvpic) | Lattice swarm, stability sweeps |
-
-## GitHub
-
-- [toe](https://github.com/kinaar8340/toe) — core conduit & lattice
-- [vqc_sims_public](https://github.com/kinaar8340/vqc_sims_public) — VQC simulations
-- [kingdom-come](https://github.com/kinaar8340/kingdom-come) — this repository
-                    """
+                    "Related Hugging Face Spaces and GitHub repositories in the TOE ecosystem. "
+                    "Each card links to the live project with a one-line connection to Kingdom Come."
                 )
+                gr.HTML(SHOWCASE_HTML)
 
         gr.HTML(footer_html(get_build_label()))
 

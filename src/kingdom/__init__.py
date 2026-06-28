@@ -1,3 +1,3 @@
 """Kingdom Come — Aaron's Hopf Fibration Theory of Everything."""
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"

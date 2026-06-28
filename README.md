@@ -114,6 +114,7 @@ python app/app.py
 
 | Version | Notes |
 |---------|-------|
+| **v0.1.2** | Visual polish, onboarding accordion, showcase cards, reset + auto-update presets |
 | **v0.1.1** | Demo GIF; Lattice Simulator tab (toe two-gyro integration) |
 | **v0.1.0** | Initial portal: Hopf visualizer, theory, flux flywheel, showcase |
 | v0.1.0+ | HF-safe 2D projections; Help tab; presets; README polish |
