@@ -145,11 +145,23 @@ def build_app() -> gr.Blocks:
     return demo
 
 
-if __name__ == "__main__":
-    app = build_app()
-    app.launch(
+demo = build_app()
+
+
+def main() -> None:
+    import os
+
+    on_hf = bool(os.environ.get("SPACE_ID"))
+    port = int(os.environ.get("GRADIO_SERVER_PORT", "7860"))
+    demo.launch(
         server_name="0.0.0.0",
-        server_port=7860,
+        server_port=port,
         css=KINGDOM_CSS,
         theme=_KINGDOM_THEME,
+        show_api=False,
+        inbrowser=not on_hf,
     )
+
+
+if __name__ == "__main__":
+    main()
