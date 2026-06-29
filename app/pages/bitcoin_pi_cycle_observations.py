@@ -19,10 +19,6 @@ BITCOIN_PI_GALLERY: tuple[tuple[Path, str], ...] = (
         "Planetary vortex → market cycle with 350/π overlay",
     ),
     (
-        GLOBAL_POINTER_IMAGE,
-        "Global pointer sync — Earth pulse, BTC cycle, pulsar spin",
-    ),
-    (
         FLUX_SCALES_IMAGE,
         "Flux flywheel — biological, geophysical, financial scales unified by W_g",
     ),
@@ -68,7 +64,7 @@ than arbitrary technical-analysis parameters.
 | 350-day SMA | wg_base winding anchor from meta-optimizer |
 | Cross event | Phase-lock / burst readout at cycle top |
 
-*BTC price with 111-day and 350-day SMAs embedded in the gauged Hopf lattice (below).*
+*BTC price with 111-day and 350-day SMAs embedded in the gauged Hopf lattice (see gallery).*
 """
 
 INVESTIGATION_8_EMERGENCE_MD = """
@@ -98,8 +94,8 @@ runaway drift until a macroscopic crossing event registers — here, a cycle top
 INVESTIGATION_8_GALLERY_INTRO_MD = """
 #### Cross-scale evidence
 
-Four readouts of the same invariant — gauged Hopf lattice, planetary vortex morphology,
-global pointer resonances, and unified flux flywheel — are shown below.
+Three readouts of the same invariant — gauged Hopf lattice, planetary vortex morphology,
+and unified flux flywheel — are shown below.
 """
 
 INVESTIGATION_8_IMPLICATIONS_MD = """

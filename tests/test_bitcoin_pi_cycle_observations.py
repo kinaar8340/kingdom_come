@@ -21,7 +21,7 @@ def test_investigation_8_content():
 
 
 def test_bitcoin_pi_gallery_images_exist():
-    assert len(BITCOIN_PI_GALLERY) == 4
+    assert len(BITCOIN_PI_GALLERY) == 3
     for path, caption in BITCOIN_PI_GALLERY:
         assert path.is_file(), f"missing {path}"
         assert path.stat().st_size > 5000
