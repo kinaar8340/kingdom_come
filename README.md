@@ -62,8 +62,11 @@ This is a **Gradio** Space (not Docker). Open the **App** tab above — no insta
 | **Lattice Simulator** | **Run lattice comparison** | Stable vs chaotic gauge pointer, twist, identity preservation |
 | **The Model** | Read overview + derivation accordion | Core TOE postulates and Hopf→quaternion math |
 | **Flux Flywheel** | Slide **Z** (try He=2, Ne=10) | Element card, electron cloud, chemistry vs TOE flux |
+| **Observations** | Expand investigations | Natural synchronicities, numerics, and TLS probes mapped to the TOE |
 | **Showcase** | Browse links | [kinaar111 HF Spaces](https://huggingface.co/kinaar111/spaces) |
 | **Help** | Full walkthrough | Controls, limitations, tech stack |
+
+New investigation added to **Observations** tab: TLS Point Cloud analysis of Fichte & Buche trees testing 350/π branch emergence hypothesis.
 
 ---
 

@@ -48,6 +48,11 @@ from app.pages.schumann_observations import (
     INVESTIGATION_5_MD,
     SCHUMANN_GALLERY,
 )
+from app.pages.tls_trees_observations import (
+    INVESTIGATION_7_ACCORDION_TITLE,
+    INVESTIGATION_7_MD,
+    TLS_TREES_GALLERY,
+)
 from app.pages.help import HELP_MD, QUICKSTART_MD
 from app.pages.home import HOME_MD, ONBOARDING_MD, SHOWCASE_CARDS
 from app.pages.hopf_guide import HF_VIEW_MODE_MD, HOPF_INTRO_MD, HOPF_PANEL_GUIDE_MD
@@ -76,6 +81,7 @@ OBSERVATIONS_DIR = ROOT / "app" / "assets" / "observations"
 HIGGS_DIR = ROOT / "app" / "assets" / "higgs"
 SCHUMANN_DIR = ROOT / "app" / "assets" / "schumann"
 MYSTERY_DIR = ROOT / "app" / "assets" / "mystery"
+TLS_TREES_DIR = ROOT / "app" / "assets" / "tls_trees"
 
 HOPF_PRESETS: dict[str, tuple[int, int, float, float, float]] = {
     "Classic Hopf": (8, 160, 0.6, 1.2, 1.0),
@@ -482,6 +488,20 @@ def build_app() -> gr.Blocks:
                                 height=280,
                             )
                     gr.Markdown(INVESTIGATION_6_MD)
+                with gr.Accordion(
+                    INVESTIGATION_7_ACCORDION_TITLE,
+                    open=False,
+                ):
+                    with gr.Row(equal_height=True, elem_classes=["kc-obs-image-row"]):
+                        for image_path, caption in TLS_TREES_GALLERY:
+                            gr.Image(
+                                str(image_path),
+                                label=caption,
+                                interactive=False,
+                                scale=1,
+                                height=280,
+                            )
+                    gr.Markdown(INVESTIGATION_7_MD)
                 gr.Markdown(OBSERVATIONS_FOOTER_MD)
 
             with gr.Tab("Showcase"):
@@ -515,6 +535,7 @@ def main() -> None:
             str(HIGGS_DIR),
             str(SCHUMANN_DIR),
             str(MYSTERY_DIR),
+            str(TLS_TREES_DIR),
         ],
         inbrowser=not on_hf,
         # HF sets GRADIO_SSR_MODE=true by default; the Node SSR proxy can emit

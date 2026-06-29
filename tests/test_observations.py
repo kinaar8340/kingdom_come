@@ -4,6 +4,7 @@ from pathlib import Path
 
 from app.pages.higgs_observations import HIGGS_GALLERY, INVESTIGATION_4_MD
 from app.pages.phi_e_pi_mystery import INVESTIGATION_6_MD, PHI_E_PI_GALLERY
+from app.pages.tls_trees_observations import INVESTIGATION_7_MD, TLS_TREES_GALLERY
 from app.pages.schumann_observations import INVESTIGATION_5_MD, SCHUMANN_GALLERY
 from app.pages.observations import (
     CATATUMBO_GALLERY,
@@ -71,6 +72,7 @@ def test_observation_galleries_exist():
         HIGGS_GALLERY,
         SCHUMANN_GALLERY,
         PHI_E_PI_GALLERY,
+        TLS_TREES_GALLERY,
     )
     for gallery in galleries:
         assert len(gallery) == 3
