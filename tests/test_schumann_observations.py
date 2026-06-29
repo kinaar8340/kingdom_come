@@ -18,6 +18,8 @@ def test_investigation_5_content():
     assert "June 20–22" in INVESTIGATION_5_MD or "June 20-22" in INVESTIGATION_5_MD
     assert "~21" in INVESTIGATION_5_MD
     assert "Tomsk" in INVESTIGATION_5_MD
+    assert "2068968094270378465" in INVESTIGATION_5_MD
+    assert "121" in INVESTIGATION_5_MD
 
 
 def test_schumann_gallery_images_exist():

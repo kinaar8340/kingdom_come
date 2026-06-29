@@ -6,7 +6,8 @@ SCHUMANN_DIR = Path(__file__).resolve().parents[1] / "assets" / "schumann"
 
 SCHUMANN_METRIC_IMAGE = SCHUMANN_DIR / "metric_diagram.jpg"
 SCHUMANN_OVERVIEW_IMAGE = SCHUMANN_DIR / "june20_22_overview.jpg"
-SCHUMANN_COMPARISON_IMAGE = SCHUMANN_DIR / "real_vs_predicted.jpg"
+SCHUMANN_RESULTS_IMAGE = SCHUMANN_DIR / "june20_22_results.png"
+SCHUMANN_RESULTS_SOURCE = "https://x.com/kinaar8340/status/2068968094270378465"
 
 SCHUMANN_GALLERY: tuple[tuple[Path, str], ...] = (
     (
@@ -18,8 +19,8 @@ SCHUMANN_GALLERY: tuple[tuple[Path, str], ...] = (
         "June 20–22 prediction — SR driver, phase curve, 111.408 crossings",
     ),
     (
-        SCHUMANN_COMPARISON_IMAGE,
-        "Real Tomsk spectrogram vs model accumulation (June 20–22)",
+        SCHUMANN_RESULTS_IMAGE,
+        "June 20–22 run — SR power, phase accumulation, 21 crossings, 121 bursts",
     ),
 )
 
@@ -71,11 +72,14 @@ punctuated topological-clock event.
 | Bright-period correlation | Higher crossing density when real SR activity is sustained |
 | Overall regime | Moderate — consistent with post–June 11–12 recovery |
 | Phase curve | Monotonic rise modulated by SR power envelope |
-| Burst alignment | Local burst counts elevated near spectrogram bright bands |
+| Burst alignment | 121 local twist bursts (scattered); elevated near bright bands |
 
 Brighter stretches in the real Tomsk spectrogram correspond to **faster phase accumulation**
 and more frequent clock crossings — the model responds coherently to geophysical drive rather
 than producing random threshold hits.
+
+Full multi-panel results plot (SR power driver, accumulated phase to ~2400, crossing and
+burst timelines): [X post, June 2026](https://x.com/kinaar8340/status/2068968094270378465).
 
 #### Interpretation & next steps
 
