@@ -66,7 +66,7 @@ This is a **Gradio** Space (not Docker). Open the **App** tab above — no insta
 | **Showcase** | Browse links | [kinaar111 HF Spaces](https://huggingface.co/kinaar111/spaces) |
 | **Help** | Full walkthrough | Controls, limitations, tech stack |
 
-New investigation added to **Observations** tab: TLS Point Cloud analysis of Fichte & Buche trees testing 350/π branch emergence hypothesis.
+New investigations in **Observations** tab include TLS tree point-cloud analysis (350/π branch bursts) and the Bitcoin Pi Cycle Top emergence of W_g = 350/π.
 
 ---
 

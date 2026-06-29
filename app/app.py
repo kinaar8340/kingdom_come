@@ -48,6 +48,12 @@ from app.pages.schumann_observations import (
     INVESTIGATION_5_MD,
     SCHUMANN_GALLERY,
 )
+from app.pages.bitcoin_pi_cycle_observations import (
+    BITCOIN_PI_GALLERY,
+    INVESTIGATION_8_ACCORDION_TITLE,
+    INVESTIGATION_8_HEADER_MD,
+    INVESTIGATION_8_MD,
+)
 from app.pages.tls_trees_observations import (
     INVESTIGATION_7_ACCORDION_TITLE,
     INVESTIGATION_7_MD,
@@ -82,6 +88,7 @@ HIGGS_DIR = ROOT / "app" / "assets" / "higgs"
 SCHUMANN_DIR = ROOT / "app" / "assets" / "schumann"
 MYSTERY_DIR = ROOT / "app" / "assets" / "mystery"
 TLS_TREES_DIR = ROOT / "app" / "assets" / "tls_trees"
+BITCOIN_PI_DIR = ROOT / "app" / "assets" / "bitcoin_pi"
 
 HOPF_PRESETS: dict[str, tuple[int, int, float, float, float]] = {
     "Classic Hopf": (8, 160, 0.6, 1.2, 1.0),
@@ -502,6 +509,22 @@ def build_app() -> gr.Blocks:
                                 height=280,
                             )
                     gr.Markdown(INVESTIGATION_7_MD)
+                with gr.Accordion(
+                    INVESTIGATION_8_ACCORDION_TITLE,
+                    open=False,
+                ):
+                    gr.Markdown(INVESTIGATION_8_HEADER_MD)
+                    for row_start in (0, 2):
+                        with gr.Row(equal_height=True, elem_classes=["kc-obs-image-row"]):
+                            for image_path, caption in BITCOIN_PI_GALLERY[row_start : row_start + 2]:
+                                gr.Image(
+                                    str(image_path),
+                                    label=caption,
+                                    interactive=False,
+                                    scale=1,
+                                    height=260,
+                                )
+                    gr.Markdown(INVESTIGATION_8_MD)
                 gr.Markdown(OBSERVATIONS_FOOTER_MD)
 
             with gr.Tab("Showcase"):
@@ -536,6 +559,7 @@ def main() -> None:
             str(SCHUMANN_DIR),
             str(MYSTERY_DIR),
             str(TLS_TREES_DIR),
+            str(BITCOIN_PI_DIR),
         ],
         inbrowser=not on_hf,
         # HF sets GRADIO_SSR_MODE=true by default; the Node SSR proxy can emit
