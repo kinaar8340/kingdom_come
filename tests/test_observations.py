@@ -5,6 +5,7 @@ from pathlib import Path
 from app.pages.higgs_observations import HIGGS_GALLERY, INVESTIGATION_4_MD
 from app.pages.phi_e_pi_mystery import INVESTIGATION_6_MD, PHI_E_PI_GALLERY
 from app.pages.bitcoin_pi_cycle_observations import BITCOIN_PI_GALLERY, INVESTIGATION_8_MD
+from app.pages.superconductors_observations import INVESTIGATION_9_MD, SUPERCONDUCTORS_GALLERY
 from app.pages.tls_trees_observations import INVESTIGATION_7_MD, TLS_TREES_GALLERY
 from app.pages.schumann_observations import INVESTIGATION_5_MD, SCHUMANN_GALLERY
 from app.pages.observations import (
@@ -65,6 +66,12 @@ def test_investigation_6_phi_e_pi_content():
     assert len(PHI_E_PI_GALLERY) == 3
 
 
+def test_investigation_9_superconductors_content():
+    assert "Cuprate Superconductors" in INVESTIGATION_9_MD
+    assert "350" in INVESTIGATION_9_MD
+    assert len(SUPERCONDUCTORS_GALLERY) == 3
+
+
 def test_observation_galleries_exist():
     galleries = (
         CATATUMBO_GALLERY,
@@ -75,6 +82,7 @@ def test_observation_galleries_exist():
         PHI_E_PI_GALLERY,
         TLS_TREES_GALLERY,
         BITCOIN_PI_GALLERY,
+        SUPERCONDUCTORS_GALLERY,
     )
     for gallery in galleries:
         assert len(gallery) >= 3

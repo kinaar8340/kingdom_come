@@ -64,6 +64,14 @@ from app.pages.tls_trees_observations import (
     INVESTIGATION_7_MD,
     TLS_TREES_GALLERY,
 )
+from app.pages.superconductors_observations import (
+    BRAIDING_TARGET,
+    INVESTIGATION_9_ACCORDION_TITLE,
+    INVESTIGATION_9_MD,
+    KAPPA_TARGET,
+    SUPERCONDUCTORS_GALLERY,
+    cuprate_conduit_metrics,
+)
 from app.pages.help import HELP_MD, QUICKSTART_MD
 from app.pages.home import HOME_MD, ONBOARDING_MD, SHOWCASE_CARDS
 from app.pages.hopf_guide import HF_VIEW_MODE_MD, HOPF_INTRO_MD, HOPF_PANEL_GUIDE_MD
@@ -94,6 +102,7 @@ SCHUMANN_DIR = ROOT / "app" / "assets" / "schumann"
 MYSTERY_DIR = ROOT / "app" / "assets" / "mystery"
 TLS_TREES_DIR = ROOT / "app" / "assets" / "tls_trees"
 BITCOIN_PI_DIR = ROOT / "app" / "assets" / "bitcoin_pi"
+SUPERCONDUCTORS_DIR = ROOT / "app" / "assets" / "superconductors"
 
 HOPF_PRESETS: dict[str, tuple[int, int, float, float, float]] = {
     "Classic Hopf": (8, 160, 0.6, 1.2, 1.0),
@@ -547,6 +556,52 @@ def build_app() -> gr.Blocks:
                         outputs=None,
                         js="(text) => { navigator.clipboard.writeText(text); return []; }",
                     )
+                with gr.Accordion(
+                    INVESTIGATION_9_ACCORDION_TITLE,
+                    open=False,
+                ):
+                    with gr.Row(equal_height=True, elem_classes=["kc-obs-image-row"]):
+                        for image_path, caption in SUPERCONDUCTORS_GALLERY:
+                            gr.Image(
+                                str(image_path),
+                                label=caption,
+                                interactive=False,
+                                scale=1,
+                                height=280,
+                            )
+                    gr.Markdown(INVESTIGATION_9_MD)
+                    with gr.Row():
+                        kappa_slider = gr.Slider(
+                            minimum=0.70,
+                            maximum=0.82,
+                            value=KAPPA_TARGET,
+                            step=0.001,
+                            label="κ — interlayer / pairing coupling",
+                        )
+                        braiding_slider = gr.Slider(
+                            minimum=0.74,
+                            maximum=0.78,
+                            value=BRAIDING_TARGET,
+                            step=0.0001,
+                            label="braiding_target — anyonic phase",
+                        )
+                    conduit_readout = gr.Markdown(
+                        cuprate_conduit_metrics(KAPPA_TARGET, BRAIDING_TARGET)
+                    )
+
+                    def on_cuprate_sliders(kappa: float, braiding: float) -> str:
+                        return cuprate_conduit_metrics(kappa, braiding)
+
+                    kappa_slider.change(
+                        on_cuprate_sliders,
+                        inputs=[kappa_slider, braiding_slider],
+                        outputs=conduit_readout,
+                    )
+                    braiding_slider.change(
+                        on_cuprate_sliders,
+                        inputs=[kappa_slider, braiding_slider],
+                        outputs=conduit_readout,
+                    )
                 gr.Markdown(OBSERVATIONS_FOOTER_MD)
 
             with gr.Tab("Showcase"):
@@ -582,6 +637,7 @@ def main() -> None:
             str(MYSTERY_DIR),
             str(TLS_TREES_DIR),
             str(BITCOIN_PI_DIR),
+            str(SUPERCONDUCTORS_DIR),
         ],
         inbrowser=not on_hf,
         # HF sets GRADIO_SSR_MODE=true by default; the Node SSR proxy can emit
