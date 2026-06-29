@@ -3,6 +3,7 @@
 from pathlib import Path
 
 from app.pages.higgs_observations import HIGGS_GALLERY, INVESTIGATION_4_MD
+from app.pages.schumann_observations import INVESTIGATION_5_MD, SCHUMANN_GALLERY
 from app.pages.observations import (
     CATATUMBO_GALLERY,
     INVESTIGATION_1_MD,
@@ -51,8 +52,20 @@ def test_investigation_4_higgs_content():
     assert len(HIGGS_GALLERY) == 3
 
 
+def test_investigation_5_schumann_content():
+    assert "Schumann" in INVESTIGATION_5_MD
+    assert len(SCHUMANN_GALLERY) == 3
+
+
 def test_observation_galleries_exist():
-    for gallery in (CATATUMBO_GALLERY, JUPITER_GALLERY, THREEBODY_GALLERY, HIGGS_GALLERY):
+    galleries = (
+        CATATUMBO_GALLERY,
+        JUPITER_GALLERY,
+        THREEBODY_GALLERY,
+        HIGGS_GALLERY,
+        SCHUMANN_GALLERY,
+    )
+    for gallery in galleries:
         assert len(gallery) == 3
         for path, caption in gallery:
             assert path.is_file(), f"missing {path}"
