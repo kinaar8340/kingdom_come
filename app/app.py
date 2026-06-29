@@ -38,6 +38,11 @@ from app.pages.higgs_observations import (
     INVESTIGATION_4_ACCORDION_TITLE,
     INVESTIGATION_4_MD,
 )
+from app.pages.phi_e_pi_mystery import (
+    INVESTIGATION_6_ACCORDION_TITLE,
+    INVESTIGATION_6_MD,
+    PHI_E_PI_GALLERY,
+)
 from app.pages.schumann_observations import (
     INVESTIGATION_5_ACCORDION_TITLE,
     INVESTIGATION_5_MD,
@@ -70,6 +75,7 @@ PAPERS_DIR = ROOT / "app" / "assets" / "papers"
 OBSERVATIONS_DIR = ROOT / "app" / "assets" / "observations"
 HIGGS_DIR = ROOT / "app" / "assets" / "higgs"
 SCHUMANN_DIR = ROOT / "app" / "assets" / "schumann"
+MYSTERY_DIR = ROOT / "app" / "assets" / "mystery"
 
 HOPF_PRESETS: dict[str, tuple[int, int, float, float, float]] = {
     "Classic Hopf": (8, 160, 0.6, 1.2, 1.0),
@@ -462,6 +468,20 @@ def build_app() -> gr.Blocks:
                                 height=280,
                             )
                     gr.Markdown(INVESTIGATION_5_MD)
+                with gr.Accordion(
+                    INVESTIGATION_6_ACCORDION_TITLE,
+                    open=False,
+                ):
+                    with gr.Row(equal_height=True, elem_classes=["kc-obs-image-row"]):
+                        for image_path, caption in PHI_E_PI_GALLERY:
+                            gr.Image(
+                                str(image_path),
+                                label=caption,
+                                interactive=False,
+                                scale=1,
+                                height=280,
+                            )
+                    gr.Markdown(INVESTIGATION_6_MD)
                 gr.Markdown(OBSERVATIONS_FOOTER_MD)
 
             with gr.Tab("Showcase"):
@@ -489,7 +509,13 @@ def main() -> None:
         server_port=port,
         css=KINGDOM_CSS + NEON_CSS + PERIODIC_CSS,
         theme=_KINGDOM_THEME,
-        allowed_paths=[str(PAPERS_DIR), str(OBSERVATIONS_DIR), str(HIGGS_DIR), str(SCHUMANN_DIR)],
+        allowed_paths=[
+            str(PAPERS_DIR),
+            str(OBSERVATIONS_DIR),
+            str(HIGGS_DIR),
+            str(SCHUMANN_DIR),
+            str(MYSTERY_DIR),
+        ],
         inbrowser=not on_hf,
         # HF sets GRADIO_SSR_MODE=true by default; the Node SSR proxy can emit
         # harmless asyncio __del__ noise on Python 3.12. Client-side mode is

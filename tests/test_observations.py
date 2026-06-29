@@ -3,6 +3,7 @@
 from pathlib import Path
 
 from app.pages.higgs_observations import HIGGS_GALLERY, INVESTIGATION_4_MD
+from app.pages.phi_e_pi_mystery import INVESTIGATION_6_MD, PHI_E_PI_GALLERY
 from app.pages.schumann_observations import INVESTIGATION_5_MD, SCHUMANN_GALLERY
 from app.pages.observations import (
     CATATUMBO_GALLERY,
@@ -57,6 +58,11 @@ def test_investigation_5_schumann_content():
     assert len(SCHUMANN_GALLERY) == 3
 
 
+def test_investigation_6_phi_e_pi_content():
+    assert "Emergent Signature" in INVESTIGATION_6_MD
+    assert len(PHI_E_PI_GALLERY) == 3
+
+
 def test_observation_galleries_exist():
     galleries = (
         CATATUMBO_GALLERY,
@@ -64,6 +70,7 @@ def test_observation_galleries_exist():
         THREEBODY_GALLERY,
         HIGGS_GALLERY,
         SCHUMANN_GALLERY,
+        PHI_E_PI_GALLERY,
     )
     for gallery in galleries:
         assert len(gallery) == 3
