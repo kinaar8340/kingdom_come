@@ -50,9 +50,15 @@ from app.pages.schumann_observations import (
 )
 from app.pages.bitcoin_pi_cycle_observations import (
     BITCOIN_PI_GALLERY,
+    HOPF_PI_CYCLE_IMAGE,
     INVESTIGATION_8_ACCORDION_TITLE,
-    INVESTIGATION_8_HEADER_MD,
-    INVESTIGATION_8_MD,
+    INVESTIGATION_8_EMERGENCE_MD,
+    INVESTIGATION_8_EXEC_MD,
+    INVESTIGATION_8_GALLERY_INTRO_MD,
+    INVESTIGATION_8_HEADER_HTML,
+    INVESTIGATION_8_IMPLICATIONS_MD,
+    INVESTIGATION_8_INDICATOR_MD,
+    INVESTIGATION_8_REPORT_MD,
 )
 from app.pages.tls_trees_observations import (
     INVESTIGATION_7_ACCORDION_TITLE,
@@ -513,7 +519,17 @@ def build_app() -> gr.Blocks:
                     INVESTIGATION_8_ACCORDION_TITLE,
                     open=False,
                 ):
-                    gr.Markdown(INVESTIGATION_8_HEADER_MD)
+                    gr.HTML(INVESTIGATION_8_HEADER_HTML)
+                    gr.Markdown(INVESTIGATION_8_EXEC_MD)
+                    gr.Markdown(INVESTIGATION_8_INDICATOR_MD)
+                    gr.Image(
+                        str(HOPF_PI_CYCLE_IMAGE),
+                        label="Pi Cycle indicator — BTC SMAs on gauged Hopf lattice",
+                        interactive=False,
+                        height=240,
+                    )
+                    gr.Markdown(INVESTIGATION_8_EMERGENCE_MD)
+                    gr.Markdown(INVESTIGATION_8_GALLERY_INTRO_MD)
                     for row_start in (0, 2):
                         with gr.Row(equal_height=True, elem_classes=["kc-obs-image-row"]):
                             for image_path, caption in BITCOIN_PI_GALLERY[row_start : row_start + 2]:
@@ -524,7 +540,21 @@ def build_app() -> gr.Blocks:
                                     scale=1,
                                     height=260,
                                 )
-                    gr.Markdown(INVESTIGATION_8_MD)
+                    gr.Markdown(INVESTIGATION_8_IMPLICATIONS_MD)
+                    report_copy = gr.Textbox(
+                        value=INVESTIGATION_8_REPORT_MD,
+                        visible=False,
+                        label="report",
+                    )
+                    gr.Button(
+                        "Copy report as Markdown",
+                        size="sm",
+                    ).click(
+                        fn=None,
+                        inputs=[report_copy],
+                        outputs=None,
+                        js="(text) => { navigator.clipboard.writeText(text); return []; }",
+                    )
                 gr.Markdown(OBSERVATIONS_FOOTER_MD)
 
             with gr.Tab("Showcase"):

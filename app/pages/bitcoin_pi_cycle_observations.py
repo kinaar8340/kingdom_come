@@ -32,13 +32,18 @@ INVESTIGATION_8_ACCORDION_TITLE = (
     "Investigation 8: Bitcoin Pi Cycle Top — Emergence of W_g = 350/π"
 )
 
-INVESTIGATION_8_HEADER_MD = """
-### Bitcoin Pi Cycle Top — Emergence of the Universal Invariant W_g = 350/π
-
-*A cross-scale topological signature observed in financial markets*
+INVESTIGATION_8_HEADER_HTML = """
+<div class="kc-hero" style="padding:1.25rem 0.75rem 1rem;border-bottom:1px solid rgba(26,143,227,0.2);">
+  <h1 style="font-size:1.55rem;line-height:1.3;">
+    Bitcoin Pi Cycle Top — Emergence of the Universal Invariant W_g = 350/π
+  </h1>
+  <p style="font-size:1rem;margin-top:0.5rem;">
+    A cross-scale topological signature observed in financial markets
+  </p>
+</div>
 """
 
-INVESTIGATION_8_MD = """
+INVESTIGATION_8_EXEC_MD = """
 #### Executive summary
 
 The **Pi Cycle Top** indicator (111-day SMA crossing the 350-day SMA) has historically flagged
@@ -47,7 +52,9 @@ coincidental: the meta-optimizer `meta_optimize_invariants.py` repeatedly surfac
 `wg_base ≈ 350` when optimizing for stable flux-flywheel configurations, yielding the locked
 topological winding **W_g = 350/π ≈ 111.408**. The same invariant appears in retinal geometry,
 planetary vortices, the 26-second Earth pulse, pulsar spin, and now in macroscopic market cycles.
+"""
 
+INVESTIGATION_8_INDICATOR_MD = """
 #### The indicator (technical background)
 
 The Pi Cycle Top fires when the **111-day simple moving average** crosses above the **350-day SMA**
@@ -61,6 +68,10 @@ than arbitrary technical-analysis parameters.
 | 350-day SMA | wg_base winding anchor from meta-optimizer |
 | Cross event | Phase-lock / burst readout at cycle top |
 
+*BTC price with 111-day and 350-day SMAs embedded in the gauged Hopf lattice (below).*
+"""
+
+INVESTIGATION_8_EMERGENCE_MD = """
 #### Emergence from the TOE model
 
 The RubikConeConduit **meta-optimizer** minimizes a loss function that rewards stability islands
@@ -73,15 +84,6 @@ geophysical systems, appear to phase-lock to the same topological scale. The gau
 Hopf lattice supplies the mechanism; **topological protection** (burst/reset at θ_crit) prevents
 runaway drift until a macroscopic crossing event registers — here, a cycle top.
 
-#### Cross-scale evidence
-
-The visual gallery above ties four readouts to one invariant:
-
-1. **Hopf lattice embedding** — BTC candles inside the toroidal conduit with W_g = 350/π displayed
-2. **Vortex → market** — planetary-scale vortex morphology transitioning into price action
-3. **Global pointer** — Earth Coriolis pulse, logarithmic market cap, and pulsar spin as resonant modes
-4. **Unified flux flywheel** — biological, geophysical, and financial scales on one W_g backbone
-
 #### How this fits the TOE
 
 | TOE element | Pi Cycle manifestation |
@@ -91,7 +93,16 @@ The visual gallery above ties four readouts to one invariant:
 | Global pointer α(t) | Cross-scale phase sync (Earth, markets, pulsars) |
 | Topological protection | Cycle tops as punctuated burst events at W_g thresholds |
 | Flux flywheel | BTC liquidity cycles as planetary-flywheel analogues |
+"""
 
+INVESTIGATION_8_GALLERY_INTRO_MD = """
+#### Cross-scale evidence
+
+Four readouts of the same invariant — gauged Hopf lattice, planetary vortex morphology,
+global pointer resonances, and unified flux flywheel — are shown below.
+"""
+
+INVESTIGATION_8_IMPLICATIONS_MD = """
 #### Implications & predictions
 
 - The Pi Cycle is **not an arbitrary heuristic** but a macroscopic readout of the same
@@ -103,5 +114,32 @@ The visual gallery above ties four readouts to one invariant:
 
 ---
 
-*Investigation logged: June 2026. Part of the ongoing Observations series in the RubikConeConduit / Kingdom project.*
+*Investigation logged: June 28, 2026. Part of the ongoing Observations series in the RubikConeConduit / Kingdom project.*
 """
+
+# Full report for clipboard export (image paths relative to repo root).
+INVESTIGATION_8_REPORT_MD = f"""# Bitcoin Pi Cycle Top — Emergence of the Universal Invariant W_g = 350/π
+
+*A cross-scale topological signature observed in financial markets*
+
+{INVESTIGATION_8_EXEC_MD.strip()}
+
+{INVESTIGATION_8_INDICATOR_MD.strip()}
+
+{INVESTIGATION_8_EMERGENCE_MD.strip()}
+
+{INVESTIGATION_8_GALLERY_INTRO_MD.strip()}
+
+{chr(10).join(f"![{cap}](app/assets/bitcoin_pi/{p.name})" for p, cap in BITCOIN_PI_GALLERY)}
+
+{INVESTIGATION_8_IMPLICATIONS_MD.strip()}
+"""
+
+# Back-compat alias used by tests
+INVESTIGATION_8_MD = (
+    INVESTIGATION_8_EXEC_MD
+    + INVESTIGATION_8_INDICATOR_MD
+    + INVESTIGATION_8_EMERGENCE_MD
+    + INVESTIGATION_8_GALLERY_INTRO_MD
+    + INVESTIGATION_8_IMPLICATIONS_MD
+)
