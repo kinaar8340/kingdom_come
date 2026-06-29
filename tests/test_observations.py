@@ -6,6 +6,7 @@ from app.pages.higgs_observations import HIGGS_GALLERY, INVESTIGATION_4_MD
 from app.pages.phi_e_pi_mystery import INVESTIGATION_6_MD, PHI_E_PI_GALLERY
 from app.pages.bitcoin_pi_cycle_observations import BITCOIN_PI_GALLERY, INVESTIGATION_8_MD
 from app.pages.superconductors_observations import INVESTIGATION_9_MD, SUPERCONDUCTORS_GALLERY
+from app.pages.pulsars_observations import INVESTIGATION_10_MD, PULSARS_GALLERY
 from app.pages.tls_trees_observations import INVESTIGATION_7_MD, TLS_TREES_GALLERY
 from app.pages.schumann_observations import INVESTIGATION_5_MD, SCHUMANN_GALLERY
 from app.pages.observations import (
@@ -72,6 +73,12 @@ def test_investigation_9_superconductors_content():
     assert len(SUPERCONDUCTORS_GALLERY) == 3
 
 
+def test_investigation_10_pulsars_content():
+    assert "PTA" in INVESTIGATION_10_MD
+    assert "Hellings" in INVESTIGATION_10_MD
+    assert len(PULSARS_GALLERY) == 3
+
+
 def test_observation_galleries_exist():
     galleries = (
         CATATUMBO_GALLERY,
@@ -83,6 +90,7 @@ def test_observation_galleries_exist():
         TLS_TREES_GALLERY,
         BITCOIN_PI_GALLERY,
         SUPERCONDUCTORS_GALLERY,
+        PULSARS_GALLERY,
     )
     for gallery in galleries:
         assert len(gallery) >= 3
