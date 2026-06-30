@@ -14,35 +14,51 @@ def _background_image_url() -> str:
     return f"https://huggingface.co/spaces/{space_id}/resolve/main/{KC_BG_IMAGE_FILE}"
 
 
+_KC_BG_LAYER_STYLE = """
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  z-index: 0 !important;
+  pointer-events: none !important;
+  background-position: center center !important;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+  background-attachment: fixed !important;
+"""
+
+
 def background_head_html() -> str:
-    """Inject background on <html> before Gradio paints opaque theme fills."""
+    """Fixed viewport background — never scrolls with Gradio content."""
     url = _background_image_url()
     return f"""<style id="kc-page-bg-head">
-html {{
-  background: url('{url}') center center / cover no-repeat fixed !important;
+html, body {{
+  background: transparent !important;
   background-color: transparent !important;
 }}
 body::before {{
   content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -9999;
-  pointer-events: none;
-  background: url('{url}') center center / cover no-repeat;
+  {_KC_BG_LAYER_STYLE.strip()}
+  z-index: -9999 !important;
+  background-image: url('{url}') !important;
+}}
+#kc-page-bg {{
+  {_KC_BG_LAYER_STYLE.strip()}
+  background-image: url('{url}') !important;
 }}
 </style>"""
 
 
 def background_layer_html() -> str:
-    """Fixed full-viewport background layer (backup if head/CSS is overridden)."""
+    """Fixed full-viewport background layer (scroll-independent anchor)."""
     url = _background_image_url()
     return f"""
 <div id="kc-page-bg" aria-hidden="true" style="
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background: url('{url}') center center / cover no-repeat;
+  {_KC_BG_LAYER_STYLE.strip()}
+  background-image: url('{url}');
 "></div>
 """
 
@@ -66,9 +82,20 @@ _KINGDOM_CSS_SHELL = """
   --block-border-color: rgba(26, 143, 227, 0.25) !important;
   --panel-background-fill: transparent !important;
 }
+html,
+body,
+#root,
+#app,
+.app,
+.main {
+  background: transparent !important;
+  background-color: transparent !important;
+}
 .gradio-container {
   position: relative !important;
   z-index: 1 !important;
+  background: transparent !important;
+  background-color: transparent !important;
 }
 .gradio-container .block,
 .gradio-container .panel,
@@ -413,23 +440,16 @@ _KC_TROUBLESHOOT_TRANSPARENCY = """
 
 
 def build_kingdom_css() -> str:
-    """Troubleshoot mode: no gradient overlays — only the kingdom_bg2.png image layer."""
-    bg_url = _background_image_url()
-    shell = f"""
-html, body, .app, .main, #root, #app {{
-  background: url('{bg_url}') center center / cover no-repeat fixed !important;
-  background-color: transparent !important;
+    """Troubleshoot mode: fixed #kc-page-bg only; foreground scrolls freely."""
+    shell = """
+html, body {
   min-height: 100%;
-}}
-body {{
   background: transparent !important;
   background-color: transparent !important;
-}}
-.gradio-container {{
-  background: transparent !important;
-  background-color: transparent !important;
+}
+.gradio-container {
   color: var(--kc-text) !important;
-}}
+}
 """
     return shell + _KINGDOM_CSS_SHELL + _KC_TROUBLESHOOT_TRANSPARENCY
 
