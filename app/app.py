@@ -87,7 +87,13 @@ from app.pages.help import (
     HELP_NAVIGATE_MD,
     HELP_TECH_MD,
 )
-from app.pages.home import HOME_CLOCK_MD, HOME_EXPLORE_MD, HOME_FOUNDATION_MD, HOME_WG_MD
+from app.pages.home import (
+    HOME_CLOCK_MD,
+    HOME_EXPLORE_MD,
+    HOME_INTRO_MD,
+    HOME_THE_MODEL_MD,
+    HOME_WG_MD,
+)
 from app.pages.hopf_guide import HF_VIEW_MODE_MD, HOPF_INTRO_MD, HOPF_PANEL_GUIDE_MD
 from app.pages.observations import (
     CATATUMBO_GALLERY,
@@ -247,15 +253,17 @@ def build_app() -> gr.Blocks:
 
         with gr.Tabs():
             with gr.Tab("Home"):
-                gr.Markdown(HOME_FOUNDATION_MD)
-                with gr.Accordion("Derivation: Hopf Map via Quaternions", open=False):
-                    gr.Markdown(DERIVATION_HOPF_MD)
+                gr.Markdown(HOME_INTRO_MD)
                 with gr.Tabs():
+                    with gr.Tab("The Model"):
+                        gr.Markdown(HOME_THE_MODEL_MD)
+                        with gr.Accordion("Derivation: Hopf Map via Quaternions", open=False):
+                            gr.Markdown(DERIVATION_HOPF_MD)
                     with gr.Tab("The Clock"):
                         gr.Markdown(HOME_CLOCK_MD)
                     with gr.Tab("W_g Constant"):
                         gr.Markdown(HOME_WG_MD)
-                    with gr.Tab("Papers"):
+                    with gr.Tab("The Papers"):
                         gr.Markdown(PAPERS_INTRO_MD)
                         paper_galleries: list[gr.Gallery] = []
                         for paper in PAPER_ENTRIES:

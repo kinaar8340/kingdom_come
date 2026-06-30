@@ -10,11 +10,11 @@ Use the **main tab bar** at the top of this page to switch between interactive m
 
 | Tab | What it does | Start here if… |
 |-----|--------------|----------------|
-| **Home** | Merged foundation + model — vision, math backbone, clock mechanism | You want the big picture first |
+| **Home → The Model** | Vision, math backbone, flux flywheels, observer sync | You want the big picture first |
 | **Help** | This page — navigation, controls, acronyms | You need orientation or a term defined |
 | **Hopf Visualizer** | Linked S³ → S² fiber plots (2D on HF, 3D WebGL locally) | You want geometric intuition |
 
-| **Home → Papers** | Accordion summaries + inline page previews + PDF download | You want primary sources |
+| **Home → The Papers** | Accordion summaries + inline page previews + PDF download | You want primary sources |
 | **Lattice Simulator** | Two-gyro gauged quaternion lattice (stable vs chaotic) | You want to see burst dynamics |
 | **Flux Flywheel** | Periodic table explorer Z = 1–180 + Magic Island heatmap | You want matter as flux configurations |
 | **Observations** | Investigations — lightning, Jupiter, 3-body, Higgs, Schumann, Bitcoin π-cycle, cuprates, pulsars | You want nature-scale W_g signatures |
@@ -55,7 +55,7 @@ linking topology, quaternions, flux lattices, and emergent matter models.
 
 ### Recommended first visit
 
-1. Read **Home** (foundation + vision) and **Home → The Clock** for the \(W_g = 350/\pi\) mechanism.
+1. Read **Home → The Model** and **Home → The Clock** for the \(W_g = 350/\pi\) mechanism.
 2. Open **Hopf Visualizer** → click **Classic Hopf** preset → **Update visualization**.
 3. Study the four panels: linked fibers (xy/xz), S² base chart, phase-colored highlight.
 4. Open **Lattice Simulator** → **Run lattice comparison** (stable vs chaotic).
@@ -160,6 +160,6 @@ HELP_TECH_MD = r"""
 ### Related reading
 
 - **Home** tab — clock mechanism and \(W_g\) foundation
-- **Home → Papers** — *GW_Burst_Threshold*, *Lagrangian_Derivation*, *Observer_Synchronization*
+- **Home → The Papers** — *GW_Burst_Threshold*, *Lagrangian_Derivation*, *Observer_Synchronization*
 - **Acronyms** tab (this Help section) — full glossary
 """

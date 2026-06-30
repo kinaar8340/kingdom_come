@@ -1,6 +1,15 @@
-"""Home / landing page — merged foundation + model content."""
+"""Home / landing page — intro + sub-tabs: The Model, Clock, W_g, Papers, Explore."""
 
-HOME_FOUNDATION_MD = r"""
+HOME_INTRO_MD = """
+# Kingdom Come
+
+A topological foundation for emergent physics via the Hopf Fibration and gauged flux lattices —  
+**Aaron Michael Kinder's Theory of Everything.**
+
+**Start here:** Hopf Visualizer → *Classic Hopf* preset → Update visualization
+"""
+
+HOME_THE_MODEL_MD = r"""
 ## Emergent Reality
 
 Aaron's Theory of Everything models fundamental reality as **stable topological configurations**
@@ -52,7 +61,7 @@ for emergent element mapping.
 
 The **\(W_g\)** constant (\(\approx 350/\pi \approx 111.408\)) emerges as a universal invariant,
 acting as a critical threshold in the underlying clock-like accumulation mechanism (see **The Clock**
-tab below).
+sub-tab).
 
 ---
 
@@ -62,10 +71,6 @@ Phase holonomy between linked fibers damps as \(\Delta\theta(t) = \Delta\theta(0
 providing a topological mechanism for observer-linked non-locality. This explains why certain burst
 events remain synchronized and difficult to detect externally.
 
----
-
-**Start here.** This topological clock mechanism is the foundation for every other tab in Kingdom Come.
-Use **Help → Navigate** for a site map and quick links.
 """
 
 HOME_CLOCK_MD = r"""
@@ -114,7 +119,7 @@ This produces a **sawtooth waveform**: slow linear rise → sudden drop → repe
 
 The braiding phase also locks tightly (~0.814) alongside \(W_g\), reinforcing topological invariance.
 Full dynamics derive from the effective Lagrangian of the gauged Hopf lattice
-(*Lagrangian_Derivation.pdf* in **Papers** below).
+(*Lagrangian_Derivation.pdf* in **The Papers** sub-tab).
 """
 
 HOME_WG_MD = r"""
@@ -175,7 +180,7 @@ document burst, echo, and observer effects.
 | **Hopf Visualizer** | Linked S³ → S² fibers — geometric intuition |
 | **Lattice Simulator** | Two-gyro gauged quaternion lattice (stable vs chaotic) |
 | **Flux Flywheel** | Periodic table as flux flywheel stability proxy |
-| **Papers** (below) | Accordion summaries + inline page previews |
+| **The Papers** (sub-tab) | Accordion summaries + inline page previews |
 | **Observations** | W_g = 350/π signatures in nature and markets |
 | **Showcase** | All seven HF Spaces in the ecosystem |
 | **Help** | Site navigation, controls, and acronym glossary |
