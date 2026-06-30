@@ -6,10 +6,14 @@ from app.components.neon import (
     NEON_CSS,
     element_card_html,
     flux_metrics_cards_html,
+    flux_observables_analysis_html,
     flux_observables_cards_html,
+    flux_observables_right_html,
+    flux_observables_table_html,
     install_neon_plugin,
     toe_strip_html,
 )
+from kingdom.core.flux_explorer import explore_flux_element_extended
 
 
 def test_install_neon_plugin_returns_css():
@@ -113,6 +117,8 @@ def test_flux_metrics_cards_html():
 def test_flux_observables_cards_html():
     payload = explore_flux_element_extended(26)
     html = flux_observables_cards_html(payload["flywheel"])
+    assert "kc-flux-metrics-col" in html
+    assert "kc-flux-validation-full" in html
     assert "kc-observables-grid" in html
     assert "7.9" in html
     assert "4" in html
@@ -137,6 +143,22 @@ def test_flux_observables_cards_html():
     assert "Atomic Radius" in html
     assert "132 pm" in html
     assert "pm" in html  # model radius proxy line
+
+
+def test_flux_observables_split_layout_xenon():
+    payload = explore_flux_element_extended(54)
+    fly = payload["flywheel"]
+    analysis = flux_observables_analysis_html(fly)
+    right = flux_observables_right_html(fly)
+    table = flux_observables_table_html(fly)
+    assert "kc-flux-analysis-col" in analysis
+    assert "Proxy Quality" in analysis
+    assert "Noble Gas" in analysis
+    assert "kc-flux-metrics-col" in right
+    assert "Overall Comparison Fidelity" in right
+    assert "Proxy Quality" not in right
+    assert "kc-flux-validation-full" in table
+    assert "model-vs-experiment-table" in table
 
 
 def test_flux_observables_heavy_element_caveat():

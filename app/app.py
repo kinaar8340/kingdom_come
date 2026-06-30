@@ -21,7 +21,9 @@ from app.components.neon import (
     install_neon_plugin,
     element_card_html,
     flux_metrics_cards_html,
-    flux_observables_cards_html,
+    flux_observables_analysis_html,
+    flux_observables_right_html,
+    flux_observables_table_html,
     synthetic_toe_strip_html,
     synthetic_z_html,
     toe_strip_html,
@@ -225,8 +227,10 @@ def _flux_panels(z: int):
         card,
         payload["cloud_fig"],
         payload["compare_fig"],
+        flux_observables_analysis_html(fly),
         flux_metrics_cards_html(fly),
-        flux_observables_cards_html(fly),
+        flux_observables_right_html(fly),
+        flux_observables_table_html(fly),
         toe,
         payload["magic_island"],
     )
@@ -253,7 +257,7 @@ def on_periodic_pick(evt: gr.EventData):
 
 
 def _trend_select_noop():
-    return tuple(gr.update() for _ in range(11))
+    return tuple(gr.update() for _ in range(13))
 
 
 def on_fidelity_trend_select(evt: gr.SelectData, periods: list[str] | None):
@@ -524,21 +528,26 @@ def build_app() -> gr.Blocks:
                         open=False,
                     ):
                         superheavy_periodic_table = gr.HTML(js_on_load=PERIODIC_TABLE_JS)
-                    # Hero: element card (left) · electron cloud plot (right, 2× width)
-                    with gr.Row():
-                        with gr.Column(scale=1, min_width=240):
+                    with gr.Row(equal_height=False):
+                        with gr.Column(
+                            scale=1,
+                            min_width=280,
+                            elem_classes=["kc-flux-left-col"],
+                        ):
                             element_card = gr.HTML(label="Element")
-                        with gr.Column(scale=2):
                             electron_plot = gr.Plot(label="Electron cloud + flux ring")
-                    with gr.Row():
-                        with gr.Column(scale=1):
                             compare_plot = gr.Plot(label="Chemistry vs TOE flux")
-                        with gr.Column(scale=1):
-                            with gr.Row(equal_height=True):
-                                with gr.Column(scale=1):
-                                    flux_metrics_panel = gr.HTML(label="Flux metrics")
-                                with gr.Column(scale=1):
-                                    flux_observables_panel = gr.HTML(label="Observables")
+                            flux_analysis_panel = gr.HTML(label="Chemistry analysis")
+                        with gr.Column(
+                            scale=1,
+                            min_width=280,
+                            elem_classes=["kc-flux-right-col"],
+                        ):
+                            flux_metrics_panel = gr.HTML(label="Flux metrics")
+                            flux_observables_panel = gr.HTML(
+                                label="Observables & fidelity"
+                            )
+                    flux_validation_panel = gr.HTML(label="Model vs experiment")
                     toe_panel = gr.HTML(label="TOE interpretation")
                     with gr.Accordion("Magic Island heatmap", open=False):
                         magic_island_plot = gr.Plot()
@@ -549,8 +558,10 @@ def build_app() -> gr.Blocks:
                         element_card,
                         electron_plot,
                         compare_plot,
+                        flux_analysis_panel,
                         flux_metrics_panel,
                         flux_observables_panel,
+                        flux_validation_panel,
                         toe_panel,
                         magic_island_plot,
                     ]

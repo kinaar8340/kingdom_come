@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import base64
 from pathlib import Path
+from typing import Any
 
 from kingdom.core.experimental_data import interpret_comparison_fidelity
 from kingdom.core.flux_explorer import build_observables_validation
@@ -586,6 +587,46 @@ NEON_CSS = """
   line-height: 1.45;
   font-size: 0.72rem;
 }
+.kc-flux-left-col,
+.kc-flux-right-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 0;
+}
+.kc-flux-analysis-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  width: 100%;
+  margin-top: 0.15rem;
+  padding-top: 0.55rem;
+  border-top: 1px solid rgba(26, 143, 227, 0.22);
+}
+.kc-flux-proxy-section {
+  width: 100%;
+  padding: 0.35rem 0.1rem 0.15rem;
+}
+.kc-flux-section-title {
+  margin: 0 0 0.35rem;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: #8ecae6;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+.kc-flux-metrics-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  width: 100%;
+}
+.kc-flux-validation-full {
+  width: 100%;
+  max-width: 100%;
+  margin-top: 0.35rem;
+  box-sizing: border-box;
+}
 .kc-obs-interpret.kc-interpret-solid {
   border-color: rgba(255, 212, 90, 0.35);
 }
@@ -835,7 +876,7 @@ _PROXY_QUALITY_TIPS: dict[str, str] = {
 }
 
 
-def _proxy_quality_html(proxy_quality: dict[str, dict[str, str]]) -> str:
+def _proxy_quality_pills_html(proxy_quality: dict[str, dict[str, str]]) -> str:
     if not proxy_quality:
         return ""
     labels = {
@@ -856,14 +897,25 @@ def _proxy_quality_html(proxy_quality: dict[str, dict[str, str]]) -> str:
             f'<span class="kc-proxy-pill kc-proxy-{level}" title="{tip}">'
             f'<span class="kc-proxy-pill-label">{labels[key]}</span>{label}</span>'
         )
+    return f'<div class="kc-obs-fidelity-proxy-pills">{"".join(items)}</div>'
+
+
+def _proxy_quality_html(proxy_quality: dict[str, dict[str, str]]) -> str:
+    pills = _proxy_quality_pills_html(proxy_quality)
+    if not pills:
+        return ""
     return (
         '<div class="kc-obs-fidelity-proxy"><strong>Proxy Quality</strong> '
-        f'<div class="kc-obs-fidelity-proxy-pills">{"".join(items)}</div></div>'
+        f"{pills}</div>"
     )
 
 
-def flux_observables_fidelity_html(extended: dict, *, interpretation: dict | None = None) -> str:
-    """Layered comparison fidelity panel (overall, core, categories, proxy tags)."""
+def flux_observables_fidelity_scores_html(
+    extended: dict,
+    *,
+    interpretation: dict | None = None,
+) -> str:
+    """Overall + Core comparison fidelity headline cards."""
     score = extended.get("comparison_fidelity_score")
     if score is None:
         return ""
@@ -871,9 +923,6 @@ def flux_observables_fidelity_html(extended: dict, *, interpretation: dict | Non
     details = extended.get("comparison_fidelity_details") or {}
     note = extended.get("comparison_fidelity_note", "")
     core = extended.get("comparison_fidelity_core_score")
-    category_scores = extended.get("comparison_fidelity_category_scores") or {}
-    category_details = extended.get("comparison_fidelity_category_details") or {}
-    proxy_quality = extended.get("comparison_fidelity_proxy_quality") or {}
     interp = interpretation or {}
     coverage = interp.get("coverage", {})
     coverage_html = ""
@@ -922,7 +971,7 @@ def flux_observables_fidelity_html(extended: dict, *, interpretation: dict | Non
             f"</div>"
         )
 
-    header_html = (
+    return (
         f'<div class="kc-obs-fidelity-header">'
         f'<div class="kc-metric-card kc-obs-fidelity kc-obs-fidelity-headline {fidelity_class}">'
         f'<span class="kc-obs-tip" title="{tip}">Overall Comparison Fidelity</span>'
@@ -933,12 +982,32 @@ def flux_observables_fidelity_html(extended: dict, *, interpretation: dict | Non
         f"</div>"
     )
 
+
+def flux_observables_fidelity_html(extended: dict, *, interpretation: dict | None = None) -> str:
+    """Layered comparison fidelity panel (overall, core, categories)."""
+    scores = flux_observables_fidelity_scores_html(extended, interpretation=interpretation)
+    if not scores:
+        return ""
+    category_scores = extended.get("comparison_fidelity_category_scores") or {}
+    category_details = extended.get("comparison_fidelity_category_details") or {}
     return f"""
   <div class="kc-obs-fidelity-panel kc-neon-plugin">
-    {header_html}
+    {scores}
     {_category_score_html(category_scores, category_details)}
-    {_proxy_quality_html(proxy_quality)}
   </div>"""
+
+
+def flux_observables_proxy_section_html(proxy_quality: dict[str, dict[str, str]]) -> str:
+    """Compact proxy quality block for the chemistry analysis column."""
+    pills = _proxy_quality_pills_html(proxy_quality)
+    if not pills:
+        return ""
+    return (
+        f'<div class="kc-flux-proxy-section kc-neon-plugin">'
+        f'<h4 class="kc-flux-section-title">Proxy Quality</h4>'
+        f'<div class="kc-obs-fidelity-proxy">{pills}</div>'
+        f"</div>"
+    )
 
 
 def flux_observables_interpretation_html(interpretation: dict) -> str:
@@ -1007,8 +1076,74 @@ def flux_observables_validation_table_html(rows: list[dict]) -> str:
 </div>"""
 
 
-def flux_observables_cards_html(extended: dict) -> str:
-    """Laboratory observables + model alignment (Flux Flywheel secondary row)."""
+def _observables_ui_bundle(extended: dict) -> dict[str, Any]:
+    """Shared validation + interpretation context for observables panels."""
+    z = int(extended.get("Z", 1))
+    validation = build_observables_validation(z, extended)
+    interpretation = interpret_comparison_fidelity(
+        z,
+        fidelity_score=validation["fidelity_score"],
+        fidelity_details=validation["fidelity_details"],
+        comparisons=validation["comparisons"],
+        stability_score=float(extended["stability_score"]),
+        is_noble_gas=bool(extended.get("is_noble_gas")),
+        core_model_fidelity=validation.get("fidelity_core_score"),
+        category_scores=validation.get("fidelity_category_scores"),
+        category_details=validation.get("fidelity_category_details"),
+    )
+    interpretation["fidelity_score"] = validation["fidelity_score"]
+    fidelity_extended = {
+        **extended,
+        "comparison_fidelity_score": validation["fidelity_score"],
+        "comparison_fidelity_core_score": validation.get("fidelity_core_score"),
+        "comparison_fidelity_category_scores": validation.get("fidelity_category_scores", {}),
+        "comparison_fidelity_category_details": validation.get("fidelity_category_details", {}),
+        "comparison_fidelity_proxy_quality": validation.get("fidelity_proxy_quality", {}),
+        "comparison_fidelity_details": validation["fidelity_details"],
+        "comparison_fidelity_note": validation["fidelity_note"],
+    }
+    noble_banner = ""
+    if extended.get("is_noble_gas"):
+        bonus = extended.get("noble_gas_stability_bonus", 0)
+        bonus_hint = f" (+{bonus:.1f} stability bonus applied)" if bonus else ""
+        noble_banner = f"""
+  <details class="kc-obs-noble-banner" data-kc-noble-z="{z}" open
+    title="Closed-shell noble gas — stability bonus{bonus_hint}">
+    <summary>Noble Gas — Closed Shell Detected</summary>
+    <div class="kc-obs-noble-banner-body">
+      This element has a closed electron shell, which the model recognizes through a
+      stability bonus{bonus_hint}. However, alignment on Electronegativity and some
+      other properties can still be modest for heavier noble gases (period 5+). This
+      reflects a known limitation of stability-based proxies in this region.
+    </div>
+  </details>"""
+    return {
+        "z": z,
+        "validation": validation,
+        "interpretation": interpretation,
+        "fidelity_extended": fidelity_extended,
+        "noble_banner": noble_banner,
+    }
+
+
+def flux_observables_analysis_html(extended: dict) -> str:
+    """Left column: proxy quality, fidelity interpretation, noble gas banner."""
+    bundle = _observables_ui_bundle(extended)
+    proxy = flux_observables_proxy_section_html(
+        bundle["fidelity_extended"].get("comparison_fidelity_proxy_quality", {})
+    )
+    interpretation = flux_observables_interpretation_html(bundle["interpretation"])
+    if not (proxy or interpretation or bundle["noble_banner"]):
+        return ""
+    return (
+        f'<div class="kc-flux-analysis-col kc-neon-plugin">'
+        f"{proxy}{interpretation}{bundle['noble_banner']}"
+        f"</div>"
+    )
+
+
+def flux_observables_right_html(extended: dict) -> str:
+    """Right column: fidelity scores, category grid, and laboratory metric cards."""
     alignment = float(extended["model_vs_reality_alignment"])
     align_pct = max(0.0, min(100.0, alignment * 10.0))
     if alignment >= 8.0:
@@ -1121,54 +1256,16 @@ def flux_observables_cards_html(extended: dict) -> str:
         f"not the absolute stability-derived proxy ({implied_ie} eV)."
     )
 
-    z = int(extended.get("Z", 1))
-    validation = build_observables_validation(z, extended)
-    interpretation = interpret_comparison_fidelity(
-        z,
-        fidelity_score=validation["fidelity_score"],
-        fidelity_details=validation["fidelity_details"],
-        comparisons=validation["comparisons"],
-        stability_score=float(extended["stability_score"]),
-        is_noble_gas=bool(extended.get("is_noble_gas")),
-        core_model_fidelity=validation.get("fidelity_core_score"),
-        category_scores=validation.get("fidelity_category_scores"),
-        category_details=validation.get("fidelity_category_details"),
+    bundle = _observables_ui_bundle(extended)
+    fidelity_card = flux_observables_fidelity_html(
+        bundle["fidelity_extended"],
+        interpretation=bundle["interpretation"],
     )
-    interpretation["fidelity_score"] = validation["fidelity_score"]
-    fidelity_card = flux_observables_fidelity_html({
-        **extended,
-        "comparison_fidelity_score": validation["fidelity_score"],
-        "comparison_fidelity_core_score": validation.get("fidelity_core_score"),
-        "comparison_fidelity_category_scores": validation.get("fidelity_category_scores", {}),
-        "comparison_fidelity_category_details": validation.get("fidelity_category_details", {}),
-        "comparison_fidelity_proxy_quality": validation.get("fidelity_proxy_quality", {}),
-        "comparison_fidelity_details": validation["fidelity_details"],
-        "comparison_fidelity_note": validation["fidelity_note"],
-    }, interpretation=interpretation)
-    interpretation_card = flux_observables_interpretation_html(interpretation)
-    validation_table = flux_observables_validation_table_html(validation["rows"])
-    noble_banner = ""
-    if extended.get("is_noble_gas"):
-        bonus = extended.get("noble_gas_stability_bonus", 0)
-        _bonus_hint = (
-            f" (+{bonus:.1f} stability bonus applied)"
-            if bonus
-            else ""
-        )
-        noble_banner = f"""
-  <details class="kc-obs-noble-banner" data-kc-noble-z="{z}" open
-    title="Closed-shell noble gas — stability bonus{_bonus_hint}">
-    <summary>Noble Gas — Closed Shell Detected</summary>
-    <div class="kc-obs-noble-banner-body">
-      This element has a closed electron shell, which the model recognizes through a
-      stability bonus{_bonus_hint}. However, alignment on Electronegativity and some
-      other properties can still be modest for heavier noble gases (period 5+). This
-      reflects a known limitation of stability-based proxies in this region.
-    </div>
-  </details>"""
 
     return f"""
-<div class="{grid_class} kc-neon-plugin">{fidelity_card}{interpretation_card}{noble_banner}
+<div class="kc-flux-metrics-col kc-neon-plugin">
+  {fidelity_card}
+  <div class="{grid_class}">
   <div class="kc-metric-card">
     <span class="kc-obs-tip" title="Flux flywheel stability score (magic-island calibrated)">Model score</span>
     <strong>{extended["stability_score"]}</strong>
@@ -1201,9 +1298,28 @@ def flux_observables_cards_html(extended: dict) -> str:
       Δ model vs IE: {align_gap:+.1f} pts
     </span>
     <span class="kc-obs-caption">{extended["validation_notes"]}</span>
-  </div>{heavy_note}{validation_table}
+  </div>{heavy_note}
+  </div>
 </div>
 """
+
+
+def flux_observables_table_html(extended: dict) -> str:
+    """Full-width Model vs Experiment validation table."""
+    bundle = _observables_ui_bundle(extended)
+    table = flux_observables_validation_table_html(bundle["validation"]["rows"])
+    if not table:
+        return ""
+    return f'<div class="kc-flux-validation-full kc-neon-plugin">{table}</div>'
+
+
+def flux_observables_cards_html(extended: dict) -> str:
+    """Combined observables layout (legacy / test helper)."""
+    return (
+        f'{flux_observables_analysis_html(extended)}'
+        f'{flux_observables_right_html(extended)}'
+        f'{flux_observables_table_html(extended)}'
+    )
 
 
 def toe_strip_html(element, flywheel: dict) -> str:
