@@ -10,7 +10,7 @@ from app.pages.help import (
 from app.pages.home import (
     HOME_CLOCK_MD,
     HOME_EXPLORE_MD,
-    HOME_INTRO_GALLERY_HTML,
+    HOME_INTRO_GALLERY,
     HOME_INTRO_MD,
     HOME_THE_MODEL_MD,
     HOME_WG_MD,
@@ -19,9 +19,9 @@ from app.pages.home import (
 
 def test_home_covers_clock_mechanism():
     assert "Kingdom Come" in HOME_INTRO_MD
-    assert "hopf_linked_fibers.png" in HOME_INTRO_GALLERY_HTML
-    assert "hopf_ribbon_torus.jpg" in HOME_INTRO_GALLERY_HTML
-    assert "hopf_fibration_bundle.png" in HOME_INTRO_GALLERY_HTML
+    assert len(HOME_INTRO_GALLERY) == 3
+    for path, _caption in HOME_INTRO_GALLERY:
+        assert path.is_file()
     assert "flux flywheels" in HOME_THE_MODEL_MD
     assert "RubikConeConduit" in HOME_THE_MODEL_MD
     assert "2x_2x_3" in HOME_THE_MODEL_MD

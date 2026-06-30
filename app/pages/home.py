@@ -1,5 +1,9 @@
 """Home / landing page — intro + sub-tabs: The Model, Clock, W_g, Papers, Explore."""
 
+from pathlib import Path
+
+HOME_ASSETS_DIR = Path(__file__).resolve().parents[1] / "assets" / "home"
+
 HOME_INTRO_MD = """
 # Kingdom Come
 
@@ -9,21 +13,20 @@ A topological foundation for emergent physics via the Hopf Fibration and gauged 
 **Start here:** Hopf Visualizer → *Classic Hopf* preset → Update visualization
 """
 
-HOME_INTRO_ASSET = "app/assets/home"
-
-HOME_INTRO_GALLERY_HTML = f"""
-<div class="kc-home-hopf-row" role="group" aria-label="Hopf fibration visualizations">
-  <img src="{HOME_INTRO_ASSET}/hopf_linked_fibers.png"
-       alt="Linked Villarceau circles — stereographic Hopf fiber projection on black background"
-       loading="lazy" />
-  <img src="{HOME_INTRO_ASSET}/hopf_ribbon_torus.jpg"
-       alt="Rainbow Hopf ribbon torus — Classic Hopf preset visualization"
-       loading="lazy" />
-  <img src="{HOME_INTRO_ASSET}/hopf_fibration_bundle.png"
-       alt="Hopf fibration fiber bundle with S² base sphere projection"
-       loading="lazy" />
-</div>
-"""
+HOME_INTRO_GALLERY: tuple[tuple[Path, str], ...] = (
+    (
+        HOME_ASSETS_DIR / "hopf_linked_fibers.png",
+        "Linked Villarceau circles — stereographic Hopf fiber projection",
+    ),
+    (
+        HOME_ASSETS_DIR / "hopf_ribbon_torus.jpg",
+        "Rainbow Hopf ribbon torus — Classic Hopf preset",
+    ),
+    (
+        HOME_ASSETS_DIR / "hopf_fibration_bundle.png",
+        "Hopf fibration fiber bundle with S² base sphere projection",
+    ),
+)
 
 HOME_THE_MODEL_MD = """
 ### Emergent Reality

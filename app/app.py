@@ -92,7 +92,7 @@ from app.pages.help import (
 from app.pages.home import (
     HOME_CLOCK_MD,
     HOME_EXPLORE_MD,
-    HOME_INTRO_GALLERY_HTML,
+    HOME_INTRO_GALLERY,
     HOME_INTRO_MD,
     HOME_THE_MODEL_MD,
     HOME_WG_MD,
@@ -258,7 +258,15 @@ def build_app() -> gr.Blocks:
         with gr.Tabs():
             with gr.Tab("Home"):
                 kc_markdown(HOME_INTRO_MD)
-                gr.HTML(HOME_INTRO_GALLERY_HTML)
+                with gr.Row(equal_height=True, elem_classes=["kc-obs-image-row"]):
+                    for image_path, caption in HOME_INTRO_GALLERY:
+                        gr.Image(
+                            str(image_path),
+                            label=caption,
+                            interactive=False,
+                            scale=1,
+                            height=220,
+                        )
                 with gr.Tabs():
                     with gr.Tab("The Model"):
                         kc_markdown(HOME_THE_MODEL_MD)
