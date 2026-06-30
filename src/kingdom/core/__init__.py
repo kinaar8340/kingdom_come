@@ -1,6 +1,6 @@
 """Core mathematical and physical models."""
 
-from .flux_flywheel import map_z_to_flywheel
+from .flux_flywheel import map_z_to_flywheel, map_z_to_flywheel_extended
 from .hopf import (
     hopf_coordinates,
     hopf_map,
@@ -19,6 +19,7 @@ __all__ = [
     "hopf_map_quaternion",
     "linking_number_pair",
     "map_z_to_flywheel",
+    "map_z_to_flywheel_extended",
     "rodrigues_rotation",
     "sample_fiber",
     "sample_fiber_family",

@@ -8,7 +8,7 @@ from pathlib import Path
 import plotly.graph_objects as go
 
 from kingdom.core.elements import EXPLORER_Z_MAX, NOBLE_GAS_Z, get_element, is_explorable_element
-from kingdom.core.flux_flywheel import map_z_to_flywheel
+from kingdom.core.flux_flywheel import map_z_to_flywheel, map_z_to_flywheel_extended
 from kingdom.viz.electron_cloud import build_chemistry_vs_toe_figure, build_electron_cloud_figure
 from kingdom.viz.hopf_plotly import kingdom_dark_theme
 from kingdom.viz.magic_island import build_magic_island_heatmap
@@ -59,6 +59,18 @@ def _cached_compare_figure(z: int, stability: float) -> go.Figure:
 @lru_cache(maxsize=256)
 def _cached_magic_island(z: int) -> go.Figure:
     return build_magic_island_heatmap(z)
+
+
+def flux_observables_table(extended: dict) -> list[list[str]]:
+    """Key-value rows for model vs laboratory observables."""
+    return [
+        ["IE (1st, eV)", str(extended["real_ionization_energy_eV"])],
+        ["Unpaired e⁻", str(extended["unpaired_electrons"])],
+        ["μ (spin-only, BM)", str(extended["magnetic_moment_BM"])],
+        ["Diamagnetic", "yes" if extended["is_diamagnetic"] else "no"],
+        ["Model ↔ reality", str(extended["model_vs_reality_alignment"])],
+        ["Validation", extended["validation_notes"]],
+    ]
 
 
 def flux_metrics_table(flywheel: dict) -> list[list[str]]:
@@ -121,4 +133,16 @@ def explore_flux_element(z: int) -> dict:
         "is_magic": element.is_magic_number if element else False,
         "is_synthetic": element.is_synthetic if element else False,
         "is_pseudo_z": z == 129,
+    }
+
+
+def explore_flux_element_extended(z: int) -> dict:
+    """Flux Flywheel payload with laboratory observables and validation metrics."""
+    payload = explore_flux_element(z)
+    extended = map_z_to_flywheel_extended(z)
+    return {
+        **payload,
+        "flywheel": extended,
+        "metrics_table": flux_metrics_table(extended),
+        "observables_table": flux_observables_table(extended),
     }
