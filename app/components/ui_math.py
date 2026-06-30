@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-# Gradio Tab labels are plain text; keep this exact string for the JS patch target.
-WG_TAB_LABEL = "W_g Constant"
+# Gradio Tab labels are plain text (no LaTeX). Avoid underscores — they collapse to "WgConstant".
+WG_TAB_LABEL = "Wg Constant"
 
 # Patches tab buttons / accordion summaries that cannot use kc_markdown LaTeX.
 UI_MATH_LABEL_JS = r"""
@@ -12,8 +12,13 @@ UI_MATH_LABEL_JS = r"""
     root.querySelectorAll("button, summary").forEach((el) => {
       if (el.dataset.kcMathPatched === "1") return;
       const text = el.textContent || "";
+      if (text.includes("WgConstant") || text.includes("Wg Constant")) {
+        el.innerHTML = el.innerHTML.replace(/Wg\s*Constant/g, 'W<sub>g</sub> Constant');
+        el.dataset.kcMathPatched = "1";
+        return;
+      }
       if (!text.includes("W_g")) return;
-      el.innerHTML = el.innerHTML.replace(/W_g/g, 'W<sub>g</sub>');
+      el.innerHTML = el.innerHTML.replace(/W_g\s*/g, 'W<sub>g</sub> ');
       el.dataset.kcMathPatched = "1";
     });
   };
