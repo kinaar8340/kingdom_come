@@ -5,6 +5,12 @@ from __future__ import annotations
 from typing import Any, Literal
 
 ObservableName = Literal["magnetic_moment", "ionization_energy", "electron_affinity"]
+DataObservable = Literal[
+    "magnetic_moment",
+    "ionization_energy",
+    "electron_affinity",
+    "atomic_radius",
+]
 
 FIDELITY_WEIGHTS: dict[str, float] = {
     "magnetic_moment": 0.50,
@@ -458,6 +464,72 @@ _EXPERIMENTAL_DATA: dict[int, dict[str, dict[str, Any]]] = {
     },
 }
 
+# Covalent radii (pm) — Cordero et al. (2008) / CRC; merged into _EXPERIMENTAL_DATA.
+_COVALENT_RADIUS_PM: dict[int, dict[str, Any]] = {
+    1: {"value": 31, "source": "Cordero et al. (2008)", "quality": "Good", "note": "Covalent radius"},
+    2: {"value": 28, "source": "Cordero et al. (2008)", "quality": "Good", "note": "Covalent radius"},
+    3: {"value": 128, "source": "Cordero et al. (2008)", "quality": "Good", "note": "Covalent radius"},
+    4: {"value": 96, "source": "Cordero et al. (2008)", "quality": "Good", "note": "Covalent radius"},
+    5: {"value": 84, "source": "Cordero et al. (2008)", "quality": "Good", "note": "Covalent radius"},
+    6: {"value": 76, "source": "Cordero et al. (2008)", "quality": "Good", "note": "Covalent radius"},
+    7: {"value": 71, "source": "Cordero et al. (2008)", "quality": "Good", "note": "Covalent radius"},
+    8: {"value": 66, "source": "Cordero et al. (2008)", "quality": "Good", "note": "Covalent radius"},
+    9: {"value": 57, "source": "Cordero et al. (2008)", "quality": "Good", "note": "Covalent radius"},
+    10: {"value": 58, "source": "Cordero et al. (2008)", "quality": "Good", "note": "Covalent radius"},
+    11: {"value": 166, "source": "Cordero et al. (2008)", "quality": "Good", "note": "Covalent radius"},
+    12: {"value": 141, "source": "Cordero et al. (2008)", "quality": "Good", "note": "Covalent radius"},
+    13: {"value": 121, "source": "Cordero et al. (2008)", "quality": "Good", "note": "Covalent radius"},
+    14: {"value": 111, "source": "Cordero et al. (2008)", "quality": "Good", "note": "Covalent radius"},
+    15: {"value": 107, "source": "Cordero et al. (2008)", "quality": "Good", "note": "Covalent radius"},
+    16: {"value": 105, "source": "Cordero et al. (2008)", "quality": "Good", "note": "Covalent radius"},
+    17: {"value": 102, "source": "Cordero et al. (2008)", "quality": "Good", "note": "Covalent radius"},
+    18: {"value": 106, "source": "Cordero et al. (2008)", "quality": "Good", "note": "Covalent radius"},
+    19: {"value": 203, "source": "Cordero et al. (2008)", "quality": "Good", "note": "Covalent radius"},
+    20: {"value": 176, "source": "Cordero et al. (2008)", "quality": "Good", "note": "Covalent radius"},
+    21: {"value": 170, "source": "Cordero et al. (2008)", "quality": "Good", "note": "Covalent radius"},
+    22: {"value": 160, "source": "Cordero et al. (2008)", "quality": "Good", "note": "Covalent radius"},
+    23: {"value": 153, "source": "Cordero et al. (2008)", "quality": "Good", "note": "Covalent radius"},
+    24: {"value": 139, "source": "Cordero et al. (2008)", "quality": "Good", "note": "Covalent radius"},
+    25: {"value": 139, "source": "Cordero et al. (2008)", "quality": "Good", "note": "Covalent radius"},
+    26: {"value": 132, "source": "Cordero et al. (2008) / CRC", "quality": "Good", "note": "Covalent radius"},
+    27: {"value": 132, "source": "Cordero et al. (2008)", "quality": "Good", "note": "Covalent radius"},
+    28: {"value": 135, "source": "Cordero et al. (2008)", "quality": "Good", "note": "Covalent radius"},
+    29: {"value": 138, "source": "Cordero et al. (2008)", "quality": "Good", "note": "Covalent radius"},
+    30: {"value": 131, "source": "Cordero et al. (2008)", "quality": "Good", "note": "Covalent radius"},
+    31: {"value": 126, "source": "Cordero et al. (2008)", "quality": "Good", "note": "Covalent radius"},
+    32: {"value": 122, "source": "Cordero et al. (2008)", "quality": "Good", "note": "Covalent radius"},
+    33: {"value": 119, "source": "Cordero et al. (2008)", "quality": "Good", "note": "Covalent radius"},
+    34: {"value": 120, "source": "Cordero et al. (2008)", "quality": "Good", "note": "Covalent radius"},
+    35: {"value": 120, "source": "Cordero et al. (2008)", "quality": "Good", "note": "Covalent radius"},
+    36: {"value": 116, "source": "Cordero et al. (2008)", "quality": "Good", "note": "Covalent radius"},
+    37: {"value": 220, "source": "Cordero et al. (2008)", "quality": "Good", "note": "Covalent radius"},
+    38: {"value": 195, "source": "Cordero et al. (2008)", "quality": "Good", "note": "Covalent radius"},
+    39: {"value": 190, "source": "Cordero et al. (2008)", "quality": "Good", "note": "Covalent radius"},
+    40: {"value": 175, "source": "Cordero et al. (2008)", "quality": "Good", "note": "Covalent radius"},
+    41: {"value": 164, "source": "Cordero et al. (2008)", "quality": "Good", "note": "Covalent radius"},
+    42: {"value": 154, "source": "Cordero et al. (2008)", "quality": "Good", "note": "Covalent radius"},
+    43: {"value": 147, "source": "Cordero et al. (2008)", "quality": "Estimated", "note": "Covalent radius"},
+    44: {"value": 146, "source": "Cordero et al. (2008)", "quality": "Good", "note": "Covalent radius"},
+    45: {"value": 142, "source": "Cordero et al. (2008)", "quality": "Good", "note": "Covalent radius"},
+    46: {"value": 139, "source": "Cordero et al. (2008)", "quality": "Good", "note": "Covalent radius"},
+    47: {"value": 145, "source": "Cordero et al. (2008)", "quality": "Good", "note": "Covalent radius"},
+    48: {"value": 144, "source": "Cordero et al. (2008)", "quality": "Good", "note": "Covalent radius"},
+    50: {"value": 139, "source": "Cordero et al. (2008)", "quality": "Good", "note": "Covalent radius"},
+    53: {"value": 139, "source": "Cordero et al. (2008)", "quality": "Good", "note": "Covalent radius"},
+    54: {"value": 140, "source": "Cordero et al. (2008)", "quality": "Good", "note": "Covalent radius"},
+    55: {"value": 244, "source": "Cordero et al. (2008)", "quality": "Good", "note": "Covalent radius"},
+    56: {"value": 215, "source": "Cordero et al. (2008)", "quality": "Good", "note": "Covalent radius"},
+    72: {"value": 175, "source": "Cordero et al. (2008)", "quality": "Good", "note": "Covalent radius"},
+    74: {"value": 162, "source": "Cordero et al. (2008)", "quality": "Good", "note": "Covalent radius"},
+    79: {"value": 136, "source": "Cordero et al. (2008)", "quality": "Good", "note": "Covalent radius"},
+    80: {"value": 132, "source": "Cordero et al. (2008)", "quality": "Good", "note": "Covalent radius"},
+    82: {"value": 146, "source": "Cordero et al. (2008)", "quality": "Good", "note": "Covalent radius"},
+    86: {"value": 116, "source": "Cordero et al. (2008)", "quality": "Estimated", "note": "Covalent radius"},
+}
+
+for _z_radius, _radius_entry in _COVALENT_RADIUS_PM.items():
+    _EXPERIMENTAL_DATA.setdefault(_z_radius, {})["atomic_radius"] = _radius_entry
+
 
 def _reference_value(exp_entry: dict[str, Any]) -> float:
     value = float(exp_entry["value"])
@@ -533,9 +605,47 @@ def compare_to_experiment(
     }
 
 
-def experimental_entry(z: int, observable: ObservableName) -> dict[str, Any] | None:
+def experimental_entry(z: int, observable: DataObservable) -> dict[str, Any] | None:
     """Return raw experimental entry for Z and observable, if present."""
     return _EXPERIMENTAL_DATA.get(z, {}).get(observable)
+
+
+def compare_atomic_radius(z: int) -> dict[str, Any]:
+    """Experimental covalent radius (pm) — no model comparison yet."""
+    entry = experimental_entry(z, "atomic_radius")
+    if entry is None:
+        return {
+            "available": False,
+            "experimental_value": None,
+            "experimental_display": None,
+            "delta": None,
+            "source": None,
+            "quality": "No data",
+            "note": "Covalent radius data not available for this element",
+            "within_range": None,
+        }
+
+    value = int(entry["value"])
+    return {
+        "available": True,
+        "experimental_value": value,
+        "experimental_display": f"{value} pm",
+        "delta": None,
+        "source": entry.get("source", "Unknown"),
+        "quality": entry.get("quality", "Good"),
+        "note": entry.get("note", "Covalent radius"),
+        "within_range": None,
+    }
+
+
+def covalent_radius_pm(z: int) -> float:
+    """Covalent radius (pm) — Cordero anchors with smooth period trend fallback."""
+    entry = experimental_entry(z, "atomic_radius")
+    if entry is not None:
+        return float(entry["value"])
+    period = get_period(z)
+    group_offset = (z % 18) or 18
+    return float(round(260 - 6.5 * group_offset + 8.0 * (period - 4), 0))
 
 
 def experimental_magnetic_moment(z: int) -> dict[str, Any] | None:

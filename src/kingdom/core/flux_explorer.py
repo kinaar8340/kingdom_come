@@ -10,6 +10,7 @@ import plotly.graph_objects as go
 from kingdom.core.elements import EXPLORER_Z_MAX, NOBLE_GAS_Z, get_element, is_explorable_element
 from kingdom.core.experimental_data import (
     calculate_comparison_fidelity,
+    compare_atomic_radius,
     compare_ionization_energy_relative,
     compare_to_experiment,
 )
@@ -185,10 +186,27 @@ def build_observables_validation(z: int, extended: dict) -> dict:
         note=note_ea,
     ))
 
+    radius_cmp = compare_atomic_radius(z)
+    if radius_cmp["available"]:
+        table.append(_observable_table_row(
+            category="Atomic Radius (Covalent)",
+            model_spin_only="—",
+            model_soc="—",
+            experimental=radius_cmp["experimental_display"] or "—",
+            delta="—",
+            source=radius_cmp["source"] or "—",
+            quality=radius_cmp["quality"],
+            note=(
+                f"{radius_cmp['note']} — model radius proxy not yet implemented; "
+                "experimental reference only"
+            ),
+        ))
+
     comparisons = {
         "magnetic_moment": mu_cmp,
         "ionization_energy": ie_cmp,
         "electron_affinity": ea_cmp,
+        "atomic_radius": radius_cmp,
     }
     fidelity = calculate_comparison_fidelity(comparisons)
 

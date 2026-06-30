@@ -2,8 +2,10 @@
 
 from .experimental_data import (
     calculate_comparison_fidelity,
+    compare_atomic_radius,
     compare_ionization_energy_relative,
     compare_to_experiment,
+    covalent_radius_pm,
 )
 from .flux_flywheel import (
     effective_magnetic_moment_with_soc,
@@ -29,8 +31,10 @@ __all__ = [
     "hopf_map_quaternion",
     "linking_number_pair",
     "calculate_comparison_fidelity",
+    "compare_atomic_radius",
     "compare_ionization_energy_relative",
     "compare_to_experiment",
+    "covalent_radius_pm",
     "effective_magnetic_moment_with_soc",
     "lande_g_factor",
     "map_z_to_flywheel",

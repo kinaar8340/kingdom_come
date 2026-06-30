@@ -2,8 +2,10 @@
 
 from kingdom.core.experimental_data import (
     calculate_comparison_fidelity,
+    compare_atomic_radius,
     compare_ionization_energy_relative,
     compare_to_experiment,
+    covalent_radius_pm,
     experimental_magnetic_moment,
     magnetic_moment_validation,
     observable_match_score,
@@ -71,20 +73,35 @@ def test_build_observables_validation_iron():
     extended = map_z_to_flywheel_extended(26)
     validation = build_observables_validation(26, extended)
     rows = validation["rows"]
-    assert len(rows) == 3
+    assert len(rows) == 4
     mu_row = rows[0]
     assert mu_row["category"] == "Magnetic Moment"
     assert mu_row["model_spin_only"] == "4.90 BM"
     assert "g_J=1.5" in mu_row["model_soc"]
     assert mu_row["delta"] == "+0.00 BM"
     assert rows[2]["category"] == "Electron Affinity"
+    assert rows[3]["category"] == "Atomic Radius (Covalent)"
+    assert "132 pm" in rows[3]["experimental"]
     assert validation["fidelity_score"] is not None
     assert "magnetic_moment" in validation["fidelity_details"]
 
 
 def test_build_observables_table_backward_compat():
     extended = map_z_to_flywheel_extended(26)
-    assert len(build_observables_table(26, extended)) == 3
+    assert len(build_observables_table(26, extended)) == 4
+
+
+def test_compare_atomic_radius_iron():
+    result = compare_atomic_radius(26)
+    assert result["available"] is True
+    assert result["experimental_value"] == 132
+    assert result["delta"] is None
+    assert "Cordero" in result["source"]
+
+
+def test_covalent_radius_fallback():
+    assert covalent_radius_pm(26) == 132.0
+    assert covalent_radius_pm(50) > 0
 
 
 def test_calculate_comparison_fidelity_iron():
