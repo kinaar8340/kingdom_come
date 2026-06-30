@@ -26,17 +26,37 @@ _KINGDOM_CSS_SHELL = """
 }
 .gradio-container .block,
 .gradio-container .panel,
-.gradio-container .form {
-  background: rgba(18, 36, 61, 0.9) !important;
-  backdrop-filter: blur(3px);
+.gradio-container .form,
+.gradio-container .tabs,
+.gradio-container .tabitem,
+.gradio-container .contain,
+.gradio-container .column,
+.gradio-container .row {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+.gradio-container .block.border,
+.gradio-container .accordion,
+.gradio-container .image-container,
+.gradio-container .gallery,
+.gradio-container .plot {
+  background: rgba(18, 36, 61, 0.52) !important;
+  backdrop-filter: blur(5px);
+}
+.gradio-container .prose {
+  background: transparent !important;
+}
+.gradio-container footer {
+  background: transparent !important;
 }
 .kc-hero {
   text-align: center;
   padding: 2rem 1rem 1.5rem;
   border-bottom: 1px solid rgba(26, 143, 227, 0.25);
   margin-bottom: 1rem;
-  background: rgba(10, 22, 40, 0.55);
+  background: rgba(10, 22, 40, 0.28);
   border-radius: 0 0 12px 12px;
+  backdrop-filter: blur(4px);
 }
 .kc-hero h1 {
   font-size: 2.2rem;
@@ -300,16 +320,21 @@ embed.kc-paper-frame {
 def build_kingdom_css() -> str:
     bg_url = _background_image_url()
     shell = f"""
-.gradio-container {{
+html, body, .app, .main {{
   background-color: #0a1628 !important;
   background-image:
     linear-gradient(
       165deg,
-      rgba(10, 22, 40, 0.84) 0%,
-      rgba(13, 31, 53, 0.78) 45%,
-      rgba(10, 22, 40, 0.86) 100%
+      rgba(10, 22, 40, 0.42) 0%,
+      rgba(13, 31, 53, 0.32) 45%,
+      rgba(10, 22, 40, 0.45) 100%
     ),
     url('{bg_url}') center center / cover no-repeat fixed !important;
+  min-height: 100%;
+}}
+.gradio-container {{
+  background: transparent !important;
+  background-color: transparent !important;
   color: var(--kc-text) !important;
 }}
 """

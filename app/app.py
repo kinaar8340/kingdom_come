@@ -244,9 +244,9 @@ _KINGDOM_THEME = gr.themes.Base(
     secondary_hue="blue",
     neutral_hue="slate",
 ).set(
-    body_background_fill="#0a1628",
+    body_background_fill="transparent",
     body_text_color="#d4e4f7",
-    block_background_fill="#12243d",
+    block_background_fill="transparent",
     block_border_color="rgba(26,143,227,0.25)",
     button_primary_background_fill="#1a8fe3",
     button_primary_text_color="#ffffff",
