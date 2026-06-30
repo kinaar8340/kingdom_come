@@ -6,7 +6,7 @@ import base64
 from pathlib import Path
 from typing import Any
 
-from kingdom.core.experimental_data import interpret_comparison_fidelity
+from kingdom.core.experimental_data import build_model_insights, interpret_comparison_fidelity
 from kingdom.core.flux_explorer import build_observables_validation
 
 NEON_CSS = """
@@ -607,6 +607,47 @@ NEON_CSS = """
   width: 100%;
   padding: 0.35rem 0.1rem 0.15rem;
 }
+.kc-model-insights {
+  width: 100%;
+  padding: 0.4rem 0.5rem;
+  background: rgba(18, 36, 61, 0.4);
+  border: 1px solid rgba(26, 143, 227, 0.2);
+  border-radius: 8px;
+  font-size: 0.72rem;
+  line-height: 1.4;
+}
+.kc-model-insights-title {
+  margin: 0 0 0.35rem;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: #8ecae6;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+.kc-model-insights-block {
+  margin-bottom: 0.35rem;
+}
+.kc-model-insights-block:last-child {
+  margin-bottom: 0;
+}
+.kc-model-insights-label {
+  font-weight: 600;
+  font-size: 0.7rem;
+}
+.kc-model-insights-label.kc-insights-strength {
+  color: #22c55e;
+}
+.kc-model-insights-label.kc-insights-limitation {
+  color: #ffd45a;
+}
+.kc-model-insights ul {
+  margin: 0.15rem 0 0;
+  padding-left: 1.1rem;
+  color: #d4e4f7;
+}
+.kc-model-insights li {
+  margin-bottom: 0.12rem;
+}
 .kc-flux-section-title {
   margin: 0 0 0.35rem;
   font-size: 0.74rem;
@@ -1126,6 +1167,37 @@ def _observables_ui_bundle(extended: dict) -> dict[str, Any]:
     }
 
 
+def flux_observables_insights_html(extended: dict, bundle: dict[str, Any] | None = None) -> str:
+    """Compact strengths & limitations card for the chemistry analysis column."""
+    ctx = bundle or _observables_ui_bundle(extended)
+    validation = ctx["validation"]
+    insights = build_model_insights(
+        ctx["z"],
+        comparisons=validation["comparisons"],
+        fidelity_details=validation["fidelity_details"],
+        category_scores=validation.get("fidelity_category_scores"),
+        proxy_quality=validation.get("fidelity_proxy_quality"),
+        core_model_fidelity=validation.get("fidelity_core_score"),
+        overall_fidelity=validation.get("fidelity_score"),
+        is_noble_gas=bool(extended.get("is_noble_gas")),
+        noble_gas_stability_bonus=float(extended.get("noble_gas_stability_bonus") or 0),
+    )
+    strength_items = "".join(f"<li>{s}</li>" for s in insights["strengths"])
+    limitation_items = "".join(f"<li>{lim}</li>" for lim in insights["limitations"])
+    return f"""
+<div class="kc-model-insights kc-neon-plugin">
+  <h4 class="kc-model-insights-title">Model Strengths &amp; Limitations</h4>
+  <div class="kc-model-insights-block">
+    <span class="kc-model-insights-label kc-insights-strength">Strengths:</span>
+    <ul>{strength_items}</ul>
+  </div>
+  <div class="kc-model-insights-block">
+    <span class="kc-model-insights-label kc-insights-limitation">Limitations:</span>
+    <ul>{limitation_items}</ul>
+  </div>
+</div>"""
+
+
 def flux_observables_analysis_html(extended: dict) -> str:
     """Left column: proxy quality, fidelity interpretation, noble gas banner."""
     bundle = _observables_ui_bundle(extended)
@@ -1133,11 +1205,12 @@ def flux_observables_analysis_html(extended: dict) -> str:
         bundle["fidelity_extended"].get("comparison_fidelity_proxy_quality", {})
     )
     interpretation = flux_observables_interpretation_html(bundle["interpretation"])
-    if not (proxy or interpretation or bundle["noble_banner"]):
+    insights = flux_observables_insights_html(extended, bundle)
+    if not (proxy or interpretation or bundle["noble_banner"] or insights):
         return ""
     return (
         f'<div class="kc-flux-analysis-col kc-neon-plugin">'
-        f"{proxy}{interpretation}{bundle['noble_banner']}"
+        f"{proxy}{interpretation}{bundle['noble_banner']}{insights}"
         f"</div>"
     )
 

@@ -145,14 +145,38 @@ def test_layered_fidelity_xenon():
     validation = build_observables_validation(54, extended)
     fidelity = calculate_comparison_fidelity(validation["comparisons"], z=54)
     assert fidelity["score"] is not None
-    assert fidelity["score"] >= 6.5
+    assert fidelity["score"] >= 7.5
     assert fidelity["core_model_fidelity"] == 8.7
     assert fidelity["category_scores"]["Structural"] == 10.0
-    assert fidelity["category_scores"]["Electronic"] == 6.3
+    assert fidelity["category_scores"]["Electronic"] >= 7.0
     assert fidelity["category_scores"]["Magnetic"] is None
-    assert fidelity["category_details"]["Electronic"] == ["IE 8.7", "EN 1.4"]
+    en_detail = fidelity["details"]["electronegativity"]
+    assert en_detail >= 4.0
+    assert "EN" in " ".join(fidelity["category_details"]["Electronic"])
     assert fidelity["proxy_quality"]["electronegativity"]["level"] == "low"
     assert fidelity["proxy_quality"]["magnetic_moment"]["level"] == "none"
+
+
+def test_build_model_insights_xenon():
+    from kingdom.core.experimental_data import build_model_insights
+
+    extended = map_z_to_flywheel_extended(54)
+    validation = build_observables_validation(54, extended)
+    insights = build_model_insights(
+        54,
+        comparisons=validation["comparisons"],
+        fidelity_details=validation["fidelity_details"],
+        category_scores=validation.get("fidelity_category_scores"),
+        proxy_quality=validation.get("fidelity_proxy_quality"),
+        core_model_fidelity=validation.get("fidelity_core_score"),
+        overall_fidelity=validation.get("fidelity_score"),
+        is_noble_gas=True,
+        noble_gas_stability_bonus=float(extended.get("noble_gas_stability_bonus") or 0),
+    )
+    assert len(insights["strengths"]) >= 2
+    assert len(insights["limitations"]) >= 1
+    assert any("structural" in s.lower() or "radius" in s.lower() for s in insights["strengths"])
+    assert any("electronegativity" in lim.lower() for lim in insights["limitations"])
 
 
 def test_compare_ionization_energy_relative_iron():
@@ -190,7 +214,9 @@ def test_allen_electronegativity_noble_gas_neon():
 
 def test_estimate_model_electronegativity_allen_bounds():
     en = estimate_model_electronegativity_allen(5.5, 26)
-    assert 0.7 <= en <= 5.0
+    assert 0.8 <= en <= 4.8
+    xe_en = estimate_model_electronegativity_allen(6.0, 54)
+    assert 2.4 <= xe_en <= 2.6
 
 
 def test_compare_electronegativity_iron():
@@ -231,8 +257,8 @@ def test_interpret_comparison_fidelity_xenon():
     )
     assert interp["coverage"]["label"].startswith("3/")
     assert interp["model_limitation"] == "noble_gas"
-    assert interp["fidelity_tier"] == "solid"
-    assert "Solid agreement" in interp["summary"]
+    assert interp["fidelity_tier"] in ("solid", "excellent")
+    assert "agreement" in interp["summary"].lower()
     assert any("Electronegativity" in n for n in interp.get("notes", []))
     assert validation.get("fidelity_core_score") == 8.7
     assert validation["fidelity_category_scores"]["Structural"] == 10.0

@@ -154,6 +154,8 @@ def test_flux_observables_split_layout_xenon():
     assert "kc-flux-analysis-col" in analysis
     assert "Proxy Quality" in analysis
     assert "Noble Gas" in analysis
+    assert "Model Strengths" in analysis
+    assert "kc-model-insights" in analysis
     assert "kc-flux-metrics-col" in right
     assert "Overall Comparison Fidelity" in right
     assert "Proxy Quality" not in right

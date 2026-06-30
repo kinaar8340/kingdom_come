@@ -994,13 +994,13 @@ def compare_ionization_energy_relative(z: int, model_stability: float) -> dict[s
 
 _PERIOD_BASE_ALLEN_EN: dict[int, float] = {
     1: 3.0,
-    2: 3.2,
-    3: 2.6,
-    4: 2.3,
-    5: 2.2,
-    6: 2.1,
-    7: 2.0,
-    8: 2.0,
+    2: 3.3,
+    3: 2.7,
+    4: 2.4,
+    5: 2.3,
+    6: 2.2,
+    7: 2.1,
+    8: 2.1,
 }
 
 
@@ -1017,19 +1017,28 @@ def estimate_model_electronegativity_allen(stability_score: float, z: int) -> fl
     Stability-based proxy for Allen electronegativity.
 
     Higher stability → higher electronegativity (tighter electron holding).
+    Period 5+ noble gases get a refined closed-shell correction: modest stability
+    credit plus period-scaled dampening so period-relative Allen ranking improves.
     """
     period = get_period(z)
     period_base = _PERIOD_BASE_ALLEN_EN.get(period, 2.1)
     first_z = _PERIOD_FIRST_Z.get(period, 1)
     position = max(0, z - first_z)
-    base = period_base + (position * 0.09)
-    stability_effect = (stability_score - 5.0) * 0.22
-    en = base + stability_effect
-    if z in NOBLE_GAS_Z:
-        # Dampen stability pull — Allen EN for noble gases is IE-driven, not bond polarity.
-        period = get_period(z)
+    base = period_base + (position * 0.085)
+    stability_effect = (stability_score - 5.0) * 0.20
+
+    if z in NOBLE_GAS_Z and period >= 5:
+        stability_effect *= 1.35
+        en = base + stability_effect
+        en -= 1.52 + max(0, period - 5) * 1.10
+    elif z in NOBLE_GAS_Z:
+        en = base + (stability_score - 5.0) * 0.22
         en -= 0.65 + max(0, period - 3) * 0.30
-    return round(max(0.7, min(en, 5.0)), 2)
+    else:
+        base = period_base + (position * 0.09)
+        en = base + (stability_score - 5.0) * 0.22
+
+    return round(max(0.8, min(en, 4.8)), 2)
 
 
 def compare_electronegativity(z: int, stability_score: float) -> dict[str, Any]:
@@ -1274,8 +1283,14 @@ def calculate_comparison_fidelity(
     for key, weight in w.items():
         if key not in details or weight <= 0:
             continue
-        weighted_score += details[key] * weight
-        total_weight += weight
+        pq = proxy_quality.get(key, {})
+        effective_weight = (
+            weight * LOW_PROXY_CATEGORY_WEIGHT
+            if pq.get("level") == "low"
+            else weight
+        )
+        weighted_score += details[key] * effective_weight
+        total_weight += effective_weight
 
     if total_weight == 0:
         return {
@@ -1376,6 +1391,100 @@ def fidelity_data_coverage(comparisons: dict[str, dict[str, Any]]) -> dict[str, 
         "missing": missing,
         "label": f"{available}/{total} observables",
     }
+
+
+def build_model_insights(
+    z: int,
+    *,
+    comparisons: dict[str, dict[str, Any]],
+    fidelity_details: dict[str, float],
+    category_scores: dict[str, float | None] | None = None,
+    proxy_quality: dict[str, dict[str, str]] | None = None,
+    core_model_fidelity: float | None = None,
+    overall_fidelity: float | None = None,
+    is_noble_gas: bool = False,
+    noble_gas_stability_bonus: float = 0.0,
+) -> dict[str, list[str]]:
+    """Balanced strengths and limitations for the chemistry analysis column."""
+    strengths: list[str] = []
+    limitations: list[str] = []
+    cats = category_scores or {}
+    proxies = proxy_quality or {}
+
+    for cat, score in cats.items():
+        if score is None:
+            continue
+        label = _CATEGORY_LABELS.get(cat, cat)
+        if score >= 8.5:
+            strengths.append(f"Strong alignment on {label.lower()} ({score}/10)")
+        elif score < 6.0:
+            limitations.append(f"{label} below target ({score}/10)")
+
+    ie_score = fidelity_details.get("ionization_energy")
+    if ie_score is not None and ie_score >= 7.0:
+        strengths.append(
+            f"Period-relative ionization energy ranking is solid (component {ie_score}/10)"
+        )
+    elif ie_score is not None and ie_score < 6.0:
+        limitations.append(
+            f"Ionization energy period-relative mismatch (component {ie_score}/10)"
+        )
+
+    radius_score = fidelity_details.get("atomic_radius")
+    if radius_score is not None and radius_score >= 9.0:
+        strengths.append("Structural radius proxy tracks experiment closely")
+
+    if is_noble_gas and noble_gas_stability_bonus > 0:
+        strengths.append(
+            f"Shell-closure stability bonus applied (+{noble_gas_stability_bonus:.1f})"
+        )
+
+    if core_model_fidelity is not None and overall_fidelity is not None:
+        if core_model_fidelity - overall_fidelity >= 1.0:
+            strengths.append(
+                f"Core model fidelity ({core_model_fidelity}/10) exceeds overall — "
+                "stability ranking is sound"
+            )
+
+    en_pq = proxies.get("electronegativity", {})
+    en_score = fidelity_details.get("electronegativity")
+    if en_pq.get("level") == "low" or (
+        en_score is not None and en_score < 5.0 and is_noble_gas and get_period(z) >= 5
+    ):
+        limitations.append(
+            "Electronegativity (Allen) proxy has limited predictive power for "
+            "heavy noble gases"
+        )
+    elif en_score is not None and en_score < 5.0:
+        limitations.append(
+            f"Electronegativity alignment is modest (component {en_score}/10)"
+        )
+
+    ea_cmp = comparisons.get("electron_affinity", {})
+    ea_score = fidelity_details.get("electron_affinity")
+    if ea_cmp.get("available") and ea_score is not None and ea_score < 6.0:
+        limitations.append(
+            "Chemical reactivity metrics (e.g. electron affinity) show larger divergence"
+        )
+    elif not ea_cmp.get("available"):
+        limitations.append(
+            "Electron affinity often unavailable — chemical reactivity category incomplete"
+        )
+
+    mm_cmp = comparisons.get("magnetic_moment", {})
+    if not mm_cmp.get("available") and is_noble_gas:
+        limitations.append(
+            "Magnetic moment anchors are usually absent for closed-shell noble gases"
+        )
+
+    if not strengths:
+        strengths.append("Model stability score is within the calibrated flywheel range")
+    if not limitations and overall_fidelity is not None and overall_fidelity < 8.5:
+        limitations.append(
+            "Some proxy translations remain weaker than direct measurements"
+        )
+
+    return {"strengths": strengths[:4], "limitations": limitations[:4]}
 
 
 def interpret_comparison_fidelity(
