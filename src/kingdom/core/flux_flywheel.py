@@ -8,6 +8,7 @@ from typing import Any
 import numpy as np
 
 from kingdom.core.elements import get_element
+from kingdom.core.experimental_data import magnetic_moment_validation
 
 # First ionization energy (eV) — experimental anchors; fallback trend for other Z.
 _IONIZATION_ENERGY_EV: dict[int, float] = {
@@ -55,6 +56,20 @@ _EXTENDED_ONLY_KEYS = frozenset({
     "ground_term_J",
     "ground_term_label",
     "spin_orbit_applied",
+    "magnetic_moment_exp_available",
+    "magnetic_moment_exp_BM",
+    "magnetic_moment_exp_low_BM",
+    "magnetic_moment_exp_high_BM",
+    "magnetic_moment_exp_display",
+    "magnetic_moment_exp_source",
+    "magnetic_moment_exp_notes",
+    "mu_delta_spin_vs_exp_BM",
+    "mu_delta_soc_vs_exp_BM",
+    "mu_delta_spin_vs_exp_pct",
+    "mu_delta_soc_vs_exp_pct",
+    "mu_within_exp_range",
+    "mu_validation_score",
+    "mu_validation_model",
     "is_diamagnetic",
     "model_vs_reality_alignment",
     "alignment_stability_pts",
@@ -401,6 +416,12 @@ def map_z_to_flywheel_extended(
     real_ie = first_ionization_energy_ev(z)
     n_unpaired = unpaired_electrons(z)
     moment = magnetic_moment_observables(z, n_unpaired, use_spin_orbit=use_spin_orbit)
+    mu_validation = magnetic_moment_validation(
+        spin_only_bm=moment["magnetic_moment_spin_only_BM"],
+        soc_bm=moment["magnetic_moment_soc_BM"],
+        z=z,
+        soc_preferred=use_spin_orbit,
+    )
     alignment = model_reality_alignment(
         base["stability_score"],
         real_ie,
@@ -418,6 +439,26 @@ def map_z_to_flywheel_extended(
         ie_scale_ev=ie_scale_ev,
     )
     heavy = z >= 80
+    validation_notes = (
+        f"Model stability {base['stability_score']} vs real IE {real_ie:.2f} eV "
+        f"(Δ {delta_ie:+.2f} eV, {delta_pct:+.1f}%)"
+    )
+    if mu_validation["magnetic_moment_exp_available"]:
+        mu_model = (
+            moment["magnetic_moment_soc_BM"]
+            if mu_validation["mu_validation_model"] == "soc"
+            else moment["magnetic_moment_spin_only_BM"]
+        )
+        mu_delta = (
+            mu_validation["mu_delta_soc_vs_exp_BM"]
+            if mu_validation["mu_validation_model"] == "soc"
+            else mu_validation["mu_delta_spin_vs_exp_BM"]
+        )
+        exp_disp = mu_validation["magnetic_moment_exp_display"]
+        validation_notes += (
+            f" · μ({mu_validation['mu_validation_model']}) {mu_model} vs exp {exp_disp} BM "
+            f"(Δ {mu_delta:+.2f} BM, fidelity {mu_validation['mu_validation_score']}/10)"
+        )
 
     return {
         **base,
@@ -427,14 +468,12 @@ def map_z_to_flywheel_extended(
         "ie_delta_pct": delta_pct,
         "unpaired_electrons": n_unpaired,
         **moment,
+        **mu_validation,
         "is_diamagnetic": n_unpaired == 0,
         "model_vs_reality_alignment": alignment,
         "alignment_stability_pts": stab_pts,
         "alignment_ie_pts": ie_pts,
         "alignment_component_gap": align_gap,
-        "validation_notes": (
-            f"Model stability {base['stability_score']} vs real IE {real_ie:.2f} eV "
-            f"(Δ {delta_ie:+.2f} eV, {delta_pct:+.1f}%)"
-        ),
+        "validation_notes": validation_notes,
         "heavy_element_caveat": heavy,
     }

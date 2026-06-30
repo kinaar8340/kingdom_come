@@ -177,6 +177,20 @@ NEON_CSS = """
   line-height: 1.35;
   font-style: italic;
 }
+.kc-obs-mu-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.12rem;
+  margin-top: 0.15rem;
+}
+.kc-obs-mu-stack .kc-obs-delta {
+  margin-top: 0;
+}
+.kc-obs-exp-tag {
+  color: #8ecae6;
+  font-size: 0.62rem;
+  font-style: italic;
+}
 .kc-toe-strip {
   background: rgba(18, 36, 61, 0.40);
   border: 1px solid rgba(201, 162, 39, 0.22);
@@ -342,12 +356,62 @@ def flux_observables_cards_html(extended: dict) -> str:
     g_j = extended.get("lande_g_J", 0)
     term = extended.get("ground_term_label", "")
     term_j = extended.get("ground_term_J", 0)
-    mu_soc_line = ""
+    mu_exp_available = extended.get("magnetic_moment_exp_available", False)
+    mu_exp_display = extended.get("magnetic_moment_exp_display")
+    mu_exp_source = extended.get("magnetic_moment_exp_source", "")
+    mu_exp_notes = extended.get("magnetic_moment_exp_notes", "")
+    mu_delta_soc = extended.get("mu_delta_soc_vs_exp_BM")
+    mu_delta_spin = extended.get("mu_delta_spin_vs_exp_BM")
+    mu_fidelity = extended.get("mu_validation_score")
+    mu_in_range = extended.get("mu_within_exp_range")
+
+    mu_stack_lines: list[str] = []
     if soc_applied and mu_soc != mu_spin:
-        mu_soc_line = f"""
-    <span class="kc-obs-delta kc-obs-delta-pos" title="Landé g_J √(J(J+1)) with ground term {term}">
-      SOC μ = {mu_soc} BM (g_J={g_j}, J={term_j})
-    </span>"""
+        mu_stack_lines.append(
+            f'<span class="kc-obs-delta kc-obs-delta-pos" '
+            f'title="Landé g_J √(J(J+1)) with ground term {term}">'
+            f"SOC μ = {mu_soc} BM (g_J={g_j}, J={term_j})</span>"
+        )
+    if mu_exp_available and mu_exp_display is not None:
+        range_note = ""
+        if mu_in_range is True:
+            range_note = " · within experimental range"
+        elif mu_in_range is False:
+            range_note = " · outside quoted range"
+        mu_stack_lines.append(
+            f'<span class="kc-obs-delta" title="{mu_exp_notes} ({mu_exp_source})">'
+            f"μ exp = {mu_exp_display} BM"
+            f'<span class="kc-obs-exp-tag"> · {mu_exp_source}</span></span>'
+        )
+        if mu_delta_soc is not None:
+            soc_delta_class = (
+                "kc-obs-delta-pos" if abs(mu_delta_soc) <= 0.5 else "kc-obs-delta-neg"
+            )
+            mu_stack_lines.append(
+                f'<span class="kc-obs-delta {soc_delta_class}" '
+                f'title="SOC model minus experimental midpoint{range_note}">'
+                f"Δ SOC vs exp = {mu_delta_soc:+.2f} BM"
+                f"{f' · fidelity {mu_fidelity}/10' if mu_fidelity is not None else ''}"
+                f"</span>"
+            )
+        if mu_delta_spin is not None and mu_delta_spin != mu_delta_soc:
+            mu_stack_lines.append(
+                f'<span class="kc-obs-delta" title="Spin-only model minus experimental midpoint">'
+                f"Δ spin-only vs exp = {mu_delta_spin:+.2f} BM</span>"
+            )
+
+    mu_stack = ""
+    if mu_stack_lines:
+        mu_stack = f"""
+    <div class="kc-obs-mu-stack">{''.join(mu_stack_lines)}
+    </div>"""
+
+    exp_tip = ""
+    if mu_exp_available:
+        exp_tip = (
+            f" Experimental μ = {mu_exp_display} BM ({mu_exp_source}; {mu_exp_notes})."
+            f" Typical atomic-beam / Zeeman uncertainties are ±0.1–0.5 BM for 3d metals."
+        )
     mu_tip = (
         f"Spin-only μ ≈ √(n(n+2)) = {mu_spin} BM. "
         + (
@@ -355,7 +419,8 @@ def flux_observables_cards_html(extended: dict) -> str:
             if soc_applied
             else "L=0 or closed shell — spin-only equals SOC. "
         )
-        + "Free-atom LS coupling; jj coupling dominates for Z ≳ 80."
+        + exp_tip
+        + " Free-atom LS coupling; jj coupling dominates for Z ≳ 80."
     )
     ie_tip = (
         f"Experimental first ionization energy. Model-implied IE from stability alone: "
@@ -379,9 +444,10 @@ def flux_observables_cards_html(extended: dict) -> str:
     <span class="kc-obs-tip" title="Ground-state unpaired electrons (Aufbau + Hund, with known overrides)">Unpaired e⁻</span>
     <strong>{extended["unpaired_electrons"]}</strong>
   </div>
-  <div class="kc-metric-card">
-    <span class="kc-obs-tip" title="{mu_tip}">μ spin-only (BM)</span>
-    <strong>{mu_spin}</strong>{mu_soc_line}
+  <div class="kc-metric-card kc-obs-mu">
+    <span class="kc-obs-tip" title="{mu_tip}">Magnetic moment (BM)</span>
+    <strong>{mu_spin}</strong>
+    <span class="kc-obs-caption">spin-only</span>{mu_stack}
   </div>
   <div class="kc-metric-card kc-obs-align">
     <span class="kc-obs-tip" title="{align_tip}">Alignment · {spin_label}</span>

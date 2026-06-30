@@ -63,14 +63,28 @@ def _cached_magic_island(z: int) -> go.Figure:
 
 def flux_observables_table(extended: dict) -> list[list[str]]:
     """Key-value rows for model vs laboratory observables."""
-    return [
+    rows = [
         ["IE (1st, eV)", str(extended["real_ionization_energy_eV"])],
         ["Unpaired e⁻", str(extended["unpaired_electrons"])],
-        ["μ (spin-only, BM)", str(extended["magnetic_moment_BM"])],
+        ["μ spin-only (BM)", str(extended["magnetic_moment_BM"])],
+        ["μ SOC (BM)", str(extended.get("magnetic_moment_soc_BM", extended["magnetic_moment_BM"]))],
+    ]
+    if extended.get("magnetic_moment_exp_available"):
+        exp_disp = extended.get("magnetic_moment_exp_display", "—")
+        source = extended.get("magnetic_moment_exp_source", "")
+        rows.append(["μ experimental (BM)", f"{exp_disp} ({source})"])
+        delta_soc = extended.get("mu_delta_soc_vs_exp_BM")
+        if delta_soc is not None:
+            rows.append(["Δ SOC vs exp (BM)", f"{delta_soc:+.2f}"])
+        fidelity = extended.get("mu_validation_score")
+        if fidelity is not None:
+            rows.append(["μ fidelity (/10)", str(fidelity)])
+    rows.extend([
         ["Diamagnetic", "yes" if extended["is_diamagnetic"] else "no"],
         ["Model ↔ reality", str(extended["model_vs_reality_alignment"])],
         ["Validation", extended["validation_notes"]],
-    ]
+    ])
+    return rows
 
 
 def flux_metrics_table(flywheel: dict) -> list[list[str]]:
