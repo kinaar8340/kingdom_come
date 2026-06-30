@@ -2,71 +2,12 @@
 
 from __future__ import annotations
 
-import os
-
-KC_BG_IMAGE_FILE = "kingdom_bg2.png"
-KC_SPACE_ID_FALLBACK = "kinaar111/kingdom"
-
-
-def _background_image_url() -> str:
-    """Absolute URL for kingdom_bg2.png (relative paths fail in injected Space CSS)."""
-    space_id = os.environ.get("SPACE_ID") or KC_SPACE_ID_FALLBACK
-    return f"https://huggingface.co/spaces/{space_id}/resolve/main/{KC_BG_IMAGE_FILE}"
-
-
-KC_BG_OVERLAY_RGBA = "rgba(8, 10, 30, 0.52)"
-
-
-def build_background_css() -> str:
-    """Wallpaper CSS — image and overlay live only on #kc-page-bg (not .gradio-container)."""
-    url = _background_image_url()
-    return f"""
-#kc-page-bg {{
-  background-image: url('{url}');
-  background-size: cover;
-  background-position: center center;
-  background-attachment: fixed;
-  background-repeat: no-repeat;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  margin: 0;
-  padding: 0;
-  z-index: -1;
-  pointer-events: none;
-}}
-#kc-page-bg::after {{
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-color: {KC_BG_OVERLAY_RGBA};
-  pointer-events: none;
-}}
-"""
-
-
-def background_head_html() -> str:
-    """Mount #kc-page-bg on document.body so it is outside Gradio's scroll root."""
-    return """<script id="kc-page-bg-mount">
-(function () {
-  function mountBg() {
-    if (document.getElementById("kc-page-bg")) return;
-    var el = document.createElement("div");
-    el.id = "kc-page-bg";
-    el.setAttribute("aria-hidden", "true");
-    document.body.insertBefore(el, document.body.firstChild);
-  }
-  if (document.body) mountBg();
-  else document.addEventListener("DOMContentLoaded", mountBg);
-})();
-</script>"""
+KC_PAGE_BG = "#000000"
 
 
 _KINGDOM_CSS_SHELL = """
 :root {
-  --kc-bg: #0a1628;
+  --kc-bg: #000000;
   --kc-surface: #12243d;
   --kc-teal: #00c9b7;
   --kc-blue: #1a8fe3;
@@ -76,55 +17,55 @@ _KINGDOM_CSS_SHELL = """
 :root,
 .gradio-container,
 .dark {
-  --body-background-fill: transparent !important;
-  --background-fill-primary: transparent !important;
-  --background-fill-secondary: transparent !important;
-  --block-background-fill: transparent !important;
+  --body-background-fill: #000000 !important;
+  --background-fill-primary: #000000 !important;
+  --background-fill-secondary: #0a0a0a !important;
+  --block-background-fill: rgba(18, 36, 61, 0.55) !important;
   --block-border-color: rgba(26, 143, 227, 0.25) !important;
-  --panel-background-fill: transparent !important;
+  --panel-background-fill: rgba(18, 36, 61, 0.55) !important;
 }
 html,
 body,
 #root,
 #app,
 .app,
-.main {
-  background: transparent !important;
-  background-color: transparent !important;
-}
+.main,
 .gradio-container {
-  position: relative !important;
-  z-index: 1 !important;
-  background: transparent !important;
-  background-color: transparent !important;
+  background: #000000 !important;
+  background-color: #000000 !important;
 }
 .gradio-container .block,
 .gradio-container .panel,
 .gradio-container .form,
 .gradio-container .tabs,
 .gradio-container .tabitem,
-.gradio-container .tab-nav,
 .gradio-container .contain,
 .gradio-container .column,
-.gradio-container .row,
+.gradio-container .row {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+.gradio-container .block.border,
 .gradio-container .accordion,
 .gradio-container .image-container,
 .gradio-container .gallery,
-.gradio-container .plot,
+.gradio-container .plot {
+  background: rgba(18, 36, 61, 0.52) !important;
+  backdrop-filter: blur(5px);
+}
 .gradio-container .prose,
 .gradio-container footer,
 .gradio-container .wrap,
 .gradio-container .html-container {
   background: transparent !important;
   background-color: transparent !important;
-  backdrop-filter: none !important;
 }
 .kc-hero {
   text-align: center;
   padding: 2rem 1rem 1.5rem;
   border-bottom: 1px solid rgba(26, 143, 227, 0.25);
   margin-bottom: 1rem;
-  background: transparent !important;
+  background: rgba(0, 0, 0, 0.35);
   border-radius: 0 0 12px 12px;
 }
 .kc-hero h1 {
@@ -387,18 +328,18 @@ embed.kc-paper-frame {
 
 
 def build_kingdom_css() -> str:
-    """Foreground scrolls; wallpaper is fixed on #kc-page-bg only."""
-    shell = """
-html, body {
+    """Solid black page background."""
+    shell = f"""
+html, body {{
   min-height: 100%;
-  background: transparent !important;
-  background-color: transparent !important;
-}
-.gradio-container {
+  background: {KC_PAGE_BG} !important;
+  background-color: {KC_PAGE_BG} !important;
+}}
+.gradio-container {{
   color: var(--kc-text) !important;
-}
+}}
 """
-    return shell + build_background_css() + _KINGDOM_CSS_SHELL
+    return shell + _KINGDOM_CSS_SHELL
 
 
 KINGDOM_CSS = build_kingdom_css()
