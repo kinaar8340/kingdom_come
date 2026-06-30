@@ -1,12 +1,15 @@
-"""Papers tab assets and accordion content."""
+"""Papers tab assets, summaries, and PDF page rendering."""
 
 from pathlib import Path
 
 from app.pages.papers import (
     PAPER_ENTRIES,
-    PAPERS_DIR,
     discover_paper_pdfs,
+    get_paper_summary,
+    get_pdf_page_images,
+    load_paper_gallery,
     paper_missing_md,
+    paper_summary_md,
     resolve_paper_path,
 )
 
@@ -29,10 +32,14 @@ def test_paper_entries_match_discovered_pdfs():
     assert "Aarons_TOE_Complete.pdf" in discovered
 
 
-def test_each_paper_has_summary():
-    for entry in PAPER_ENTRIES:
-        assert entry.summary_md.strip()
-        assert len(entry.summary_md) > 40
+def test_paper_summary_and_markdown():
+    summary = get_paper_summary("toe_complete")
+    assert summary["title"] == "Aaron's TOE — Complete"
+    assert summary["covers"]
+    assert summary["anchor"]
+    md = paper_summary_md("toe_complete")
+    assert "**Scope:**" in md
+    assert "350" in md
 
 
 def test_resolve_paper_path_accepts_apostrophe_alias(tmp_path, monkeypatch):
@@ -58,3 +65,16 @@ def test_missing_paper_markdown(tmp_path, monkeypatch):
     md = paper_missing_md(PAPER_ENTRIES[0])
     assert "PDF not found" in md
     assert "Aarons_TOE_Complete.pdf" in md
+
+
+def test_pdf_page_images_for_complete_toe():
+    images = get_pdf_page_images("toe_complete", max_pages=2, dpi=72)
+    assert len(images) == 2
+    assert images[0].size[0] > 100
+    assert images[0].size[1] > 100
+
+
+def test_load_paper_gallery_matches_images():
+    gallery = load_paper_gallery("lagrangian")
+    assert len(gallery) >= 1
+    assert gallery[0].width > 0

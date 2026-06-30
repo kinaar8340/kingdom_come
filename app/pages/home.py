@@ -133,7 +133,7 @@ document burst, echo, and observer effects.
 | **The Model** | Four core postulates and derivations |
 | **Lattice Simulator** | Two-gyro gauged quaternion lattice (stable vs chaotic) |
 | **Flux Flywheel** | Periodic table as flux flywheel stability proxy |
-| **Papers** (this tab bar) | Accordion summaries + PDF download |
+| **Papers** (this tab bar) | Accordion summaries + inline page previews |
 | **Observations** | W_g = 350/π signatures in nature and markets |
 | **Showcase** | All seven HF Spaces in the ecosystem |
 | **Help** | Site navigation, controls, and acronym glossary |

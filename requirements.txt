@@ -5,3 +5,4 @@ scipy>=1.10
 sympy>=1.12
 pandas>=2.0
 pillow>=10.0
+pymupdf>=1.24

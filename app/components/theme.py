@@ -258,6 +258,15 @@ embed.kc-paper-frame {
 .kc-paper-missing a {
   color: var(--kc-blue);
 }
+.kc-paper-gallery .gallery,
+.kc-paper-gallery .grid-wrap {
+  width: 100%;
+}
+.kc-paper-gallery img {
+  border-radius: 6px;
+  border: 1px solid rgba(26, 143, 227, 0.2);
+  background: #0d1f35;
+}
 .kc-footer {
   text-align: center;
   font-size: 0.85rem;

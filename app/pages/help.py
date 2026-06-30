@@ -14,7 +14,7 @@ Use the **main tab bar** at the top of this page to switch between interactive m
 | **Help** | This page — navigation, controls, acronyms | You need orientation or a term defined |
 | **Hopf Visualizer** | Linked S³ → S² fiber plots (2D on HF, 3D WebGL locally) | You want geometric intuition |
 | **The Model** | Core postulates and quaternion Hopf derivation | You want the theory in prose + math |
-| **Home → Papers** | Accordion summaries + PDF download — GW bursts, Lagrangian, complete TOE | You want primary sources |
+| **Home → Papers** | Accordion summaries + inline page previews + PDF download | You want primary sources |
 | **Lattice Simulator** | Two-gyro gauged quaternion lattice (stable vs chaotic) | You want to see burst dynamics |
 | **Flux Flywheel** | Periodic table explorer Z = 1–180 + Magic Island heatmap | You want matter as flux configurations |
 | **Observations** | Investigations — lightning, Jupiter, 3-body, Higgs, Schumann, Bitcoin π-cycle, cuprates, pulsars | You want nature-scale W_g signatures |
