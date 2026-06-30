@@ -103,6 +103,12 @@ from app.pages.home import (
     HOME_WG_MD,
 )
 from app.pages.hopf_guide import HF_VIEW_MODE_MD, HOPF_INTRO_MD, HOPF_PANEL_GUIDE_MD
+from app.pages.toroidal_periodic import (
+    TOROIDAL_GALLERY,
+    TOROIDAL_HF_NOTE_MD,
+    TOROIDAL_INTRO_MD,
+    render_toroidal_periodic,
+)
 from app.pages.flux_trends_observations import (
     FLUX_TRENDS_MD,
     render_flux_trend_plots,
@@ -145,6 +151,7 @@ TLS_TREES_DIR = ROOT / "app" / "assets" / "tls_trees"
 BITCOIN_PI_DIR = ROOT / "app" / "assets" / "bitcoin_pi"
 SUPERCONDUCTORS_DIR = ROOT / "app" / "assets" / "superconductors"
 PULSARS_DIR = ROOT / "app" / "assets" / "pulsars"
+TOROIDAL_DIR = ROOT / "app" / "assets" / "toroidal"
 
 HOPF_PRESETS: dict[str, tuple[int, int, float, float, float]] = {
     "Classic Hopf": (8, 160, 0.6, 1.2, 1.0),
@@ -477,6 +484,83 @@ def build_app() -> gr.Blocks:
                     outputs=hopf_inputs,
                 ).then(render_hopf_visualizer, inputs=hopf_inputs, outputs=hopf_plot)
 
+            with gr.Tab("Toroidal Periodic") as toroidal_tab:
+                kc_markdown(TOROIDAL_INTRO_MD)
+                if is_hf_space():
+                    kc_markdown(TOROIDAL_HF_NOTE_MD)
+                else:
+                    kc_markdown(
+                        "Choose **2D** for maximum compatibility or **3D** for interactive "
+                        "WebGL rotation (local)."
+                    )
+                with gr.Row(equal_height=True, elem_classes=["kc-obs-image-row"]):
+                    for image_path, caption in TOROIDAL_GALLERY:
+                        if image_path.is_file():
+                            gr.Image(
+                                str(image_path),
+                                label=caption,
+                                interactive=False,
+                                scale=1,
+                                height=280,
+                            )
+                _toroidal_on_hf = is_hf_space()
+                with gr.Row():
+                    toroidal_z_highlight = gr.Slider(
+                        0,
+                        118,
+                        value=54,
+                        step=1,
+                        label="Highlight Z (0 = none)",
+                    )
+                    toroidal_major_r = gr.Slider(
+                        2.0, 5.0, value=3.0, step=0.1, label="Major radius"
+                    )
+                    toroidal_minor_r = gr.Slider(
+                        0.5, 2.0, value=1.0, step=0.1, label="Minor radius"
+                    )
+                with gr.Row():
+                    toroidal_wireframe = gr.Checkbox(value=True, label="Wireframe torus")
+                    toroidal_coil = gr.Checkbox(value=True, label="(1,7) coil path")
+                    toroidal_flux_rings = gr.Checkbox(value=True, label="Flux flywheel rings")
+                    toroidal_noble_locks = gr.Checkbox(value=True, label="Noble gas locks")
+                    toroidal_labels = gr.Checkbox(value=True, label="Element symbols")
+                with gr.Row():
+                    if _toroidal_on_hf:
+                        toroidal_view_mode = gr.State("2D projection")
+                    else:
+                        toroidal_view_mode = gr.Radio(
+                            ["2D projection", "3D interactive (WebGL)"],
+                            value="2D projection",
+                            label="View mode",
+                        )
+                toroidal_plot = gr.Plot(label="Toroidal Periodic × Flux Flywheel")
+                with gr.Row():
+                    toroidal_refresh = gr.Button("Update visualization", variant="primary")
+                    toroidal_flux_btn = gr.Button("Open in Flux Flywheel", variant="secondary")
+                toroidal_inputs = [
+                    toroidal_z_highlight,
+                    toroidal_major_r,
+                    toroidal_minor_r,
+                    toroidal_wireframe,
+                    toroidal_coil,
+                    toroidal_flux_rings,
+                    toroidal_noble_locks,
+                    toroidal_labels,
+                    toroidal_view_mode,
+                ]
+                toroidal_refresh.click(
+                    render_toroidal_periodic,
+                    inputs=toroidal_inputs,
+                    outputs=toroidal_plot,
+                )
+                toroidal_tab.select(
+                    render_toroidal_periodic,
+                    inputs=toroidal_inputs,
+                    outputs=toroidal_plot,
+                    trigger_mode="once",
+                    show_progress="minimal",
+                )
+
             with gr.Tab("Lattice Simulator") as lattice_tab:
                 kc_markdown(
                     "Two-gyro **gauged quaternion lattice** from the toe repo — "
@@ -584,6 +668,18 @@ def build_app() -> gr.Blocks:
                     outputs=flux_panel_outputs,
                     trigger_mode="once",
                     show_progress="minimal",
+                )
+
+                def on_toroidal_flux_jump(z_highlight: float):
+                    z = int(z_highlight)
+                    if z < 1:
+                        z = 54
+                    return select_flux_z(z)
+
+                toroidal_flux_btn.click(
+                    fn=on_toroidal_flux_jump,
+                    inputs=[toroidal_z_highlight],
+                    outputs=flux_jump_outputs,
                 )
 
             with gr.Tab("Observations", elem_classes=["kc-observations-tab"]) as observations_tab:
@@ -944,6 +1040,7 @@ def main() -> None:
             str(BITCOIN_PI_DIR),
             str(SUPERCONDUCTORS_DIR),
             str(PULSARS_DIR),
+            str(TOROIDAL_DIR),
         ],
         inbrowser=not on_hf,
         # HF sets GRADIO_SSR_MODE=true by default; the Node SSR proxy can emit
