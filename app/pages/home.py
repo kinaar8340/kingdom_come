@@ -92,7 +92,7 @@ This produces a **sawtooth waveform**: slow linear rise → sudden drop → repe
 | Phase | Clock analog |
 |-------|--------------|
 | Constant-rate accumulation | Steady tick / spring-winding |
-| Fixed threshold W<sub>g</sub> | Alarm setting |
+| Fixed threshold $W_{g}$ | Alarm setting |
 | Sudden release + reset | Chime and mechanism reset |
 | Repetition | Quasi-periodic rhythm — period set by rate and threshold |
 
@@ -102,7 +102,7 @@ gauged Hopf lattice (*Lagrangian_Derivation.pdf* in **The Papers** tab).
 """
 
 HOME_WG_MD = """
-### W<sub>g</sub> Constant
+### $W_{g}$ Constant
 
 The constant $W_{g}$ emerges as a robust invariant from the gauged Hopf lattice dynamics.
 

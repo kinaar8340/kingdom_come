@@ -21,7 +21,7 @@ def test_home_covers_clock_mechanism():
     assert "frac{dS}{dt}" in HOME_CLOCK_MD or "S(t)" in HOME_CLOCK_MD
     assert "111.408" in HOME_CLOCK_MD or "350" in HOME_CLOCK_MD
     assert "Approximate Value" in HOME_WG_MD
-    assert "W_{g}" in HOME_WG_MD or "W<sub>g</sub>" in HOME_WG_MD
+    assert "W_{g}" in HOME_WG_MD
     assert "phi_b" in HOME_CLOCK_MD
     assert "Observations" in HOME_EXPLORE_MD
 

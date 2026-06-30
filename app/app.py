@@ -32,6 +32,7 @@ from app.components.periodic_picker import (
     periodic_table_html,
     picker_label_for_z,
 )
+from app.components.markdown_math import kc_markdown
 from app.components.theme import HERO_HTML, KINGDOM_CSS, footer_html
 from app.pages.higgs_observations import (
     HIGGS_GALLERY,
@@ -253,22 +254,22 @@ def build_app() -> gr.Blocks:
 
         with gr.Tabs():
             with gr.Tab("Home"):
-                gr.Markdown(HOME_INTRO_MD)
+                kc_markdown(HOME_INTRO_MD)
                 with gr.Tabs():
                     with gr.Tab("The Model"):
-                        gr.Markdown(HOME_THE_MODEL_MD)
+                        kc_markdown(HOME_THE_MODEL_MD)
                         with gr.Accordion("Derivation: Hopf Map via Quaternions", open=False):
-                            gr.Markdown(DERIVATION_HOPF_MD)
+                            kc_markdown(DERIVATION_HOPF_MD)
                     with gr.Tab("The Clock"):
-                        gr.Markdown(HOME_CLOCK_MD)
+                        kc_markdown(HOME_CLOCK_MD)
                     with gr.Tab("W_g Constant"):
-                        gr.Markdown(HOME_WG_MD)
+                        kc_markdown(HOME_WG_MD)
                     with gr.Tab("The Papers"):
-                        gr.Markdown(PAPERS_INTRO_MD)
+                        kc_markdown(PAPERS_INTRO_MD)
                         for paper in PAPER_ENTRIES:
                             with gr.Accordion(paper.title, open=False) as paper_accordion:
-                                gr.Markdown(paper_summary_md(paper.key))
-                                gr.Markdown("### Paper pages (inline preview)")
+                                kc_markdown(paper_summary_md(paper.key))
+                                kc_markdown("### Paper pages (inline preview)")
                                 page_gallery = gr.Gallery(
                                     label="PDF pages",
                                     columns=1,
@@ -285,34 +286,34 @@ def build_app() -> gr.Blocks:
                                         interactive=False,
                                     )
                                 else:
-                                    gr.Markdown(paper_missing_md(paper))
+                                    kc_markdown(paper_missing_md(paper))
                                 paper_accordion.expand(
                                     fn=lambda key=paper.key: load_paper_gallery(key),
                                     outputs=page_gallery,
                                     show_progress="minimal",
                                 )
                     with gr.Tab("Explore"):
-                        gr.Markdown(HOME_EXPLORE_MD)
+                        kc_markdown(HOME_EXPLORE_MD)
 
             with gr.Tab("Help"):
                 with gr.Tabs():
                     with gr.Tab("Navigate"):
-                        gr.Markdown(HELP_NAVIGATE_MD)
+                        kc_markdown(HELP_NAVIGATE_MD)
                     with gr.Tab("Getting Started"):
-                        gr.Markdown(HELP_GETTING_STARTED_MD)
+                        kc_markdown(HELP_GETTING_STARTED_MD)
                     with gr.Tab("Controls"):
-                        gr.Markdown(HELP_CONTROLS_MD)
+                        kc_markdown(HELP_CONTROLS_MD)
                     with gr.Tab("Acronyms"):
-                        gr.Markdown(HELP_ACRONYMS_MD)
+                        kc_markdown(HELP_ACRONYMS_MD)
                     with gr.Tab("Tech Stack"):
-                        gr.Markdown(HELP_TECH_MD)
+                        kc_markdown(HELP_TECH_MD)
 
             with gr.Tab("Hopf Visualizer") as hopf_tab:
-                gr.Markdown(HOPF_INTRO_MD)
+                kc_markdown(HOPF_INTRO_MD)
                 if is_hf_space():
-                    gr.Markdown(HF_VIEW_MODE_MD)
+                    kc_markdown(HF_VIEW_MODE_MD)
                 else:
-                    gr.Markdown(
+                    kc_markdown(
                         "Choose **2D** for maximum compatibility or **3D** for interactive WebGL rotation (local)."
                     )
                 _on_hf = is_hf_space()
@@ -334,14 +335,14 @@ def build_app() -> gr.Blocks:
                 with gr.Row():
                     show_base = gr.Checkbox(value=True, label="Show S² base sphere")
                     show_highlight = gr.Checkbox(value=True, label="Highlight single fiber")
-                gr.Markdown("**Try a preset** — loads parameters and updates the plot automatically.")
+                kc_markdown("**Try a preset** — loads parameters and updates the plot automatically.")
                 with gr.Row():
                     preset_btns = [
                         gr.Button(name, size="sm") for name in HOPF_PRESETS
                     ]
                     reset_btn = gr.Button("Reset defaults", size="sm")
                 with gr.Accordion("What you're looking at — panels ①–④", open=True):
-                    gr.Markdown(HOPF_PANEL_GUIDE_MD)
+                    kc_markdown(HOPF_PANEL_GUIDE_MD)
                 hopf_plot = gr.Plot(label="Hopf Fibration")
                 with gr.Row():
                     refresh = gr.Button("Update visualization", variant="primary")
@@ -393,7 +394,7 @@ def build_app() -> gr.Blocks:
                 ).then(render_hopf_visualizer, inputs=hopf_inputs, outputs=hopf_plot)
 
             with gr.Tab("Lattice Simulator") as lattice_tab:
-                gr.Markdown(
+                kc_markdown(
                     "Two-gyro **gauged quaternion lattice** from the toe repo — "
                     "compare stable (gauge=0.85) vs chaotic (gauge=0.08) flux flywheel dynamics."
                 )
@@ -402,7 +403,7 @@ def build_app() -> gr.Blocks:
                     lat_sites = gr.Slider(24, 128, value=72, step=8, label="Lattice sites")
                     lat_gauge = gr.Slider(0.5, 0.95, value=0.85, step=0.05, label="Stable gauge strength")
                 lattice_plot = gr.Plot(label="Lattice metrics")
-                lattice_summary = gr.Markdown()
+                lattice_summary = kc_markdown()
                 lattice_run = gr.Button("Run lattice comparison", variant="primary")
                 lattice_run.click(
                     render_lattice_sim,
@@ -418,7 +419,7 @@ def build_app() -> gr.Blocks:
                 )
 
             with gr.Tab("Flux Flywheel") as flux_tab:
-                gr.Markdown(
+                kc_markdown(
                     "**Element explorer + flux flywheel** — pick any Z from the table or dropdown. "
                     "Z = 1–118 known · Z = 119–180 superheavy (predicted) · Z = 129 Magic Island ID."
                 )
@@ -460,7 +461,7 @@ def build_app() -> gr.Blocks:
                 ]
                 flux_jump_outputs = [z_slider, *flux_panel_outputs]
                 with noble_jump_row:
-                    gr.Markdown("**Noble gas quick-jump:**")
+                    kc_markdown("**Noble gas quick-jump:**")
                     for z_val, sym in NOBLE_GAS_JUMP:
                         btn = gr.Button(sym, size="sm", min_width=48)
                         btn.click(
@@ -479,7 +480,7 @@ def build_app() -> gr.Blocks:
                 )
 
             with gr.Tab("Observations"):
-                gr.Markdown(OBSERVATIONS_INTRO_MD)
+                kc_markdown(OBSERVATIONS_INTRO_MD)
                 with gr.Accordion(
                     "Investigation 1: Catatumbo Lightning Hotspot — Earth",
                     open=False,
@@ -493,7 +494,7 @@ def build_app() -> gr.Blocks:
                                 scale=1,
                                 height=280,
                             )
-                    gr.Markdown(INVESTIGATION_1_MD)
+                    kc_markdown(INVESTIGATION_1_MD)
                 with gr.Accordion(
                     "Investigation 2: Great Red Spot — Jupiter",
                     open=False,
@@ -507,7 +508,7 @@ def build_app() -> gr.Blocks:
                                 scale=1,
                                 height=280,
                             )
-                    gr.Markdown(INVESTIGATION_2_MD)
+                    kc_markdown(INVESTIGATION_2_MD)
                 with gr.Accordion(
                     "Investigation 3: Emergent Periodic Orbits in Gravitational Three-Body Systems",
                     open=False,
@@ -521,7 +522,7 @@ def build_app() -> gr.Blocks:
                                 scale=1,
                                 height=280,
                             )
-                    gr.Markdown(INVESTIGATION_3_MD)
+                    kc_markdown(INVESTIGATION_3_MD)
                 with gr.Accordion(
                     INVESTIGATION_4_ACCORDION_TITLE,
                     open=False,
@@ -535,7 +536,7 @@ def build_app() -> gr.Blocks:
                                 scale=1,
                                 height=280,
                             )
-                    gr.Markdown(INVESTIGATION_4_MD)
+                    kc_markdown(INVESTIGATION_4_MD)
                 with gr.Accordion(
                     INVESTIGATION_5_ACCORDION_TITLE,
                     open=False,
@@ -549,7 +550,7 @@ def build_app() -> gr.Blocks:
                                 scale=1,
                                 height=280,
                             )
-                    gr.Markdown(INVESTIGATION_5_MD)
+                    kc_markdown(INVESTIGATION_5_MD)
                 with gr.Accordion(
                     INVESTIGATION_6_ACCORDION_TITLE,
                     open=False,
@@ -563,7 +564,7 @@ def build_app() -> gr.Blocks:
                                 scale=1,
                                 height=280,
                             )
-                    gr.Markdown(INVESTIGATION_6_MD)
+                    kc_markdown(INVESTIGATION_6_MD)
                 with gr.Accordion(
                     INVESTIGATION_7_ACCORDION_TITLE,
                     open=False,
@@ -577,16 +578,16 @@ def build_app() -> gr.Blocks:
                                 scale=1,
                                 height=280,
                             )
-                    gr.Markdown(INVESTIGATION_7_MD)
+                    kc_markdown(INVESTIGATION_7_MD)
                 with gr.Accordion(
                     INVESTIGATION_8_ACCORDION_TITLE,
                     open=False,
                 ):
                     gr.HTML(INVESTIGATION_8_HEADER_HTML)
-                    gr.Markdown(INVESTIGATION_8_EXEC_MD)
-                    gr.Markdown(INVESTIGATION_8_INDICATOR_MD)
-                    gr.Markdown(INVESTIGATION_8_EMERGENCE_MD)
-                    gr.Markdown(INVESTIGATION_8_GALLERY_INTRO_MD)
+                    kc_markdown(INVESTIGATION_8_EXEC_MD)
+                    kc_markdown(INVESTIGATION_8_INDICATOR_MD)
+                    kc_markdown(INVESTIGATION_8_EMERGENCE_MD)
+                    kc_markdown(INVESTIGATION_8_GALLERY_INTRO_MD)
                     with gr.Row(equal_height=True, elem_classes=["kc-obs-image-row"]):
                         for image_path, caption in BITCOIN_PI_GALLERY:
                             gr.Image(
@@ -596,7 +597,7 @@ def build_app() -> gr.Blocks:
                                 scale=1,
                                 height=280,
                             )
-                    gr.Markdown(INVESTIGATION_8_IMPLICATIONS_MD)
+                    kc_markdown(INVESTIGATION_8_IMPLICATIONS_MD)
                     report_copy = gr.Textbox(
                         value=INVESTIGATION_8_REPORT_MD,
                         visible=False,
@@ -624,7 +625,7 @@ def build_app() -> gr.Blocks:
                                 scale=1,
                                 height=280,
                             )
-                    gr.Markdown(INVESTIGATION_9_MD)
+                    kc_markdown(INVESTIGATION_9_MD)
                     with gr.Row():
                         kappa_slider = gr.Slider(
                             minimum=0.70,
@@ -640,7 +641,7 @@ def build_app() -> gr.Blocks:
                             step=0.0001,
                             label="braiding_target — anyonic phase",
                         )
-                    conduit_readout = gr.Markdown(
+                    conduit_readout = kc_markdown(
                         cuprate_conduit_metrics(KAPPA_TARGET, BRAIDING_TARGET)
                     )
 
@@ -670,7 +671,7 @@ def build_app() -> gr.Blocks:
                                 scale=1,
                                 height=280,
                             )
-                    gr.Markdown(INVESTIGATION_10_MD)
+                    kc_markdown(INVESTIGATION_10_MD)
                     with gr.Row():
                         pulsar_freq = gr.Number(
                             label="Test pulsar spin frequency (Hz)",
@@ -685,7 +686,7 @@ def build_app() -> gr.Blocks:
                             step=0.01,
                             label="κ — coupling parameter",
                         )
-                    pulsar_readout = gr.Markdown(
+                    pulsar_readout = kc_markdown(
                         pulsar_quick_check(REFERENCE_PULSAR_HZ, PULSAR_KAPPA_DEFAULT)
                     )
                     gr.Button("Run quick check", size="sm").click(
@@ -693,10 +694,10 @@ def build_app() -> gr.Blocks:
                         inputs=[pulsar_freq, pulsar_kappa],
                         outputs=pulsar_readout,
                     )
-                gr.Markdown(OBSERVATIONS_FOOTER_MD)
+                kc_markdown(OBSERVATIONS_FOOTER_MD)
 
             with gr.Tab("Showcase"):
-                gr.Markdown(
+                kc_markdown(
                     "Related Hugging Face Spaces in the TOE ecosystem. "
                     "Each card links to a live Space with a one-line connection to Kingdom Come."
                 )
