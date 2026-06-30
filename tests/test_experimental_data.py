@@ -2,11 +2,13 @@
 
 from kingdom.core.experimental_data import (
     calculate_comparison_fidelity,
+    compare_ionization_energy_relative,
     compare_to_experiment,
     experimental_magnetic_moment,
     magnetic_moment_validation,
     observable_match_score,
 )
+from kingdom.core.flux_explorer import explore_flux_element_extended
 from kingdom.core.flux_explorer import build_observables_table, build_observables_validation
 from kingdom.core.flux_flywheel import map_z_to_flywheel_extended
 
@@ -92,3 +94,31 @@ def test_calculate_comparison_fidelity_iron():
     assert fidelity["score"] is not None
     assert fidelity["details"]["magnetic_moment"] == 10.0
     assert fidelity["score"] >= 4.0
+
+
+def test_compare_ionization_energy_relative_iron():
+    result = compare_ionization_energy_relative(26, 5.5)
+    assert result["available"] is True
+    assert result["comparison_mode"] == "period_relative"
+    assert result["experimental_value"] == 7.90
+    assert result["score"] is not None
+    assert result["score"] >= 4.0
+    assert abs(result["delta"]) < 2.0
+
+
+def test_iron_fidelity_improved_with_relative_ie():
+    payload = explore_flux_element_extended(26)
+    score = payload["flywheel"]["comparison_fidelity_score"]
+    ie_detail = payload["flywheel"]["comparison_fidelity_details"]["ionization_energy"]
+    assert score is not None
+    assert ie_detail >= 4.0
+    assert score > 5.0
+
+
+def test_build_observables_ie_row_uses_period_relative():
+    extended = map_z_to_flywheel_extended(26)
+    ie_row = build_observables_validation(26, extended)["rows"][1]
+    assert ie_row["category"] == "Ionization Energy"
+    assert "stab z" in ie_row["model_spin_only"]
+    assert "Δz" in ie_row["delta"]
+    assert "Period-relative" in ie_row["source"]

@@ -563,6 +563,102 @@ def ea_model_implied_ev(stability_score: float, ea_scale_ev: float = 3.5) -> flo
     return round((8.0 - stability_score) / 8.0 * ea_scale_ev, 2)
 
 
+def get_period(z: int) -> int:
+    """IUPAC period for atomic number Z (1–118+)."""
+    if z <= 118:
+        from kingdom.core.periodic_meta import period_group_category
+
+        return period_group_category(z)[0]
+    from kingdom.core.superheavy import superheavy_period_group
+
+    return superheavy_period_group(z)[0]
+
+
+def elements_in_period(period: int, *, z_max: int = 118) -> list[int]:
+    """Atomic numbers in the given period (default: known table Z ≤ 118)."""
+    from kingdom.core.periodic_meta import _build
+
+    meta = _build()
+    return sorted(z for z, (p, _g, _c) in meta.items() if p == period and z <= z_max)
+
+
+def _z_score(value: float, population: list[float]) -> float:
+    if len(population) < 2:
+        return 0.0
+    mean = sum(population) / len(population)
+    variance = sum((v - mean) ** 2 for v in population) / len(population)
+    std = variance ** 0.5
+    if std < 1e-9:
+        return 0.0
+    return (value - mean) / std
+
+
+def compare_ionization_energy_relative(z: int, model_stability: float) -> dict[str, Any]:
+    """
+    Compare flywheel stability to real IE via period-relative z-scores.
+
+    Answers: does this element's model stability rank appropriately vs its real IE
+    within the same period? (Not an absolute IE prediction test.)
+    """
+    period = get_period(z)
+    period_z = elements_in_period(period)
+    if z not in period_z or len(period_z) < 3:
+        return {
+            "available": False,
+            "experimental_value": None,
+            "experimental_display": None,
+            "delta": None,
+            "percent_delta": None,
+            "source": None,
+            "quality": "No experimental data",
+            "note": f"Insufficient period-{period} coverage for relative IE comparison",
+            "within_range": None,
+            "score": None,
+            "comparison_mode": "period_relative",
+        }
+
+    from kingdom.core.flux_flywheel import first_ionization_energy_ev, map_z_to_flywheel
+
+    stabilities = [map_z_to_flywheel(el)["stability_score"] for el in period_z]
+    ionization_ev = [first_ionization_energy_ev(el) for el in period_z]
+    real_ie = first_ionization_energy_ev(z)
+
+    z_stab = _z_score(model_stability, stabilities)
+    z_ie = _z_score(real_ie, ionization_ev)
+    delta_z = z_stab - z_ie
+
+    relative_error = min(abs(delta_z) / 2.0, 1.0)
+    score = max(0.0, 10.0 * (1.0 - relative_error))
+    if (z_stab >= 0) == (z_ie >= 0):
+        score = min(10.0, score + 1.0)
+
+    exp_entry = experimental_entry(z, "ionization_energy")
+    source = exp_entry.get("source", "NIST / period trend") if exp_entry else "Lookup + period trend"
+    quality = "Good" if exp_entry else "Estimated"
+
+    return {
+        "available": True,
+        "experimental_value": round(real_ie, 2),
+        "experimental_low": None,
+        "experimental_high": None,
+        "experimental_display": f"{real_ie:.2f}",
+        "delta": round(delta_z, 3),
+        "percent_delta": None,
+        "source": source,
+        "quality": quality,
+        "note": (
+            f"Period {period} z-score match: stability {z_stab:+.2f} vs IE {z_ie:+.2f} "
+            f"(Δz = {delta_z:+.2f}). Relative ranking — not absolute IE prediction."
+        ),
+        "within_range": abs(delta_z) <= 0.5,
+        "score": round(score, 1),
+        "comparison_mode": "period_relative",
+        "stability_z_score": round(z_stab, 3),
+        "ie_z_score": round(z_ie, 3),
+        "period": period,
+    }
+
+
 def calculate_comparison_fidelity(
     comparisons: dict[str, dict[str, Any]],
     *,
@@ -587,18 +683,25 @@ def calculate_comparison_fidelity(
         if weight <= 0:
             continue
 
-        delta = abs(comp.get("delta") or 0.0)
-        exp_val = float(comp["experimental_value"])
-        ref = abs(exp_val) if exp_val != 0 else 1.0
-
-        if exp_val == 0.0:
-            score = 10.0 if delta < 0.05 else max(0.0, 10.0 * (1.0 - min(delta / ref, 1.0)))
+        if comp.get("score") is not None:
+            score = float(comp["score"])
         else:
-            relative_error = min(delta / ref, 1.0)
-            score = max(0.0, 10.0 * (1.0 - relative_error))
+            delta = abs(comp.get("delta") or 0.0)
+            exp_val = float(comp["experimental_value"])
+            ref = abs(exp_val) if exp_val != 0 else 1.0
 
-        if comp.get("within_range"):
-            score = min(10.0, score + 1.5)
+            if exp_val == 0.0:
+                score = (
+                    10.0
+                    if delta < 0.05
+                    else max(0.0, 10.0 * (1.0 - min(delta / ref, 1.0)))
+                )
+            else:
+                relative_error = min(delta / ref, 1.0)
+                score = max(0.0, 10.0 * (1.0 - relative_error))
+
+            if comp.get("within_range"):
+                score = min(10.0, score + 1.5)
 
         weighted_score += score * weight
         total_weight += weight

@@ -8,7 +8,11 @@ from pathlib import Path
 import plotly.graph_objects as go
 
 from kingdom.core.elements import EXPLORER_Z_MAX, NOBLE_GAS_Z, get_element, is_explorable_element
-from kingdom.core.experimental_data import calculate_comparison_fidelity, compare_to_experiment
+from kingdom.core.experimental_data import (
+    calculate_comparison_fidelity,
+    compare_ionization_energy_relative,
+    compare_to_experiment,
+)
 from kingdom.core.flux_flywheel import map_z_to_flywheel, map_z_to_flywheel_extended
 from kingdom.viz.electron_cloud import build_chemistry_vs_toe_figure, build_electron_cloud_figure
 from kingdom.viz.hopf_plotly import kingdom_dark_theme
@@ -120,26 +124,31 @@ def build_observables_validation(z: int, extended: dict) -> dict:
         note=mu_cmp["note"],
     ))
 
-    implied_ie = float(extended.get("ie_model_implied_eV", 0.0))
+    stability = float(extended["stability_score"])
     real_ie = float(extended["real_ionization_energy_eV"])
-    ie_cmp = compare_to_experiment(z, implied_ie, "ionization_energy")
+    ie_cmp = compare_ionization_energy_relative(z, stability)
 
     if ie_cmp["available"]:
-        exp_ie = f"{ie_cmp['experimental_value']:.2f} eV"
-        delta_ie = f"{ie_cmp['delta']:+.2f} eV"
-        source_ie = ie_cmp["source"] or "—"
+        stab_z = ie_cmp.get("stability_z_score", 0.0)
+        ie_z = ie_cmp.get("ie_z_score", 0.0)
+        exp_ie = f"{ie_cmp['experimental_value']:.2f} eV (IE z {ie_z:+.2f})"
+        delta_ie = f"Δz {ie_cmp['delta']:+.2f}"
+        source_ie = f"Period-relative · {ie_cmp['source'] or 'NIST'}"
         quality_ie = ie_cmp["quality"]
         note_ie = ie_cmp["note"]
+        model_ie = f"stab z {stab_z:+.2f}"
     else:
+        implied_ie = float(extended.get("ie_model_implied_eV", 0.0))
         exp_ie = f"{real_ie:.2f} eV"
-        delta_ie = f"{implied_ie - real_ie:+.2f} eV"
-        source_ie = "Lookup + fallback"
-        quality_ie = "Estimated"
-        note_ie = "No NIST anchor — smooth fallback trend used"
+        delta_ie = "—"
+        source_ie = "—"
+        quality_ie = ie_cmp["quality"]
+        note_ie = ie_cmp["note"]
+        model_ie = f"{implied_ie:.2f} eV proxy"
 
     table.append(_observable_table_row(
         category="Ionization Energy",
-        model_spin_only=f"{implied_ie:.2f} eV",
+        model_spin_only=model_ie,
         model_soc="—",
         experimental=exp_ie,
         delta=delta_ie,

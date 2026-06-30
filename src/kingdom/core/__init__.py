@@ -1,6 +1,10 @@
 """Core mathematical and physical models."""
 
-from .experimental_data import calculate_comparison_fidelity, compare_to_experiment
+from .experimental_data import (
+    calculate_comparison_fidelity,
+    compare_ionization_energy_relative,
+    compare_to_experiment,
+)
 from .flux_flywheel import (
     effective_magnetic_moment_with_soc,
     lande_g_factor,
@@ -25,6 +29,7 @@ __all__ = [
     "hopf_map_quaternion",
     "linking_number_pair",
     "calculate_comparison_fidelity",
+    "compare_ionization_energy_relative",
     "compare_to_experiment",
     "effective_magnetic_moment_with_soc",
     "lande_g_factor",

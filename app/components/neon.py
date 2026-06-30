@@ -594,8 +594,9 @@ def flux_observables_cards_html(extended: dict) -> str:
         + " Free-atom LS coupling; jj coupling dominates for Z ≳ 80."
     )
     ie_tip = (
-        f"Experimental first ionization energy. Model-implied IE from stability alone: "
-        f"{implied_ie} eV."
+        f"Experimental first ionization energy ({extended['real_ionization_energy_eV']} eV). "
+        f"Fidelity uses period-relative z-score ranking (stability vs IE within period), "
+        f"not the absolute stability-derived proxy ({implied_ie} eV)."
     )
 
     z = int(extended.get("Z", 1))
