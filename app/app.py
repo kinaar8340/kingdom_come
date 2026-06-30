@@ -101,6 +101,7 @@ from app.pages.home import (
     HOME_WG_MD,
 )
 from app.pages.hopf_guide import HF_VIEW_MODE_MD, HOPF_INTRO_MD, HOPF_PANEL_GUIDE_MD
+from app.pages.flux_trends_observations import FLUX_TRENDS_MD, render_flux_trend_plots
 from app.pages.observations import (
     CATATUMBO_GALLERY,
     INVESTIGATION_1_MD,
@@ -519,8 +520,26 @@ def build_app() -> gr.Blocks:
                     show_progress="minimal",
                 )
 
-            with gr.Tab("Observations", elem_classes=["kc-observations-tab"]):
+            with gr.Tab("Observations", elem_classes=["kc-observations-tab"]) as observations_tab:
                 kc_markdown(OBSERVATIONS_INTRO_MD)
+                with gr.Accordion(
+                    "Periodic Trends — Flux Flywheel Validation",
+                    open=True,
+                ):
+                    kc_markdown(FLUX_TRENDS_MD)
+                    with gr.Row():
+                        fidelity_trend_plot = gr.Plot(label="Fidelity score trend")
+                        stability_ie_plot = gr.Plot(label="Stability vs ionization energy")
+                    mu_validation_plot = gr.Plot(label="SOC μ vs experimental")
+                    flux_trends_outputs = [
+                        fidelity_trend_plot,
+                        stability_ie_plot,
+                        mu_validation_plot,
+                    ]
+                    gr.Button("Refresh trend analysis", size="sm").click(
+                        render_flux_trend_plots,
+                        outputs=flux_trends_outputs,
+                    )
                 with gr.Accordion(
                     "Investigation 1: Catatumbo Lightning Hotspot — Earth",
                     open=False,
@@ -735,6 +754,12 @@ def build_app() -> gr.Blocks:
                         outputs=pulsar_readout,
                     )
                 kc_markdown(OBSERVATIONS_FOOTER_MD)
+                observations_tab.select(
+                    render_flux_trend_plots,
+                    outputs=flux_trends_outputs,
+                    trigger_mode="once",
+                    show_progress="minimal",
+                )
 
             with gr.Tab("Showcase"):
                 kc_markdown(
