@@ -328,17 +328,34 @@ def flux_observables_cards_html(extended: dict) -> str:
     if heavy:
         heavy_note = """
   <div class="kc-obs-heavy-note" title="Relativistic and many-body effects grow for heavy Z">
-    Z ≥ 80: spin-only μ and Aufbau-based unpaired counts are illustrative —
-    relativistic core contraction and configuration mixing reduce accuracy.
+    Z ≥ 80: LS spin-only / Landé μ are illustrative — jj coupling and
+    relativistic core contraction dominate; values are exploratory only.
   </div>"""
 
     align_tip = (
         "50% model stability (÷8) + 50% normalized real IE (÷25 eV). "
         f"Stability contributes {stab_pts} pts · IE contributes {ie_pts} pts."
     )
+    mu_spin = extended.get("magnetic_moment_spin_only_BM", extended["magnetic_moment_BM"])
+    mu_soc = extended.get("magnetic_moment_soc_BM", mu_spin)
+    soc_applied = extended.get("spin_orbit_applied", False)
+    g_j = extended.get("lande_g_J", 0)
+    term = extended.get("ground_term_label", "")
+    term_j = extended.get("ground_term_J", 0)
+    mu_soc_line = ""
+    if soc_applied and mu_soc != mu_spin:
+        mu_soc_line = f"""
+    <span class="kc-obs-delta kc-obs-delta-pos" title="Landé g_J √(J(J+1)) with ground term {term}">
+      SOC μ = {mu_soc} BM (g_J={g_j}, J={term_j})
+    </span>"""
     mu_tip = (
-        "Spin-only μ ≈ √(n(n+2)) Bohr magnetons from unpaired electrons. "
-        "Orbital angular momentum and crystal fields are not included."
+        f"Spin-only μ ≈ √(n(n+2)) = {mu_spin} BM. "
+        + (
+            f"SOC-corrected (LS): μ_eff = {mu_soc} BM via {term}, g_J={g_j}. "
+            if soc_applied
+            else "L=0 or closed shell — spin-only equals SOC. "
+        )
+        + "Free-atom LS coupling; jj coupling dominates for Z ≳ 80."
     )
     ie_tip = (
         f"Experimental first ionization energy. Model-implied IE from stability alone: "
@@ -364,7 +381,7 @@ def flux_observables_cards_html(extended: dict) -> str:
   </div>
   <div class="kc-metric-card">
     <span class="kc-obs-tip" title="{mu_tip}">μ spin-only (BM)</span>
-    <strong>{extended["magnetic_moment_BM"]}</strong>
+    <strong>{mu_spin}</strong>{mu_soc_line}
   </div>
   <div class="kc-metric-card kc-obs-align">
     <span class="kc-obs-tip" title="{align_tip}">Alignment · {spin_label}</span>

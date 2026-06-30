@@ -2,6 +2,8 @@
 
 from kingdom.core.flux_flywheel import (
     base_flywheel_keys,
+    lande_g_factor,
+    lande_magnetic_moment_bm,
     map_z_to_flywheel,
     map_z_to_flywheel_extended,
     model_reality_alignment,
@@ -52,7 +54,23 @@ def test_extended_iron_magnetism():
     result = map_z_to_flywheel_extended(26)
     assert result["unpaired_electrons"] == 4
     assert result["magnetic_moment_BM"] == round(spin_only_magnetic_moment_bm(4), 2)
+    assert result["magnetic_moment_soc_BM"] > result["magnetic_moment_BM"]
+    assert result["ground_term_label"] == "5D4"
+    assert result["spin_orbit_applied"] is True
     assert result["real_ionization_energy_eV"] == 7.90
+
+
+def test_lande_g_factor_iron():
+    g_j = lande_g_factor(L=2, S=2.0, J=4.0)
+    assert abs(g_j - 1.5) < 0.01
+    mu = lande_magnetic_moment_bm(2, 2.0, 4.0)
+    assert mu > spin_only_magnetic_moment_bm(4)
+
+
+def test_helium_soc_matches_spin_only():
+    result = map_z_to_flywheel_extended(2)
+    assert result["magnetic_moment_soc_BM"] == result["magnetic_moment_BM"] == 0.0
+    assert result["spin_orbit_applied"] is False
 
 
 def test_unpaired_from_aufbau_neon():

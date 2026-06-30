@@ -47,6 +47,14 @@ _EXTENDED_ONLY_KEYS = frozenset({
     "ie_delta_pct",
     "unpaired_electrons",
     "magnetic_moment_BM",
+    "magnetic_moment_soc_BM",
+    "magnetic_moment_spin_only_BM",
+    "lande_g_J",
+    "ground_term_L",
+    "ground_term_S",
+    "ground_term_J",
+    "ground_term_label",
+    "spin_orbit_applied",
     "is_diamagnetic",
     "model_vs_reality_alignment",
     "alignment_stability_pts",
@@ -57,6 +65,25 @@ _EXTENDED_ONLY_KEYS = frozenset({
 })
 
 _ORBITAL_CAPACITY = {"s": 2, "p": 6, "d": 10, "f": 14}
+_ORBITAL_L = {"s": 0, "p": 1, "d": 2, "f": 3}
+
+# Ground LS terms (L, S, J, label) — anchors for SOC / Landé g_J.
+_GROUND_TERM_LS: dict[int, tuple[int, float, float, str]] = {
+    2: (0, 0.0, 0.0, "1S0"),
+    10: (0, 0.0, 0.0, "1S0"),
+    18: (0, 0.0, 0.0, "1S0"),
+    24: (2, 3.0, 3.0, "7S3"),   # Cr 3d⁵4s¹ → ⁷S₃ (simplified)
+    26: (2, 2.0, 4.0, "5D4"),   # Fe
+    27: (3, 1.5, 4.5, "4F9/2"), # Co
+    28: (3, 1.0, 4.0, "3F4"),   # Ni
+    29: (0, 0.5, 0.5, "2S1/2"), # Cu 4s¹
+    41: (2, 2.5, 1.5, "6D1/2"), # Nb
+    42: (2, 3.0, 3.0, "7S3"),   # Mo
+    46: (0, 0.0, 0.0, "1S0"),   # Pd
+    79: (0, 0.5, 0.5, "2S1/2"), # Au 6s¹
+    86: (0, 0.0, 0.0, "1S0"),
+    118: (0, 0.0, 0.0, "1S0"),
+}
 _SUBSHELL_RE = re.compile(r"(\d+)([spdf])(\d+)")
 
 
@@ -169,6 +196,129 @@ def spin_only_magnetic_moment_bm(n_unpaired: int) -> float:
     return float(np.sqrt(n_unpaired * (n_unpaired + 2)))
 
 
+def lande_g_factor(L: int, S: float, J: float) -> float:
+    """Landé g-factor for an LS-coupled term."""
+    if J == 0:
+        return 0.0
+    numerator = J * (J + 1) + S * (S + 1) - L * (L + 1)
+    return 1.0 + numerator / (2.0 * J * (J + 1))
+
+
+def lande_magnetic_moment_bm(L: int, S: float, J: float) -> float:
+    """Effective moment μ_eff = g_J √(J(J+1)) Bohr magnetons."""
+    if J == 0:
+        return 0.0
+    g_j = lande_g_factor(L, S, J)
+    return float(g_j * np.sqrt(J * (J + 1)))
+
+
+def _hunds_rule_J(L: int, S: float, electrons: int, capacity: int) -> float:
+    """Hund's rule J selection for a subshell with given occupancy."""
+    if electrons <= 0 or electrons >= capacity:
+        return 0.0
+    half = capacity // 2
+    if electrons < half:
+        return abs(L - S)
+    if electrons > half:
+        return L + S
+    return float(L)
+
+
+def _estimate_ground_term_from_config(config: str, n_unpaired: int) -> tuple[int, float, float, str]:
+    """Estimate (L, S, J, label) from aufbau string when no lookup exists."""
+    if n_unpaired <= 0:
+        return 0, 0.0, 0.0, "1S0"
+
+    best: tuple[int, str, int, int] | None = None
+    for shell_n, orb, count in _SUBSHELL_RE.findall(config.replace(" (predicted)", "")):
+        cap = _ORBITAL_CAPACITY[orb]
+        e = int(count)
+        unpaired = _hund_unpaired(e, cap)
+        if unpaired <= 0:
+            continue
+        candidate = (int(shell_n), orb, e, unpaired)
+        if best is None or candidate[0] > best[0]:
+            best = candidate
+
+    if best is None:
+        s = n_unpaired / 2.0
+        return 0, s, abs(s), f"2S{int(abs(s))}"
+
+    _shell_n, orb, electrons, unpaired = best
+    L = _ORBITAL_L[orb]
+    S = unpaired / 2.0
+    cap = _ORBITAL_CAPACITY[orb]
+    J = _hunds_rule_J(L, S, electrons, cap)
+    j_label = int(J) if J == int(J) else J
+    orb_label = orb.upper()
+    mult = int(2 * S + 1)
+    label = f"{mult}{orb_label}{j_label}"
+    return L, S, J, label
+
+
+def ground_term_ls(z: int, n_unpaired: int) -> tuple[int, float, float, str]:
+    """Ground-term (L, S, J, label) for SOC — lookup with aufbau fallback."""
+    if z in _GROUND_TERM_LS:
+        return _GROUND_TERM_LS[z]
+    element = get_element(z)
+    if element is None:
+        s = n_unpaired / 2.0 if n_unpaired else 0.0
+        return 0, s, abs(s), f"2S{int(abs(s))}" if n_unpaired else "1S0"
+    return _estimate_ground_term_from_config(element.electron_config, n_unpaired)
+
+
+def effective_magnetic_moment_with_soc(
+    n_unpaired: int,
+    *,
+    L: int = 0,
+    S: float = 0.0,
+    J: float = 0.0,
+    use_spin_orbit: bool = True,
+) -> float:
+    """
+    Magnetic moment in BM.
+
+    When use_spin_orbit is False or L = 0, falls back to spin-only √(n(n+2)).
+    Otherwise uses Landé g_J and μ_eff = g_J √(J(J+1)).
+    """
+    if n_unpaired <= 0:
+        return 0.0
+    if not use_spin_orbit or (L == 0 and J == 0):
+        return spin_only_magnetic_moment_bm(n_unpaired)
+    if J == 0:
+        return spin_only_magnetic_moment_bm(n_unpaired)
+    return lande_magnetic_moment_bm(L, S, J)
+
+
+def magnetic_moment_observables(
+    z: int,
+    n_unpaired: int,
+    *,
+    use_spin_orbit: bool = True,
+) -> dict[str, Any]:
+    """Spin-only and SOC-corrected μ with ground-term metadata."""
+    L, S, J, label = ground_term_ls(z, n_unpaired)
+    spin_only = spin_only_magnetic_moment_bm(n_unpaired)
+    soc_enabled = use_spin_orbit and J > 0 and (L > 0 or S > 0)
+    soc = (
+        lande_magnetic_moment_bm(L, S, J)
+        if soc_enabled
+        else spin_only
+    )
+    g_j = lande_g_factor(L, S, J) if soc_enabled else 0.0
+    return {
+        "magnetic_moment_spin_only_BM": round(spin_only, 2),
+        "magnetic_moment_soc_BM": round(soc, 2),
+        "magnetic_moment_BM": round(spin_only, 2),
+        "lande_g_J": round(g_j, 3),
+        "ground_term_L": L,
+        "ground_term_S": S,
+        "ground_term_J": J,
+        "ground_term_label": label,
+        "spin_orbit_applied": soc_enabled and abs(soc - spin_only) > 0.05,
+    }
+
+
 def ie_model_implied_ev(stability_score: float, ie_scale_ev: float = 25.0) -> float:
     """IE (eV) implied if model stability tracked ionization linearly."""
     return round((stability_score / 8.0) * ie_scale_ev, 2)
@@ -238,17 +388,19 @@ def map_z_to_flywheel_extended(
     stability_weight: float = 0.5,
     ie_weight: float = 0.5,
     ie_scale_ev: float = 25.0,
+    use_spin_orbit: bool = True,
 ) -> dict[str, Any]:
     """
     Extended mapping: flywheel parameters plus laboratory-style observables.
 
-    Adds ionization energy, unpaired electrons, spin-only magnetic moment,
+    Adds ionization energy, unpaired electrons, magnetic moment (spin-only
+    default on magnetic_moment_BM; SOC Landé value on magnetic_moment_soc_BM),
     and a simple model-vs-reality alignment metric for validation hooks.
     """
     base = map_z_to_flywheel(z, n_sites=n_sites, frames=frames)
     real_ie = first_ionization_energy_ev(z)
     n_unpaired = unpaired_electrons(z)
-    magnetic_moment = spin_only_magnetic_moment_bm(n_unpaired)
+    moment = magnetic_moment_observables(z, n_unpaired, use_spin_orbit=use_spin_orbit)
     alignment = model_reality_alignment(
         base["stability_score"],
         real_ie,
@@ -274,7 +426,7 @@ def map_z_to_flywheel_extended(
         "ie_delta_eV": delta_ie,
         "ie_delta_pct": delta_pct,
         "unpaired_electrons": n_unpaired,
-        "magnetic_moment_BM": round(magnetic_moment, 2),
+        **moment,
         "is_diamagnetic": n_unpaired == 0,
         "model_vs_reality_alignment": alignment,
         "alignment_stability_pts": stab_pts,

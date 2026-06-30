@@ -111,6 +111,7 @@ def test_flux_observables_cards_html():
     assert "Alignment" in html
     assert "Δ" in html
     assert "/ 10" in html
+    assert "SOC μ" in html or "spin-only" in html.lower()
 
 
 def test_flux_observables_heavy_element_caveat():
