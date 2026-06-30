@@ -110,6 +110,7 @@ from app.pages.showcase import SHOWCASE_HTML
 from app.pages.theory import DERIVATION_HOPF_MD, THEORY_MD
 
 PAPERS_DIR = ROOT / "app" / "assets" / "papers"
+PAPERS_SOURCE_DIR = ROOT / "papers"
 OBSERVATIONS_DIR = ROOT / "app" / "assets" / "observations"
 HIGGS_DIR = ROOT / "app" / "assets" / "higgs"
 SCHUMANN_DIR = ROOT / "app" / "assets" / "schumann"
@@ -695,6 +696,7 @@ def main() -> None:
         theme=_KINGDOM_THEME,
         allowed_paths=[
             str(PAPERS_DIR),
+            str(PAPERS_SOURCE_DIR),
             str(OBSERVATIONS_DIR),
             str(HIGGS_DIR),
             str(SCHUMANN_DIR),

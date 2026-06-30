@@ -10,6 +10,7 @@ from app.pages.papers import (
     load_paper,
     paper_file_url,
     papers_index_html,
+    resolve_paper_path,
 )
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -17,17 +18,18 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def test_all_paper_pdfs_exist():
     pdfs = discover_paper_pdfs()
-    assert len(pdfs) == 7
+    assert len(pdfs) >= 7
     for entry in PAPER_ENTRIES:
-        path = PAPERS_DIR / entry.filename
-        assert path.is_file(), f"missing {path}"
+        path = resolve_paper_path(entry)
+        assert path is not None, f"missing {entry.filename}"
         assert path.stat().st_size > 10_000
 
 
 def test_paper_entries_match_discovered_pdfs():
     discovered = {p.name for p in discover_paper_pdfs()}
     catalogued = {entry.filename for entry in PAPER_ENTRIES}
-    assert discovered == catalogued
+    assert catalogued.issubset(discovered)
+    assert "Aarons_TOE_Complete.pdf" in discovered
 
 
 def test_paper_viewer_html_and_file_path():
@@ -42,9 +44,24 @@ def test_paper_viewer_html_and_file_path():
 
 def test_paper_file_url_uses_gradio_path():
     entry = PAPER_ENTRIES[0]
-    url = paper_file_url(entry.path)
+    path = resolve_paper_path(entry)
+    assert path is not None
+    url = paper_file_url(path)
     assert url.startswith("/gradio_api/file=")
     assert "Aarons_TOE_Complete.pdf" in url
+
+
+def test_resolve_paper_path_accepts_apostrophe_alias(tmp_path, monkeypatch):
+    from app.pages import papers as papers_mod
+
+    assets = tmp_path / "assets"
+    assets.mkdir()
+    apostrophe = assets / "Aaron's_TOE_Complete.pdf"
+    apostrophe.write_bytes(b"%PDF-1.4 test")
+    monkeypatch.setattr(papers_mod, "PAPERS_SEARCH_DIRS", (assets,))
+    monkeypatch.setattr(papers_mod, "PAPERS_DIR", assets)
+    path = resolve_paper_path(PAPER_ENTRIES[0])
+    assert path == apostrophe.resolve()
 
 
 def test_missing_paper_returns_error_html(tmp_path, monkeypatch):
@@ -53,6 +70,7 @@ def test_missing_paper_returns_error_html(tmp_path, monkeypatch):
     missing = tmp_path / "papers"
     missing.mkdir()
     monkeypatch.setattr(papers_mod, "PAPERS_DIR", missing)
+    monkeypatch.setattr(papers_mod, "PAPERS_SEARCH_DIRS", (missing,))
     path, html, _ = load_paper(default_paper_key())
     assert path is None
     assert "kc-paper-missing" in html
