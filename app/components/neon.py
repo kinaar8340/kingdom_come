@@ -138,6 +138,45 @@ NEON_CSS = """
   font-size: 0.68rem;
   line-height: 1.35;
 }
+.kc-obs-tip {
+  cursor: help;
+  border-bottom: 1px dotted rgba(142, 202, 230, 0.45);
+}
+.kc-obs-delta {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 0.68rem;
+  color: #8ecae6;
+  line-height: 1.3;
+}
+.kc-obs-delta.kc-obs-delta-pos { color: #00c9b7; }
+.kc-obs-delta.kc-obs-delta-neg { color: #ffb4a2; }
+.kc-obs-align-score {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+}
+.kc-obs-align-score small {
+  color: #6a9bb8;
+  font-size: 0.72rem;
+  font-weight: 400;
+}
+.kc-observables-grid.kc-obs-heavy .kc-metric-card:nth-child(3) strong,
+.kc-observables-grid.kc-obs-heavy .kc-metric-card:nth-child(4) strong {
+  color: #9ec8e8;
+  opacity: 0.88;
+}
+.kc-obs-heavy-note {
+  grid-column: 1 / -1;
+  padding: 0.35rem 0.45rem;
+  border-radius: 6px;
+  background: rgba(18, 36, 61, 0.45);
+  border: 1px dashed rgba(142, 202, 230, 0.25);
+  color: #6a9bb8;
+  font-size: 0.67rem;
+  line-height: 1.35;
+  font-style: italic;
+}
 .kc-toe-strip {
   background: rgba(18, 36, 61, 0.40);
   border: 1px solid rgba(201, 162, 39, 0.22);
@@ -275,32 +314,71 @@ def flux_observables_cards_html(extended: dict) -> str:
         fill_class = "kc-align-fill kc-align-low"
     diamagnetic = extended["is_diamagnetic"]
     spin_label = "Diamagnetic" if diamagnetic else "Paramagnetic"
+    delta_ie = float(extended.get("ie_delta_eV", 0.0))
+    delta_pct = float(extended.get("ie_delta_pct", 0.0))
+    delta_class = "kc-obs-delta-pos" if delta_ie >= 0 else "kc-obs-delta-neg"
+    align_gap = float(extended.get("alignment_component_gap", 0.0))
+    gap_class = "kc-obs-delta-pos" if align_gap >= 0 else "kc-obs-delta-neg"
+    stab_pts = extended.get("alignment_stability_pts", "—")
+    ie_pts = extended.get("alignment_ie_pts", "—")
+    implied_ie = extended.get("ie_model_implied_eV", "—")
+    heavy = extended.get("heavy_element_caveat", False)
+    grid_class = "kc-observables-grid kc-obs-heavy" if heavy else "kc-observables-grid"
+    heavy_note = ""
+    if heavy:
+        heavy_note = """
+  <div class="kc-obs-heavy-note" title="Relativistic and many-body effects grow for heavy Z">
+    Z ≥ 80: spin-only μ and Aufbau-based unpaired counts are illustrative —
+    relativistic core contraction and configuration mixing reduce accuracy.
+  </div>"""
+
+    align_tip = (
+        "50% model stability (÷8) + 50% normalized real IE (÷25 eV). "
+        f"Stability contributes {stab_pts} pts · IE contributes {ie_pts} pts."
+    )
+    mu_tip = (
+        "Spin-only μ ≈ √(n(n+2)) Bohr magnetons from unpaired electrons. "
+        "Orbital angular momentum and crystal fields are not included."
+    )
+    ie_tip = (
+        f"Experimental first ionization energy. Model-implied IE from stability alone: "
+        f"{implied_ie} eV."
+    )
+
     return f"""
-<div class="kc-observables-grid">
+<div class="{grid_class}">
   <div class="kc-metric-card">
-    <span>Model score</span>
+    <span class="kc-obs-tip" title="Flux flywheel stability score (magic-island calibrated)">Model score</span>
     <strong>{extended["stability_score"]}</strong>
   </div>
   <div class="kc-metric-card">
-    <span>Real IE (eV)</span>
+    <span class="kc-obs-tip" title="{ie_tip}">Real IE (eV)</span>
     <strong>{extended["real_ionization_energy_eV"]}</strong>
+    <span class="kc-obs-delta {delta_class}" title="Real IE minus model-implied IE from stability score">
+      Δ {delta_ie:+.2f} eV ({delta_pct:+.1f}%)
+    </span>
   </div>
   <div class="kc-metric-card">
-    <span>Unpaired e⁻</span>
+    <span class="kc-obs-tip" title="Ground-state unpaired electrons (Aufbau + Hund, with known overrides)">Unpaired e⁻</span>
     <strong>{extended["unpaired_electrons"]}</strong>
   </div>
   <div class="kc-metric-card">
-    <span>μ (BM)</span>
+    <span class="kc-obs-tip" title="{mu_tip}">μ spin-only (BM)</span>
     <strong>{extended["magnetic_moment_BM"]}</strong>
   </div>
   <div class="kc-metric-card kc-obs-align">
-    <span>Alignment · {spin_label}</span>
-    <strong>{alignment:.1f}/10</strong>
-    <div class="kc-align-track" title="Model ↔ reality alignment">
+    <span class="kc-obs-tip" title="{align_tip}">Alignment · {spin_label}</span>
+    <div class="kc-obs-align-score">
+      <strong>{alignment:.1f}</strong><small>/ 10</small>
+    </div>
+    <div class="kc-align-track" title="Alignment score: {alignment:.1f} / 10">
       <div class="{fill_class}" style="width:{align_pct:.0f}%"></div>
     </div>
+    <span class="kc-obs-delta {gap_class}" title="Stability contribution minus IE contribution (alignment points)">
+      Δ model vs IE: {align_gap:+.1f} pts
+    </span>
     <span class="kc-obs-caption">{extended["validation_notes"]}</span>
-  </div>
+  </div>{heavy_note}
 </div>
 """
 

@@ -109,6 +109,16 @@ def test_flux_observables_cards_html():
     assert "7.9" in html
     assert "4" in html
     assert "Alignment" in html
+    assert "Δ" in html
+    assert "/ 10" in html
+
+
+def test_flux_observables_heavy_element_caveat():
+    payload = explore_flux_element_extended(86)
+    assert payload["flywheel"]["heavy_element_caveat"] is True
+    html = flux_observables_cards_html(payload["flywheel"])
+    assert "kc-obs-heavy" in html
+    assert "Z ≥ 80" in html
 
 
 def test_compact_element_card_with_art_inset():

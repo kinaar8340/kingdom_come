@@ -67,6 +67,14 @@ def test_unpaired_transition_metal_overrides():
     assert unpaired_electrons(46) == 0  # Pd
 
 
+def test_extended_ie_delta_fields():
+    result = map_z_to_flywheel_extended(2)
+    assert result["ie_model_implied_eV"] == 25.0
+    assert result["ie_delta_eV"] == round(24.59 - 25.0, 2)
+    assert "alignment_stability_pts" in result
+    assert result["heavy_element_caveat"] is False
+
+
 def test_alignment_weights_are_tunable():
     default = model_reality_alignment(5.5, 7.90)
     ie_heavy = model_reality_alignment(5.5, 7.90, stability_weight=0.2, ie_weight=0.8)

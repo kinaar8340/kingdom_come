@@ -42,11 +42,18 @@ _UNPAIRED_OVERRIDE: dict[int, int] = {
 
 _EXTENDED_ONLY_KEYS = frozenset({
     "real_ionization_energy_eV",
+    "ie_model_implied_eV",
+    "ie_delta_eV",
+    "ie_delta_pct",
     "unpaired_electrons",
     "magnetic_moment_BM",
     "is_diamagnetic",
     "model_vs_reality_alignment",
+    "alignment_stability_pts",
+    "alignment_ie_pts",
+    "alignment_component_gap",
     "validation_notes",
+    "heavy_element_caveat",
 })
 
 _ORBITAL_CAPACITY = {"s": 2, "p": 6, "d": 10, "f": 14}
@@ -162,6 +169,43 @@ def spin_only_magnetic_moment_bm(n_unpaired: int) -> float:
     return float(np.sqrt(n_unpaired * (n_unpaired + 2)))
 
 
+def ie_model_implied_ev(stability_score: float, ie_scale_ev: float = 25.0) -> float:
+    """IE (eV) implied if model stability tracked ionization linearly."""
+    return round((stability_score / 8.0) * ie_scale_ev, 2)
+
+
+def ie_reality_delta(
+    stability_score: float,
+    real_ie: float,
+    ie_scale_ev: float = 25.0,
+) -> tuple[float, float]:
+    """Δ real IE minus model-implied IE (eV) and percent of real IE."""
+    implied = (stability_score / 8.0) * ie_scale_ev
+    delta = real_ie - implied
+    pct = (delta / real_ie * 100.0) if real_ie else 0.0
+    return round(delta, 2), round(pct, 1)
+
+
+def alignment_components(
+    stability_score: float,
+    ionization_ev: float,
+    *,
+    stability_weight: float = 0.5,
+    ie_weight: float = 0.5,
+    ie_scale_ev: float = 25.0,
+) -> tuple[float, float, float]:
+    """Alignment score split: stability points, IE points, gap (stab − IE)."""
+    total = stability_weight + ie_weight
+    if total <= 0:
+        raise ValueError("alignment weights must sum to a positive value")
+    w_stab = stability_weight / total
+    w_ie = ie_weight / total
+    ie_norm = min(ionization_ev / ie_scale_ev, 1.0)
+    stab_pts = round(10.0 * w_stab * (stability_score / 8.0), 1)
+    ie_pts = round(10.0 * w_ie * ie_norm, 1)
+    return stab_pts, ie_pts, round(stab_pts - ie_pts, 1)
+
+
 def model_reality_alignment(
     stability_score: float,
     ionization_ev: float,
@@ -212,15 +256,33 @@ def map_z_to_flywheel_extended(
         ie_weight=ie_weight,
         ie_scale_ev=ie_scale_ev,
     )
+    implied_ie = ie_model_implied_ev(base["stability_score"], ie_scale_ev)
+    delta_ie, delta_pct = ie_reality_delta(base["stability_score"], real_ie, ie_scale_ev)
+    stab_pts, ie_pts, align_gap = alignment_components(
+        base["stability_score"],
+        real_ie,
+        stability_weight=stability_weight,
+        ie_weight=ie_weight,
+        ie_scale_ev=ie_scale_ev,
+    )
+    heavy = z >= 80
 
     return {
         **base,
         "real_ionization_energy_eV": round(real_ie, 2),
+        "ie_model_implied_eV": implied_ie,
+        "ie_delta_eV": delta_ie,
+        "ie_delta_pct": delta_pct,
         "unpaired_electrons": n_unpaired,
         "magnetic_moment_BM": round(magnetic_moment, 2),
         "is_diamagnetic": n_unpaired == 0,
         "model_vs_reality_alignment": alignment,
+        "alignment_stability_pts": stab_pts,
+        "alignment_ie_pts": ie_pts,
+        "alignment_component_gap": align_gap,
         "validation_notes": (
-            f"Model stability {base['stability_score']} vs real IE {real_ie:.2f} eV"
+            f"Model stability {base['stability_score']} vs real IE {real_ie:.2f} eV "
+            f"(Δ {delta_ie:+.2f} eV, {delta_pct:+.1f}%)"
         ),
+        "heavy_element_caveat": heavy,
     }
