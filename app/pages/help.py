@@ -55,7 +55,7 @@ linking topology, quaternions, flux lattices, and emergent matter models.
 
 ### Recommended first visit
 
-1. Read **Home → The Model** and **Home → The Clock** for the \(W_g = 350/\pi\) mechanism.
+1. Read **Home → The Model** and **Home → The Clock** for the $W_g = 350/\\pi$ mechanism.
 2. Open **Hopf Visualizer** → click **Classic Hopf** preset → **Update visualization**.
 3. Study the four panels: linked fibers (xy/xz), S² base chart, phase-colored highlight.
 4. Open **Lattice Simulator** → **Run lattice comparison** (stable vs chaotic).
@@ -159,7 +159,7 @@ HELP_TECH_MD = r"""
 
 ### Related reading
 
-- **Home** tab — clock mechanism and \(W_g\) foundation
+- **Home** tab — clock mechanism and $W_g$ foundation
 - **Home → The Papers** — *GW_Burst_Threshold*, *Lagrangian_Derivation*, *Observer_Synchronization*
 - **Acronyms** tab (this Help section) — full glossary
 """
