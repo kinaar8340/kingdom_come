@@ -63,6 +63,7 @@ _EXTENDED_ONLY_KEYS = frozenset({
     "magnetic_moment_exp_display",
     "magnetic_moment_exp_source",
     "magnetic_moment_exp_notes",
+    "magnetic_moment_exp_quality",
     "mu_delta_spin_vs_exp_BM",
     "mu_delta_soc_vs_exp_BM",
     "mu_delta_spin_vs_exp_pct",

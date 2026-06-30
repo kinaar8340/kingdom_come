@@ -8,6 +8,7 @@ from pathlib import Path
 import plotly.graph_objects as go
 
 from kingdom.core.elements import EXPLORER_Z_MAX, NOBLE_GAS_Z, get_element, is_explorable_element
+from kingdom.core.experimental_data import compare_to_experiment
 from kingdom.core.flux_flywheel import map_z_to_flywheel, map_z_to_flywheel_extended
 from kingdom.viz.electron_cloud import build_chemistry_vs_toe_figure, build_electron_cloud_figure
 from kingdom.viz.hopf_plotly import kingdom_dark_theme
@@ -61,8 +62,75 @@ def _cached_magic_island(z: int) -> go.Figure:
     return build_magic_island_heatmap(z)
 
 
-def flux_observables_table(extended: dict) -> list[list[str]]:
-    """Key-value rows for model vs laboratory observables."""
+def build_observables_table(z: int, extended: dict) -> list[dict]:
+    """
+    Structured model-vs-experiment rows for the Observables validation table.
+
+    Each row: category, model_spin_only, model_soc, experimental, delta, source, quality, note.
+    """
+    table: list[dict] = []
+
+    spin_only = float(extended["magnetic_moment_BM"])
+    soc_value = extended.get("magnetic_moment_soc_BM")
+    soc_applied = extended.get("spin_orbit_applied", False)
+    g_j = extended.get("lande_g_J", 0)
+    term_j = extended.get("ground_term_J", 0)
+
+    model_mu = float(soc_value) if soc_applied and soc_value is not None else spin_only
+    mu_cmp = compare_to_experiment(z, model_mu, "magnetic_moment")
+
+    soc_display = "—"
+    if soc_applied and soc_value is not None and abs(float(soc_value) - spin_only) > 0.05:
+        soc_display = f"{float(soc_value):.2f} BM (g_J={g_j}, J={term_j})"
+
+    exp_mu = f"{mu_cmp['experimental_display']} BM" if mu_cmp["available"] else "—"
+    delta_mu = f"{mu_cmp['delta']:+.2f} BM" if mu_cmp["delta"] is not None else "—"
+
+    table.append({
+        "category": "Magnetic Moment",
+        "model_spin_only": f"{spin_only:.2f} BM",
+        "model_soc": soc_display,
+        "experimental": exp_mu,
+        "delta": delta_mu,
+        "source": mu_cmp["source"] or "—",
+        "quality": mu_cmp["quality"],
+        "note": mu_cmp["note"],
+    })
+
+    implied_ie = float(extended.get("ie_model_implied_eV", 0.0))
+    real_ie = float(extended["real_ionization_energy_eV"])
+    ie_cmp = compare_to_experiment(z, implied_ie, "ionization_energy")
+
+    if ie_cmp["available"]:
+        exp_ie = f"{ie_cmp['experimental_value']:.2f} eV"
+        delta_ie = f"{ie_cmp['delta']:+.2f} eV"
+        source_ie = ie_cmp["source"] or "—"
+        quality_ie = ie_cmp["quality"]
+        note_ie = ie_cmp["note"]
+    else:
+        exp_ie = f"{real_ie:.2f} eV"
+        delta_ie = f"{implied_ie - real_ie:+.2f} eV"
+        source_ie = "Lookup + fallback"
+        quality_ie = "Estimated"
+        note_ie = "No NIST anchor — smooth fallback trend used"
+
+    table.append({
+        "category": "Ionization Energy",
+        "model_spin_only": f"{implied_ie:.2f} eV",
+        "model_soc": "—",
+        "experimental": exp_ie,
+        "delta": delta_ie,
+        "source": source_ie,
+        "quality": quality_ie,
+        "note": note_ie,
+    })
+
+    return table
+
+
+def flux_observables_table(extended: dict, z: int | None = None) -> list[list[str]]:
+    """Flattened key-value rows (legacy) plus structured validation rows."""
+    z_val = int(extended.get("Z", z or 1))
     rows = [
         ["IE (1st, eV)", str(extended["real_ionization_energy_eV"])],
         ["Unpaired e⁻", str(extended["unpaired_electrons"])],
@@ -72,6 +140,7 @@ def flux_observables_table(extended: dict) -> list[list[str]]:
     if extended.get("magnetic_moment_exp_available"):
         exp_disp = extended.get("magnetic_moment_exp_display", "—")
         source = extended.get("magnetic_moment_exp_source", "")
+        quality = extended.get("magnetic_moment_exp_quality", "")
         rows.append(["μ experimental (BM)", f"{exp_disp} ({source})"])
         delta_soc = extended.get("mu_delta_soc_vs_exp_BM")
         if delta_soc is not None:
@@ -79,6 +148,16 @@ def flux_observables_table(extended: dict) -> list[list[str]]:
         fidelity = extended.get("mu_validation_score")
         if fidelity is not None:
             rows.append(["μ fidelity (/10)", str(fidelity)])
+        if quality:
+            rows.append(["μ data quality", quality])
+
+    for entry in build_observables_table(z_val, extended):
+        rows.append([f"— {entry['category']}", entry["experimental"]])
+        if entry["delta"] != "—":
+            rows.append([f"  Δ ({entry['category']})", entry["delta"]])
+        rows.append([f"  Source ({entry['category']})", entry["source"]])
+        rows.append([f"  Quality ({entry['category']})", entry["quality"]])
+
     rows.extend([
         ["Diamagnetic", "yes" if extended["is_diamagnetic"] else "no"],
         ["Model ↔ reality", str(extended["model_vs_reality_alignment"])],
@@ -154,9 +233,11 @@ def explore_flux_element_extended(z: int) -> dict:
     """Flux Flywheel payload with laboratory observables and validation metrics."""
     payload = explore_flux_element(z)
     extended = map_z_to_flywheel_extended(z)
+    observables_rows = build_observables_table(z, extended)
     return {
         **payload,
         "flywheel": extended,
         "metrics_table": flux_metrics_table(extended),
-        "observables_table": flux_observables_table(extended),
+        "observables_table": flux_observables_table(extended, z=z),
+        "observables_validation": observables_rows,
     }

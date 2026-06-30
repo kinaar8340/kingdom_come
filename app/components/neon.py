@@ -5,6 +5,8 @@ from __future__ import annotations
 import base64
 from pathlib import Path
 
+from kingdom.core.flux_explorer import build_observables_table
+
 NEON_CSS = """
 /* Kingdom Come neon plugin — noble gas / magic island badges */
 .kc-neon-noble {
@@ -191,6 +193,59 @@ NEON_CSS = """
   font-size: 0.62rem;
   font-style: italic;
 }
+.kc-obs-val-wrap {
+  grid-column: 1 / -1;
+  margin-top: 0.25rem;
+}
+.kc-obs-val-title {
+  display: block;
+  color: #6a9bb8;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.3rem;
+}
+.kc-obs-val-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.68rem;
+  line-height: 1.35;
+}
+.kc-obs-val-table th {
+  color: #6a9bb8;
+  font-weight: 600;
+  text-align: left;
+  padding: 0.28rem 0.35rem;
+  border-bottom: 1px solid rgba(26, 143, 227, 0.22);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  font-size: 0.62rem;
+}
+.kc-obs-val-table td {
+  color: #e8f4ff;
+  padding: 0.3rem 0.35rem;
+  border-bottom: 1px solid rgba(26, 143, 227, 0.1);
+  vertical-align: top;
+}
+.kc-obs-val-table tr:last-child td {
+  border-bottom: none;
+}
+.kc-obs-val-table .kc-obs-val-cat {
+  color: #00c9b7;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.kc-obs-val-table .kc-obs-val-delta-pos { color: #00c9b7; }
+.kc-obs-val-table .kc-obs-val-delta-neg { color: #ffb4a2; }
+.kc-obs-val-table .kc-obs-val-quality {
+  color: #8ecae6;
+  font-style: italic;
+  white-space: nowrap;
+}
+.kc-obs-val-info {
+  cursor: help;
+  border-bottom: 1px dotted rgba(142, 202, 230, 0.45);
+}
 .kc-toe-strip {
   background: rgba(18, 36, 61, 0.40);
   border: 1px solid rgba(201, 162, 39, 0.22);
@@ -316,6 +371,56 @@ def flux_metrics_cards_html(flywheel: dict) -> str:
 """
 
 
+def _delta_cell_class(delta_str: str) -> str:
+    if delta_str == "—" or delta_str.startswith("+0.00") or delta_str.startswith("+0.0 "):
+        return "kc-obs-val-delta-pos"
+    if delta_str.startswith("+"):
+        return "kc-obs-val-delta-pos"
+    if delta_str.startswith("-"):
+        return "kc-obs-val-delta-neg"
+    return ""
+
+
+def flux_observables_validation_table_html(rows: list[dict]) -> str:
+    """HTML table: spin-only → SOC → experimental comparison."""
+    if not rows:
+        return ""
+
+    body_rows: list[str] = []
+    for row in rows:
+        delta_class = _delta_cell_class(row["delta"])
+        quality_tip = f"{row['quality']}: {row['note']}" if row.get("note") else row["quality"]
+        source_tip = row.get("note", "")
+        body_rows.append(
+            f"""<tr>
+  <td class="kc-obs-val-cat">{row["category"]}</td>
+  <td>{row["model_spin_only"]}</td>
+  <td>{row["model_soc"]}</td>
+  <td>{row["experimental"]}</td>
+  <td class="{delta_class}">{row["delta"]}</td>
+  <td><span class="kc-obs-val-info" title="{source_tip}">{row["source"]}</span></td>
+  <td class="kc-obs-val-quality"><span class="kc-obs-val-info" title="{quality_tip}">{row["quality"]}</span></td>
+</tr>"""
+        )
+
+    return f"""
+<div class="kc-obs-val-wrap">
+  <span class="kc-obs-val-title">Model vs experiment</span>
+  <table class="kc-obs-val-table">
+    <thead><tr>
+      <th>Category</th>
+      <th>Spin-only / Model</th>
+      <th>SOC</th>
+      <th>Experimental</th>
+      <th>Δ (model − exp)</th>
+      <th>Source</th>
+      <th>Quality</th>
+    </tr></thead>
+    <tbody>{"".join(body_rows)}</tbody>
+  </table>
+</div>"""
+
+
 def flux_observables_cards_html(extended: dict) -> str:
     """Laboratory observables + model alignment (Flux Flywheel secondary row)."""
     alignment = float(extended["model_vs_reality_alignment"])
@@ -360,6 +465,7 @@ def flux_observables_cards_html(extended: dict) -> str:
     mu_exp_display = extended.get("magnetic_moment_exp_display")
     mu_exp_source = extended.get("magnetic_moment_exp_source", "")
     mu_exp_notes = extended.get("magnetic_moment_exp_notes", "")
+    mu_exp_quality = extended.get("magnetic_moment_exp_quality", "")
     mu_delta_soc = extended.get("mu_delta_soc_vs_exp_BM")
     mu_delta_spin = extended.get("mu_delta_spin_vs_exp_BM")
     mu_fidelity = extended.get("mu_validation_score")
@@ -378,10 +484,11 @@ def flux_observables_cards_html(extended: dict) -> str:
             range_note = " · within experimental range"
         elif mu_in_range is False:
             range_note = " · outside quoted range"
+        quality_tag = f" · {mu_exp_quality}" if mu_exp_quality else ""
         mu_stack_lines.append(
             f'<span class="kc-obs-delta" title="{mu_exp_notes} ({mu_exp_source})">'
             f"μ exp = {mu_exp_display} BM"
-            f'<span class="kc-obs-exp-tag"> · {mu_exp_source}</span></span>'
+            f'<span class="kc-obs-exp-tag"> · {mu_exp_source}{quality_tag}</span></span>'
         )
         if mu_delta_soc is not None:
             soc_delta_class = (
@@ -427,6 +534,11 @@ def flux_observables_cards_html(extended: dict) -> str:
         f"{implied_ie} eV."
     )
 
+    z = int(extended.get("Z", 1))
+    validation_table = flux_observables_validation_table_html(
+        build_observables_table(z, extended)
+    )
+
     return f"""
 <div class="{grid_class}">
   <div class="kc-metric-card">
@@ -461,7 +573,7 @@ def flux_observables_cards_html(extended: dict) -> str:
       Δ model vs IE: {align_gap:+.1f} pts
     </span>
     <span class="kc-obs-caption">{extended["validation_notes"]}</span>
-  </div>{heavy_note}
+  </div>{heavy_note}{validation_table}
 </div>
 """
 

@@ -1,19 +1,37 @@
 """Tests for experimental observable lookups and model validation."""
 
 from kingdom.core.experimental_data import (
+    compare_to_experiment,
     experimental_magnetic_moment,
     magnetic_moment_validation,
     observable_match_score,
 )
+from kingdom.core.flux_explorer import build_observables_table
 from kingdom.core.flux_flywheel import map_z_to_flywheel_extended
 
 
+def test_compare_to_experiment_iron_magnetic_moment():
+    result = compare_to_experiment(26, 6.71, "magnetic_moment")
+    assert result["available"] is True
+    assert result["experimental_value"] == 6.71
+    assert result["source"] == "NIST ASD / atomic beam"
+    assert result["quality"] == "Direct measurement"
+    assert result["delta"] == 0.0
+    assert result["within_range"] is True
+
+
+def test_compare_to_experiment_missing_data():
+    result = compare_to_experiment(44, 3.0, "magnetic_moment")
+    assert result["available"] is False
+    assert result["experimental_value"] is None
+    assert result["quality"] == "No experimental data"
+
+
 def test_experimental_magnetic_moment_iron():
-    obs = experimental_magnetic_moment(26)
-    assert obs is not None
-    assert obs.source == "NIST ASD"
-    assert obs.low == 6.0
-    assert obs.high == 6.8
+    entry = experimental_magnetic_moment(26)
+    assert entry is not None
+    assert entry["low"] == 6.0
+    assert entry["high"] == 6.8
 
 
 def test_fe_soc_matches_experimental_range():
@@ -43,6 +61,20 @@ def test_unknown_z_no_experimental_mu():
 
 
 def test_observable_match_score_in_range():
-    obs = experimental_magnetic_moment(26)
-    assert obs is not None
-    assert observable_match_score(6.71, obs) == 10.0
+    assert observable_match_score(6.71, 26, "magnetic_moment") == 10.0
+
+
+def test_build_observables_table_iron():
+    extended = map_z_to_flywheel_extended(26)
+    rows = build_observables_table(26, extended)
+    assert len(rows) == 2
+    mu_row = rows[0]
+    assert mu_row["category"] == "Magnetic Moment"
+    assert mu_row["model_spin_only"] == "4.90 BM"
+    assert "g_J=1.5" in mu_row["model_soc"]
+    assert "6" in mu_row["experimental"]
+    assert mu_row["delta"] == "+0.00 BM"
+    assert mu_row["quality"] == "Direct measurement"
+    ie_row = rows[1]
+    assert ie_row["category"] == "Ionization Energy"
+    assert ie_row["experimental"] == "7.90 eV"

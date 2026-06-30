@@ -1,5 +1,6 @@
 """Core mathematical and physical models."""
 
+from .experimental_data import compare_to_experiment
 from .flux_flywheel import (
     effective_magnetic_moment_with_soc,
     lande_g_factor,
@@ -23,6 +24,7 @@ __all__ = [
     "hopf_map",
     "hopf_map_quaternion",
     "linking_number_pair",
+    "compare_to_experiment",
     "effective_magnetic_moment_with_soc",
     "lande_g_factor",
     "map_z_to_flywheel",

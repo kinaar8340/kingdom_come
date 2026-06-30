@@ -114,6 +114,9 @@ def test_flux_observables_cards_html():
     assert "SOC μ" in html or "spin-only" in html.lower()
     assert "μ exp" in html
     assert "Δ SOC vs exp" in html
+    assert "kc-obs-val-table" in html
+    assert "Magnetic Moment" in html
+    assert "Direct measurement" in html
 
 
 def test_flux_observables_heavy_element_caveat():
