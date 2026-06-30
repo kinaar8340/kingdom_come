@@ -55,17 +55,17 @@ def pulsar_quick_check(freq_hz: float, kappa: float = KAPPA_DEFAULT) -> str:
 |-------------|-------|
 | Spin frequency f | {freq_hz:.3f} Hz |
 | Period T | {period_ms:.4f} ms |
-| W_g = 350/π | {WG:.4f} |
+| $W_{{g}} = 350/\\pi$ | {WG:.4f} |
 | κ | {kappa:.3f} |
-| f / W_g | {wg_ratio:.4f} |
+| f / $W_{{g}}$ | {wg_ratio:.4f} |
 | Nearest integer harmonic | {harmonic_nearest} (Δ = {harmonic_delta:.4f}) |
 | f / f_Earth (26 s pulse) | {earth_ratio:,.1f}× |
-| Reference (716 Hz) f/W_g | {REFERENCE_PULSAR_HZ / WG:.4f} |
+| Reference (716 Hz) f/$W_{{g}}$ | {REFERENCE_PULSAR_HZ / WG:.4f} |
 """
 
 
 INVESTIGATION_10_MD = f"""
-### Investigation 10: Pulsars — PTA Observations & the Universal Constant 350/π
+### Investigation 10: Pulsars — PTA Observations & the Universal Constant $350/\\pi$
 
 **Investigation ID:** OBS-PULSAR-001  
 **Date:** June 2026  
@@ -80,7 +80,7 @@ and IPTA reported compelling evidence for a stochastic **nanohertz gravitational
 — widely interpreted as overlapping signals from supermassive black hole binaries across cosmic
 history.
 
-This investigation connects those observations to the hypothesis that **350/π** functions as a
+This investigation connects those observations to the hypothesis that **$350/\\pi$** functions as a
 single universal constant unifying scales from planetary pulses to compact-object spin resonances
 within the RubikConeConduit / Kingdom TOE framework.
 
@@ -111,31 +111,31 @@ GW background versus uncorrelated noise.
 #### 4. Numerical angle — the 716 Hz pulsar case study
 
 Consider the well-known **716 Hz** pulsar (period $T \\approx 1.397$ ms). Using parameters
-$W_g \\approx 111.408$, $\\kappa \\approx 0.85$:
+$W_{{g}} \\approx 111.408$, $\\kappa \\approx 0.85$:
 
 | Quantity | Value |
 |----------|-------|
-| Spin frequency ratio $f_{{\\rm spin}}/W_g$ | $\\approx 6.427$ |
+| Spin frequency ratio $f_{{\\rm spin}}/W_{{g}}$ | $\\approx 6.427$ |
 | Ratio to Earth's ~26 s pulse frequency | $\\sim 18{{,}}616\\times$ |
 | Harmonic proximity | Near integer 6 — resonant island candidate |
 
 This clean (near-harmonic) ratio suggests the spin frequency is sampling a resonant **harmonic
 island** in the high-density regime — the kind of scale-jump behavior a universal constant like
-**350/π** could govern.
+**$350/\\pi$** could govern.
 
-Use the interactive quick-check below to test other pulsar frequencies against $W_g$.
+Use the interactive quick-check below to test other pulsar frequencies against $W_{{g}}$.
 
-#### 5. Hypothesis — 350/π as unifying invariant
+#### 5. Hypothesis — $350/\\pi$ as unifying invariant
 
 The GitHub script `meta_optimize_invariants.py` explores optimization of mathematical invariants.
-We propose that **350/π** emerges as a candidate single universal constant that:
+We propose that **$350/\\pi$** emerges as a candidate single universal constant that:
 
 - Scales resonant frequencies across density regimes.
 - Provides a bridge between classical pulsar timing and quantum/TOE-scale physics.
 - Could be tested by feeding real PTA timing residuals or individual pulsar spin data into the
   optimizer.
 
-Further runs on expanded PTA datasets (more pulsars, longer baselines) could reveal whether 350/π
+Further runs on expanded PTA datasets (more pulsars, longer baselines) could reveal whether $350/\\pi$
 consistently appears in invariant optimization across the observed nanohertz background and
 individual sources.
 
@@ -147,17 +147,17 @@ individual sources.
 | Meta-optimizer | wg_base → 350 lock in `meta_optimize_invariants.py` |
 | Global pointer α(t) | Cross-pulsar timing residual synchronization |
 | Topological protection | Stable millisecond clocks as protected resonant modes |
-| W_g = 350/π | Harmonic sampling in high-spin pulsars (e.g. 716 Hz) |
+| $W_{{g}} = 350/\\pi$ | Harmonic sampling in high-spin pulsars (e.g. 716 Hz) |
 
 #### 6. Conclusions & next steps
 
 PTA observations provide a powerful new window. Resonant signatures in high-spin pulsars, combined
-with the Hellings–Downs-correlated GW background, offer fertile ground for testing whether 350/π is
+with the Hellings–Downs-correlated GW background, offer fertile ground for testing whether $350/\\pi$ is
 more than coincidence.
 
 **Open questions:**
 
-- Does the 350/π constant optimize invariants when applied to full IPTA datasets?
+- Does the $350/\\pi$ constant optimize invariants when applied to full IPTA datasets?
 - Can we detect individual continuous-wave sources whose parameters align with this scaling?
 - What multimessenger signatures (if any) would support this unification?
 

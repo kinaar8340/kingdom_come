@@ -1,8 +1,8 @@
 """Hopf Visualizer — in-panel guide copy."""
 
 HOPF_INTRO_MD = """
-Each point on **S²** (bottom-left) has a **fiber** — a circle in **S³**. Stereographic projection
-reveals these as linked loops in ℝ³ (top panels). **Gold** traces your highlighted fiber; colors
+Each point on $S^2$ (bottom-left) has a **fiber** — a circle in $S^3$. Stereographic projection
+reveals these as linked loops in $\\mathbb{R}^3$ (top panels). **Gold** traces your highlighted fiber; colors
 mark distinct fibers with Hopf linking number 1.
 """
 
@@ -11,10 +11,10 @@ HOPF_PANEL_GUIDE_MD = """
 
 | Panel | Meaning |
 |-------|---------|
-| **① ℝ³ xy** | Linked Villarceau circles — stereographic view of Hopf fibers |
-| **② ℝ³ xz** | Orthogonal slice — same fibers, side projection |
-| **③ S² base** | Where each fiber lands on the Hopf base sphere (stereographic chart) |
-| **④ Phase ξ₂** | Gold highlight fiber colored by fiber-phase angle |
+| **① $\\mathbb{R}^3$ xy** | Linked Villarceau circles — stereographic view of Hopf fibers |
+| **② $\\mathbb{R}^3$ xz** | Orthogonal slice — same fibers, side projection |
+| **③ $S^2$ base** | Where each fiber lands on the Hopf base sphere (stereographic chart) |
+| **④ Phase $\\xi_2$** | Gold highlight fiber colored by fiber-phase angle |
 
 *Topology primer: fibers are linked like chain links; this linking is the topological backbone of the TOE model.*
 """

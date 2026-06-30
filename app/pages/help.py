@@ -11,13 +11,14 @@ Use the **main tab bar** at the top of this page to switch between interactive m
 | Tab | What it does | Start here if… |
 |-----|--------------|----------------|
 | **Home → The Model** | Vision, math backbone, flux flywheels, observer sync | You want the big picture first |
+| **Home → W<sub>g</sub> Constant** | $W_{g} = 350/\\pi$ threshold and gauged weight invariant | You want the universal alarm constant |
 | **Help** | This page — navigation, controls, acronyms | You need orientation or a term defined |
-| **Hopf Visualizer** | Linked S³ → S² fiber plots (2D on HF, 3D WebGL locally) | You want geometric intuition |
+| **Hopf Visualizer** | Linked $S^3 \\to S^2$ fiber plots (2D on HF, 3D WebGL locally) | You want geometric intuition |
 
 | **Home → The Papers** | Accordion summaries + inline page previews + PDF download | You want primary sources |
 | **Lattice Simulator** | Two-gyro gauged quaternion lattice (stable vs chaotic) | You want to see burst dynamics |
 | **Flux Flywheel** | Periodic table explorer Z = 1–180 + Magic Island heatmap | You want matter as flux configurations |
-| **Observations** | Investigations — lightning, Jupiter, 3-body, Higgs, Schumann, Bitcoin π-cycle, cuprates, pulsars | You want nature-scale W_g signatures |
+| **Observations** | Investigations — lightning, Jupiter, 3-body, Higgs, Schumann, Bitcoin π-cycle, cuprates, pulsars | You want nature-scale $W_{g}$ signatures |
 | **Showcase** | Card grid linking all HF Spaces | You want to jump to sibling demos |
 
 ### Hugging Face Spaces ([kinaar111/spaces](https://huggingface.co/kinaar111/spaces))
@@ -55,9 +56,9 @@ linking topology, quaternions, flux lattices, and emergent matter models.
 
 ### Recommended first visit
 
-1. Read **Home → The Model** and **Home → The Clock** for the $W_g = 350/\\pi$ mechanism.
+1. Read **Home → The Model** and **Home → The Clock** for the $W_{g} = 350/\\pi$ mechanism.
 2. Open **Hopf Visualizer** → click **Classic Hopf** preset → **Update visualization**.
-3. Study the four panels: linked fibers (xy/xz), S² base chart, phase-colored highlight.
+3. Study the four panels: linked fibers (xy/xz), $S^2$ base chart, phase-colored highlight.
 4. Open **Lattice Simulator** → **Run lattice comparison** (stable vs chaotic).
 5. Try **Flux Flywheel** at Z = 2 (He — noble gas lock), Z = 10 (Ne), or Z = 129 (Magic Island ID).
 
@@ -84,7 +85,7 @@ HELP_CONTROLS_MD = """
 | **Number of fibers** | Density of linked Villarceau circles |
 | **Highlight η, ξ₁** | Which fiber is gold-highlighted |
 | **Projection scale** | Zoom stereographic view |
-| **Show S² base** | Base-space markers on stereographic chart |
+| **Show $S^2$ base** | Base-space markers on stereographic chart |
 | **Presets** | Classic Hopf, Dense fiber weave, Wide projection |
 
 ### Lattice Simulator
@@ -124,12 +125,12 @@ and [hfb/GLOSSARY.md](https://github.com/kinaar8340/hfb/blob/main/GLOSSARY.md).
 | Acronym | Stands For | Definition |
 |---------|------------|------------|
 | **TOE** | Theory of Everything | Hopf-lattice model where flux flywheels on a gauged lattice yield emergent particles, forces, and phenomena. |
-| **W_g** | Gauged weight (emergent constant) | Universal alarm threshold 350/π ≈ 111.4085 — critical accumulated twist/stress before topological burst and reset. |
+| **$W_{g}$** | Gauged weight (emergent constant) | Universal alarm threshold $350/\\pi \\approx 111.4085$ — critical accumulated twist/stress before topological burst and reset. |
 | **VQC** | Vortex Quaternion Conduit | Ultra-high-density quantum data compression and transfer via OAM-flux qubits and quaternion encoding. |
 | **OAM** | Orbital Angular Momentum | Angular momentum of a light beam from spatial phase structure (twist number ℓ), independent of polarization. |
 | **QVPIC** | Quaternion Vortex Persistent Identity Conduit | Software embodiment of VQC — drift-resistant AI memory via topological invariants on a Clifford-torus base. |
 | **PIC** | Persistent Identity Conduit | Geometric helical memory architecture shifting persistence from vectors to global topological features. |
-| **RCC** | RubikConeConduit | Core TOE simulator — toroidal flux flywheel lattice with locked W_g and braiding invariants. |
+| **RCC** | RubikConeConduit | Core TOE simulator — toroidal flux flywheel lattice with locked $W_{g}$ and braiding invariants. |
 | **HFB** | Hopf Flux Bubble | Emergent effective-metric playground from defects, flows, and Hopf topology — analog gravity demos. |
 | **LG** | Laguerre-Gaussian | Standard analytic basis for OAM donut beams (ℓ = topological charge). |
 | **DWDM** | Dense Wavelength Division Multiplexing | Parallel wavelength channels; VQC stacks OAM modes within each channel. |
@@ -139,8 +140,8 @@ and [hfb/GLOSSARY.md](https://github.com/kinaar8340/hfb/blob/main/GLOSSARY.md).
 | **QEC** | Quantum Error Correction | 16-qubit canonical error suppression in the full VQC pipeline. |
 | **SLM** | Spatial Light Modulator | Phase-only display chip for holographic OAM / typehead patterns. |
 | **TNN** | Topological Neural Network | Copresheaf diffusion layer on RingConeChain geometry in QVPIC v10.2. |
-| **GW** | Gravitational Wave | Burst and echo signatures derived from W_g threshold crossings in TOE papers. |
-| **PTA** | Pulsar Timing Array | Radio-timing networks used to test 350/π coupling hypotheses (Observations tab). |
+| **GW** | Gravitational Wave | Burst and echo signatures derived from $W_{g}$ threshold crossings in TOE papers. |
+| **PTA** | Pulsar Timing Array | Radio-timing networks used to test $350/\\pi$ coupling hypotheses (Observations tab). |
 | **BEC** | Bose-Einstein Condensate | Ultracold atomic medium used as tabletop acoustic/optical analog in HFB. |
 | **SOC** | Spin-Orbit Coupling | Interaction parameter in p-wave BMGL altermagnetic variant. |
 | **HF** | Hugging Face | Host for live Gradio Spaces in the seven-project ecosystem. |
@@ -159,7 +160,7 @@ HELP_TECH_MD = r"""
 
 ### Related reading
 
-- **Home** tab — clock mechanism and $W_g$ foundation
+- **Home** tab — clock mechanism and $W_{g}$ foundation
 - **Home → The Papers** — *GW_Burst_Threshold*, *Lagrangian_Derivation*, *Observer_Synchronization*
 - **Acronyms** tab (this Help section) — full glossary
 """

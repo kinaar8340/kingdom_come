@@ -29,7 +29,7 @@ INVESTIGATION_7_ACCORDION_TITLE = (
 )
 
 INVESTIGATION_7_MD = """
-### Investigation 7: TLS Point Clouds of Fichte & Buche Trees — Testing 350/π Branch Bursts
+### Investigation 7: TLS Point Clouds of Fichte & Buche Trees — Testing $350/\\pi$ Branch Bursts
 
 #### Data source
 
@@ -55,7 +55,7 @@ INVESTIGATION_7_MD = """
 These patterns are consistent with **torsion accumulation** along the trunk until a critical threshold triggers a topological **burst** and new branch emergence.
 
 Angular step size predicted by quantized winding number
-$W_g = 350/\\pi \\approx 111.408$ (≈ 3.23° fundamental interval) is under active testing with the
+$W_{g} = 350/\\pi \\approx 111.408$ (≈ 3.23° fundamental interval) is under active testing with the
 extracted point data.
 
 The process resembles the **gauged two-gyro Hopf lattice reset rule** and flux-flywheel behavior

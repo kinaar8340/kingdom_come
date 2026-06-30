@@ -12,7 +12,7 @@ def test_investigation_6_title():
 
 
 def test_investigation_6_content():
-    assert "φ² + e² ≈ π²" in INVESTIGATION_6_MD
+    assert r"$\phi^2 + e^2 \approx \pi^2$" in INVESTIGATION_6_MD
     assert "0.137486" in INVESTIGATION_6_MD
     assert "31.0" in INVESTIGATION_6_MD
     assert "3, 6, 9" in INVESTIGATION_6_MD

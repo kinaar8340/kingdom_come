@@ -33,6 +33,7 @@ from app.components.periodic_picker import (
     picker_label_for_z,
 )
 from app.components.markdown_math import kc_markdown
+from app.components.ui_math import UI_MATH_LABEL_JS, WG_TAB_LABEL
 from app.components.theme import HERO_HTML, KINGDOM_CSS, footer_html
 from app.pages.higgs_observations import (
     HIGGS_GALLERY,
@@ -262,7 +263,7 @@ def build_app() -> gr.Blocks:
                             kc_markdown(DERIVATION_HOPF_MD)
                     with gr.Tab("The Clock"):
                         kc_markdown(HOME_CLOCK_MD)
-                    with gr.Tab("W_g Constant"):
+                    with gr.Tab(WG_TAB_LABEL, elem_id="kc-tab-wg"):
                         kc_markdown(HOME_WG_MD)
                     with gr.Tab("The Papers"):
                         kc_markdown(PAPERS_INTRO_MD)
@@ -704,6 +705,8 @@ def build_app() -> gr.Blocks:
                 gr.HTML(SHOWCASE_HTML)
 
         gr.HTML(footer_html(get_build_label()))
+
+        demo.load(fn=None, js=UI_MATH_LABEL_JS)
 
     return demo
 

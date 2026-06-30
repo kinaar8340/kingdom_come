@@ -47,7 +47,7 @@ def cuprate_conduit_metrics(kappa: float, braiding_target: float) -> str:
     return f"""| Conduit readout | Value |
 |-----------------|-------|
 | wg_base | {WG_BASE:.3f} |
-| W_g = wg_base / π | {WG_EMERGENT:.4f} |
+| $W_{{g}} = wg_base / \\pi$ | {WG_EMERGENT:.4f} |
 | κ (slider) | {kappa:.4f} |
 | braiding_target (slider) | {braiding_target:.5f} |
 | Hopf penalty | {hopf_penalty:.6f} |
@@ -58,7 +58,7 @@ def cuprate_conduit_metrics(kappa: float, braiding_target: float) -> str:
 
 
 INVESTIGATION_9_MD = """
-### Investigation 9: Cuprate Superconductors — Emergent Universal Constant 350/π in the RubikConeConduit TOE
+### Investigation 9: Cuprate Superconductors — Emergent Universal Constant $350/\\pi$ in the RubikConeConduit TOE
 
 **Status:** Emergent attractor confirmed via meta-optimization. Topologically protected. Experimentally aligned.
 
@@ -66,7 +66,7 @@ INVESTIGATION_9_MD = """
 
 The RubikConeConduit (toroidal_modulo9 + vortex_math_369 + clifford_projection + Hopf fibration)
 yields **wg_base = 350.000** exactly when optimized against noble-gas magic-island stability targets.
-This produces the geometric winding **W_g = 350/π ≈ 111.4085**. These invariants map directly onto
+This produces the geometric winding **$W_{g} = 350/\\pi \\approx 111.4085$**. These invariants map directly onto
 hallmark signatures of high-T_c cuprate superconductors (e.g. YBCO, Bi-2212), providing a
 first-principles topological foundation for observed phonon–magnetic resonance coupling, pseudogap
 scaling, and vortex lattice behavior.
@@ -85,7 +85,7 @@ these not as independent coincidences but as projections of a single Hopf-protec
 | Emergent parameter | Value | Physical mapping in cuprates | Experimental signature |
 |------------------|-------|------------------------------|------------------------|
 | wg_base | 350 | B₁g Raman phonon (out-of-phase O vibration) | ~340–350 cm⁻¹ (YBCO) |
-| W_g = wg_base / π | 111.4085 | Universal geometric scaling factor | STM pseudogap staircases & vortex lattices |
+| $W_{g} = wg_base / \\pi$ | 111.4085 | Universal geometric scaling factor | STM pseudogap staircases & vortex lattices |
 | Energy equivalence | ~41 meV | Neutron spin resonance (collective magnetic mode) | Peak at Q ≈ (π,π) below T_c |
 | κ | 0.7600 | Effective interlayer / pairing coupling | Bilayer Hubbard models, mirror ratio |
 | braiding_target | 0.75800 | Anyonic braiding phase (~3/4 statistics) | Topological protection of vortices |
@@ -109,10 +109,10 @@ This closes the loop: phonon scale (Raman) ↔ magnetic scale (neutron) ↔ geom
 
 - Unifies the ~350 cm⁻¹ phonon with the 41 meV resonance through Hopf-protected coupling.
 - Explains STM-observed ~111 scaling and hexagonal vortex lattices as natural consequences of
-  W_g ≈ 111.41.
+  $W_{g} \\approx 111.41$.
 - Provides topological protection (Clifford + braiding ≈ 0.758) for stable vortex configurations.
 - **Fusion application:** CCSRPR V2.1 dual-opposing 45° conical coils with 9 helical HTS strands
-  (39 turns/cone) locked to 350/π yields enhanced Q (~30+), longer τ_E, and MHD-damped plasmoid merging.
+  (39 turns/cone) locked to $350/\\pi$ yields enhanced Q (~30+), longer τ_E, and MHD-damped plasmoid merging.
 
 #### How this fits the TOE
 
@@ -125,11 +125,11 @@ This closes the loop: phonon scale (Raman) ↔ magnetic scale (neutron) ↔ geom
 | Flux flywheel | CCSRPR coils as macroscopic superconducting flywheel |
 
 Use the sliders below to explore how κ and braiding_target affect the conduit loss landscape
-near the 350/π attractor.
+near the $350/\\pi$ attractor.
 
 #### Conclusion
 
-350/π is not postulated — it is demanded by the conduit’s first principles when the objective is
+$350/\\pi$ is not postulated — it is demanded by the conduit’s first principles when the objective is
 universal closed-shell/topological stability. It provides a unified explanation for key cuprate
 phenomena and extends naturally to practical applications such as advanced fusion reactor coil design.
 

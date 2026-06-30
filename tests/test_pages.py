@@ -34,8 +34,9 @@ def test_help_navigate_links_hf_and_github():
 
 
 def test_help_acronyms_table_has_core_terms():
-    for term in ("VQC", "OAM", "TOE", "W_g", "QVPIC", "HFB", "BMGL"):
+    for term in ("VQC", "OAM", "TOE", "QVPIC", "HFB", "BMGL"):
         assert term in HELP_ACRONYMS_MD
+    assert "W_{g}" in HELP_ACRONYMS_MD
     assert "| Acronym | Stands For | Definition |" in HELP_ACRONYMS_MD
     assert "Vortex Quaternion Conduit" in HELP_ACRONYMS_MD
     assert "Orbital Angular Momentum" in HELP_ACRONYMS_MD

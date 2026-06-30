@@ -58,13 +58,13 @@ PAPER_ENTRIES: tuple[PaperEntry, ...] = (
         filename="Aarons_TOE_Complete.pdf",
         scope="Complete Theory of Everything manuscript.",
         covers=(
-            "Hopf fibration backbone (S³ → S²) and quaternion structure",
+            "Hopf fibration backbone ($S^3 \\to S^2$) and quaternion structure",
             "Flux flywheels as stable topological matter configurations",
             "Gauged Hopf lattice and porous vacuum sponge",
-            "Emergent $W_g = 350/\\pi$ alarm threshold and burst–reset dynamics",
+            "Emergent $W_{g} = 350/\\pi$ alarm threshold and burst–reset dynamics",
             "Observer synchronization and testable predictions",
         ),
-        anchor="$W_g = 350/\\pi \\approx 111.40846$",
+        anchor="$W_{g} = 350/\\pi \\approx 111.40846$",
     ),
     PaperEntry(
         key="lagrangian",
@@ -76,7 +76,7 @@ PAPER_ENTRIES: tuple[PaperEntry, ...] = (
             "Field variables for flux flywheels on the lattice",
             "Gauge coupling, twist accumulation, and braiding terms",
             "Derivation from geometry to equations of motion",
-            "Connection to the $W_g$ burst threshold",
+            "Connection to the $W_{g}$ burst threshold",
         ),
     ),
     PaperEntry(
@@ -111,7 +111,7 @@ PAPER_ENTRIES: tuple[PaperEntry, ...] = (
         scope="Gravitational-wave echo phenomenology from the porous vacuum.",
         covers=(
             "Echo timing and amplitude from lattice boundary conditions",
-            "Flux-discharge events after $W_g$ threshold crossings",
+            "Flux-discharge events after $W_{g}$ threshold crossings",
             "Signatures distinguishable from standard GR ringdown",
         ),
     ),
@@ -134,12 +134,12 @@ PAPER_ENTRIES: tuple[PaperEntry, ...] = (
         filename="GW_Burst_Threshold.pdf",
         scope="Burst threshold and discharge conditions for GW flux events.",
         covers=(
-            "Critical accumulated twist $S_{\\text{crit}} = W_g = 350/\\pi$",
+            "Critical accumulated twist $S_{\\text{crit}} = W_{g} = 350/\\pi$",
             "Topological instability trigger and punctuated release",
             "Sawtooth accumulation–reset clock mechanism",
             "RubikConeConduit simulation reproducibility",
         ),
-        anchor="$W_g = 350/\\pi \\approx 111.40846$",
+        anchor="$W_{g} = 350/\\pi \\approx 111.40846$",
     ),
 )
 

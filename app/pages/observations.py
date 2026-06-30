@@ -70,7 +70,7 @@ with properties that resonate with the gauged Hopf lattice TOE. Each entry is an
 **investigation** with key measurements, the observed synchronicity, and a proposed
 mapping to the model.
 
-**Global winding (model anchor):** $W_g = 350/\\pi \\approx 111.40846$
+**Global winding (model anchor):** $W_{g} = 350/\\pi \\approx 111.40846$
 """
 
 INVESTIGATION_1_MD = """
@@ -88,17 +88,17 @@ per year, often 9+ hours per night.
 |----------|-------|
 | Hotspot latitude | ~9.344° N |
 | Earth's mean meridional arc per degree | ≈ 111.194 km/° |
-| Model global winding $W_g$ | $350/\\pi \\approx 111.40846$ |
-| Match to $W_g$ | within ~0.19% of meridional arc |
+| Model global winding $W_{g}$ | $350/\\pi \\approx 111.40846$ |
+| Match to $W_{g}$ | within ~0.19% of meridional arc |
 | Arc distance from equator | $9.344 \\times 111.194 \\approx 1{,}039$ km |
-| Normalized position | $1039 / W_g \\approx 9.335°$ |
+| Normalized position | $1039 / W_{g} \\approx 9.335°$ |
 
 #### Observed synchronicity
 
 Earth's mean meridional arc length per degree of latitude (~111.194 km/°) matches the
-model's global topological winding number $W_g = 350/\\pi \\approx 111.40846$ to within
+model's global topological winding number $W_{g} = 350/\\pi \\approx 111.40846$ to within
 ~0.19%. The arc distance from the equator to the hotspot (~1,039 km) normalizes to
-$1039 / W_g \\approx 9.335°$, aligning with the actual latitude (~9.344° N).
+$1039 / W_{g} \\approx 9.335°$, aligning with the actual latitude (~9.344° N).
 
 #### TOE mapping
 
@@ -140,7 +140,7 @@ neighboring jet-stream boundaries.
 #### TOE mapping
 
 Natural macroscopic extension of the gauged Hopf fibration. The model's global winding
-$W_g$ can quantize linking number across a planetary-scale storm cell, turning it into
+$W_{g}$ can quantize linking number across a planetary-scale storm cell, turning it into
 a stabilized **macroscopic Hopfion** in conductive/fluid media. As the lattice protects
 microscopic flux flywheels, the same topological logic can protect giant atmospheric
 vortices on gas giants. The Red Spot behaves as a resonant **planetary flywheel** locked
@@ -173,7 +173,7 @@ $\\alpha(t) = -\\kappa \\bar{\\Theta}(t)$, can self-organize into meta-stable pe
 configurations rather than fragmenting into chaos.
 
 Observer synchronization locks linking phase across sites; topological protection via
-$W_g = 350/\\pi$ prevents premature burst discharge. The result is not three independent
+$W_{g} = 350/\\pi$ prevents premature burst discharge. The result is not three independent
 particles, but a **multi-resonator attractor** — a choreography of braided flux tubes
 executing a closed orbit in configuration space.
 
@@ -184,7 +184,7 @@ executing a closed orbit in configuration space.
 | PDE multi-Hopfion runs | Periodicity scores $\\approx 1.0$, zero burst events |
 | Magic Island fact-bake | 48 facts $\\times$ 120 steps (RubikConeConduit full bake) |
 | Stability scores | 17–18 — noble-gas targets exceeded |
-| $W_g$ lock | Perfect alignment with $350/\\pi$ |
+| $W_{g}$ lock | Perfect alignment with $350/\\pi$ |
 | Dual braiding metrics | Linking phase locked in strong_gauge_low_twist regime |
 | Velocity-coupled PDE | Preliminary runs consistent with attractor picture |
 

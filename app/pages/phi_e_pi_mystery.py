@@ -28,7 +28,7 @@ INVESTIGATION_6_ACCORDION_TITLE = (
     "Investigation 6: The φ-e-π Emergent Signature Mystery"
 )
 
-INVESTIGATION_6_MD = """
+INVESTIGATION_6_MD = r"""
 ### Investigation 6: The φ-e-π Emergent Signature Mystery
 
 **Source:** [github.com/kinaar8340/mystery](https://github.com/kinaar8340/mystery) ·
@@ -37,25 +37,25 @@ INVESTIGATION_6_MD = """
 Three fundamental constants from different mathematical families exhibit a striking
 near-alignment:
 
-**φ² + e² ≈ π²**
+**$\phi^2 + e^2 \approx \pi^2$**
 
-where φ (golden ratio) ≈ 1.6180339887, e (Euler's number) ≈ 2.71828182846, and
-π ≈ 3.14159265359.
+where $\phi$ (golden ratio) $\approx$ 1.6180339887, $e$ (Euler's number) $\approx$ 2.71828182846, and
+$\pi \approx$ 3.14159265359.
 
-High-precision computation yields a small residual **R = φ² + e² − π² ≈ +0.137486**
+High-precision computation yields a small residual **$R = \phi^2 + e^2 - \pi^2 \approx +0.137486$**
 (relative error ≈ 1.39%). This is **not** a forced mathematical identity, yet close
 enough to be considered a *compatible emergent signature*.
 
 #### Geometric resonance
 
-Treating φ and e as legs of a triangle with hypotenuse π produces angles remarkably close
+Treating $\phi$ and $e$ as legs of a triangle with hypotenuse $\pi$ produces angles remarkably close
 to a 30°-60°-90° triangle:
 
 | Leg | Angle |
 |-----|-------|
-| φ | ≈ 31.0° |
-| e | ≈ 59.9° |
-| π (hypotenuse) | ≈ 89.1° |
+| $\phi$ | $\approx$ 31.0° |
+| $e$ | $\approx$ 59.9° |
+| $\pi$ (hypotenuse) | $\approx$ 89.1° |
 
 This near-right triangle suggests emergent geometric harmony rather than pure coincidence.
 
@@ -71,7 +71,7 @@ The signature is explored within the **gauged Hopf lattice** model (broader TOE 
 
 | Observation | Detail |
 |-------------|--------|
-| Coupling κ | ≈ 0.85 (very close to e/π ≈ 0.865) |
+| Coupling κ | $\approx$ 0.85 (very close to $e/\pi \approx$ 0.865) |
 | PDE simulations | Relaxation preserves topology; non-random FFT content |
 | Optimization sweeps | Residual proximity stable but not exact |
 | Rodin mod-9 mapping | Doubling cycles on Hopf fiber phase advances — topological cipher candidate |

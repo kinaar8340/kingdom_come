@@ -31,7 +31,7 @@ INVESTIGATION_5_MD = """
 
 **Objective:** Test whether real Schumann Resonance (SR) power time series can drive a
 geometric/topological accumulation model and produce meaningful **punctuated events** at the
-$111.408$ scale ($W_g = 350/\\pi$). This is an early empirical validation loop for the broader
+$111.408$ scale ($W_{g} = 350/\\pi$). This is an early empirical validation loop for the broader
 RubikConeConduit + two-gyro lattice + CubeChain framework.
 
 #### Refined metric
@@ -49,7 +49,7 @@ $$
 | **gauge_alpha** | Gauged pointer / holonomy drive from the two-gyro lattice |
 | **mean_twist** | Spatial average twist density on the conduit |
 | **vortex_sync** | CubeChain vortex synchronization score |
-| **δ effective_winding** | Deviation from locked $W_g$ invariant |
+| **δ effective_winding** | Deviation from locked $W_{g}$ invariant |
 | **$P_{\\text{SR}}$** | Tomsk SR power (real or synthetic driver) |
 
 **Event trigger:** Each crossing of an integer multiple of **111.408** registers as a
