@@ -16,14 +16,38 @@ DataObservable = Literal[
 ]
 
 FIDELITY_WEIGHTS: dict[str, float] = {
-    "magnetic_moment": 0.48,
-    "ionization_energy": 0.28,
-    "atomic_radius": 0.12,
-    "electron_affinity": 0.10,
-    "electronegativity": 0.10,
+    "magnetic_moment": 0.28,
+    "ionization_energy": 0.22,
+    "atomic_radius": 0.18,
+    "electron_affinity": 0.16,
+    "electronegativity": 0.16,
 }
 
-_FIDELITY_WEIGHTS_LABEL = "MM 48%, IE 28%, radius 12%, EA 10%, EN 10%"
+_FIDELITY_WEIGHTS_LABEL = "MM 28%, IE 22%, radius 18%, EA 16%, EN 16%"
+
+CORE_MODEL_OBSERVABLES: tuple[str, ...] = ("ionization_energy", "electronegativity")
+
+FIDELITY_CATEGORIES: dict[str, tuple[str, ...]] = {
+    "Magnetic": ("magnetic_moment",),
+    "Electronic": ("ionization_energy", "electronegativity"),
+    "Structural": ("atomic_radius",),
+    "Chemical": ("electron_affinity",),
+}
+
+_CATEGORY_LABELS: dict[str, str] = {
+    "Magnetic": "Magnetic Properties",
+    "Electronic": "Electronic Properties",
+    "Structural": "Structural Properties",
+    "Chemical": "Chemical Reactivity",
+}
+
+_PROXY_OBSERVABLE_LABELS: dict[str, str] = {
+    "magnetic_moment": "Magnetic Moment",
+    "ionization_energy": "Ionization Energy",
+    "atomic_radius": "Atomic Radius",
+    "electron_affinity": "Electron Affinity",
+    "electronegativity": "Electronegativity (Allen)",
+}
 
 # z → observable → {value, low?, high?, source, quality, note}
 _EXPERIMENTAL_DATA: dict[int, dict[str, dict[str, Any]]] = {
@@ -1074,67 +1098,174 @@ def compare_electronegativity(z: int, stability_score: float) -> dict[str, Any]:
     }
 
 
+def _fidelity_component_score(comp: dict[str, Any]) -> float | None:
+    """Derive a 0–10 component score from a comparison result."""
+    if not comp.get("available") or comp.get("experimental_value") is None:
+        return None
+    if comp.get("score") is not None:
+        return float(comp["score"])
+    if comp.get("delta") is None:
+        return None
+
+    delta = abs(comp.get("delta") or 0.0)
+    exp_val = float(comp["experimental_value"])
+    ref = abs(exp_val) if exp_val != 0 else 1.0
+    if exp_val == 0.0:
+        score = (
+            10.0
+            if delta < 0.05
+            else max(0.0, 10.0 * (1.0 - min(delta / ref, 1.0)))
+        )
+    else:
+        relative_error = min(delta / ref, 1.0)
+        score = max(0.0, 10.0 * (1.0 - relative_error))
+    if comp.get("within_range"):
+        score = min(10.0, score + 1.5)
+    return score
+
+
+def _average_fidelity_scores(scores: list[float | None]) -> float | None:
+    valid = [s for s in scores if s is not None]
+    if not valid:
+        return None
+    return round(sum(valid) / len(valid), 1)
+
+
+def get_proxy_quality_tags(
+    z: int,
+    comparisons: dict[str, dict[str, Any]],
+) -> dict[str, dict[str, str]]:
+    """Per-observable proxy trust level (High / Medium / Low / No data)."""
+    period = get_period(z)
+    tags: dict[str, dict[str, str]] = {}
+    for key in _FIDELITY_OBSERVABLE_ORDER:
+        comp = comparisons.get(key, {})
+        if key == "magnetic_moment":
+            if not comp.get("available"):
+                tags[key] = {
+                    "level": "none",
+                    "label": "No data",
+                    "note": "No experimental anchor for this element",
+                }
+            else:
+                tags[key] = {
+                    "level": "high",
+                    "label": "High",
+                    "note": "Direct NIST / SOC comparison",
+                }
+        elif key == "ionization_energy":
+            tags[key] = {
+                "level": "high",
+                "label": "High",
+                "note": "Period-relative z-score ranking",
+            }
+        elif key == "atomic_radius":
+            tags[key] = {
+                "level": "medium",
+                "label": "Medium",
+                "note": "Stability-based covalent radius proxy",
+            }
+        elif key == "electron_affinity":
+            tags[key] = {
+                "level": "medium",
+                "label": "Medium",
+                "note": "Stability-implied electron affinity proxy",
+            }
+        elif key == "electronegativity":
+            if z in NOBLE_GAS_Z and period >= 5:
+                tags[key] = {
+                    "level": "low",
+                    "label": "Low",
+                    "note": "Allen proxy weaker for period 5+ noble gases",
+                }
+            else:
+                tags[key] = {
+                    "level": "medium",
+                    "label": "Medium",
+                    "note": "Allen period-relative proxy",
+                }
+        else:
+            tags[key] = {"level": "medium", "label": "Medium", "note": ""}
+    return tags
+
+
+def _category_scores(
+    comparisons: dict[str, dict[str, Any]],
+    details: dict[str, float],
+) -> dict[str, float | None]:
+    """Domain-level fidelity averages."""
+    out: dict[str, float | None] = {}
+    for cat, keys in FIDELITY_CATEGORIES.items():
+        scores: list[float | None] = []
+        for key in keys:
+            if key in details:
+                scores.append(details[key])
+            else:
+                scores.append(_fidelity_component_score(comparisons.get(key, {})))
+        out[cat] = _average_fidelity_scores(scores)
+    return out
+
+
 def calculate_comparison_fidelity(
     comparisons: dict[str, dict[str, Any]],
     *,
+    z: int | None = None,
     weights: dict[str, float] | None = None,
 ) -> dict[str, Any]:
     """
-    Composite 0–10 fidelity from compare_to_experiment() results.
+    Layered fidelity: overall composite, core model, categories, and proxy tags.
 
-    Weights default to FIDELITY_WEIGHTS (MM 48%, IE 28%, radius 12%, EA 10%, EN 10%).
-    Renormalizes over observables that have experimental anchors.
+    Overall weights default to FIDELITY_WEIGHTS and renormalize over available data.
+    Core model fidelity uses stability-driven observables (IE, EN) but excludes
+    Low-proxy tags so weak translations do not penalize the flux flywheel concept.
     """
     w = FIDELITY_WEIGHTS if weights is None else weights
+    details: dict[str, float] = {}
+    for key in _FIDELITY_OBSERVABLE_ORDER:
+        comp = comparisons.get(key, {})
+        score = _fidelity_component_score(comp)
+        if score is not None:
+            details[key] = round(score, 1)
+
+    proxy_quality = get_proxy_quality_tags(z or 0, comparisons) if z is not None else {}
+
     total_weight = 0.0
     weighted_score = 0.0
-    details: dict[str, float] = {}
-
-    for key, comp in comparisons.items():
-        if not comp.get("available") or comp.get("experimental_value") is None:
+    for key, weight in w.items():
+        if key not in details or weight <= 0:
             continue
-
-        weight = w.get(key, 0.0)
-        if weight <= 0:
-            continue
-
-        if comp.get("score") is not None:
-            score = float(comp["score"])
-        elif comp.get("delta") is None:
-            continue
-        else:
-            delta = abs(comp.get("delta") or 0.0)
-            exp_val = float(comp["experimental_value"])
-            ref = abs(exp_val) if exp_val != 0 else 1.0
-
-            if exp_val == 0.0:
-                score = (
-                    10.0
-                    if delta < 0.05
-                    else max(0.0, 10.0 * (1.0 - min(delta / ref, 1.0)))
-                )
-            else:
-                relative_error = min(delta / ref, 1.0)
-                score = max(0.0, 10.0 * (1.0 - relative_error))
-
-            if comp.get("within_range"):
-                score = min(10.0, score + 1.5)
-
-        weighted_score += score * weight
+        weighted_score += details[key] * weight
         total_weight += weight
-        details[key] = round(score, 1)
 
     if total_weight == 0:
         return {
             "score": None,
+            "overall_fidelity": None,
+            "core_model_fidelity": None,
+            "category_scores": {},
             "details": {},
+            "proxy_quality": proxy_quality,
             "note": "Insufficient experimental data",
             "weights_label": _FIDELITY_WEIGHTS_LABEL,
         }
 
+    overall = round(weighted_score / total_weight, 1)
+
+    core_scores: list[float] = []
+    for key in CORE_MODEL_OBSERVABLES:
+        if key not in details:
+            continue
+        pq = proxy_quality.get(key, {})
+        if pq.get("level") == "low":
+            continue
+        core_scores.append(details[key])
+    core_model = _average_fidelity_scores(core_scores)
+
+    category_scores = _category_scores(comparisons, details)
+
     active = [k for k in w if k in details]
     parts = []
-    labels = {
+    short_labels = {
         "magnetic_moment": "MM",
         "ionization_energy": "IE",
         "electron_affinity": "EA",
@@ -1143,12 +1274,20 @@ def calculate_comparison_fidelity(
     }
     for k in active:
         pct = int(w[k] * 100)
-        parts.append(f"{labels.get(k, k)} {pct}%")
+        parts.append(f"{short_labels.get(k, k)} {pct}%")
+
+    note = f"Overall weighted: {', '.join(parts)} (renormalized over available data)"
+    if core_model is not None:
+        note += f" · Core model (IE+EN, high-trust proxies): {core_model}/10"
 
     return {
-        "score": round(weighted_score / total_weight, 1),
+        "score": overall,
+        "overall_fidelity": overall,
+        "core_model_fidelity": core_model,
+        "category_scores": category_scores,
         "details": details,
-        "note": f"Weighted: {', '.join(parts)} (renormalized over available data)",
+        "proxy_quality": proxy_quality,
+        "note": note,
         "weights_label": _FIDELITY_WEIGHTS_LABEL,
     }
 
@@ -1203,17 +1342,29 @@ def interpret_comparison_fidelity(
     comparisons: dict[str, dict[str, Any]],
     stability_score: float,
     is_noble_gas: bool = False,
+    core_model_fidelity: float | None = None,
+    category_scores: dict[str, float | None] | None = None,
 ) -> dict[str, Any]:
     """
     Human-readable drivers for composite fidelity (esp. low scores).
     """
     coverage = fidelity_data_coverage(comparisons)
     drivers: list[str] = []
+    cats = category_scores or {}
+
+    if cats:
+        for cat, cat_score in sorted(cats.items(), key=lambda kv: kv[1] if kv[1] is not None else 11):
+            if cat_score is None:
+                drivers.append(f"{_CATEGORY_LABELS.get(cat, cat)}: N/A (no scored data)")
+            elif cat_score < 7.0:
+                drivers.append(f"{_CATEGORY_LABELS.get(cat, cat)}: {cat_score}/10")
 
     if fidelity_score is not None and fidelity_details:
         weakest = sorted(fidelity_details.items(), key=lambda kv: kv[1])
-        for key, comp_score in weakest[:3]:
+        for key, comp_score in weakest[:2]:
             if comp_score >= 7.0:
+                continue
+            if any(_FIDELITY_OBSERVABLE_LABELS.get(key, key) in d for d in drivers):
                 continue
             label = _FIDELITY_OBSERVABLE_LABELS.get(key, key)
             comp = comparisons.get(key, {})
@@ -1242,12 +1393,25 @@ def interpret_comparison_fidelity(
             "proxies are less predictive for this configuration."
         )
 
+    core_gap_note = ""
+    if (
+        fidelity_score is not None
+        and core_model_fidelity is not None
+        and core_model_fidelity - fidelity_score >= 1.5
+    ):
+        core_gap_note = (
+            f" Core model fidelity ({core_model_fidelity}/10) is stronger than the "
+            f"overall score — gaps are mainly in weaker proxy translations, not the "
+            "underlying stability ranking."
+        )
+
     if is_noble_gas:
         if fidelity_score is not None and fidelity_score >= 7.0:
             summary = (
                 f"Solid agreement ({fidelity_score}/10) for this noble gas after "
                 "shell-closure bonus. Period-relative rankings drive the score; "
                 "μ is usually absent for closed shells."
+                + core_gap_note
             )
         else:
             summary = (
@@ -1268,9 +1432,9 @@ def interpret_comparison_fidelity(
     elif fidelity_score is not None and fidelity_score < 7.0:
         summary = f"Moderate fidelity ({fidelity_score}/10); see component breakdown."
     elif fidelity_score is not None and fidelity_score < 8.5:
-        summary = f"Solid agreement ({fidelity_score}/10) across available observables."
+        summary = f"Solid agreement ({fidelity_score}/10) across available observables." + core_gap_note
     else:
-        summary = f"Excellent agreement ({fidelity_score}/10) across available observables."
+        summary = f"Excellent agreement ({fidelity_score}/10) across available observables." + core_gap_note
 
     limitation = None
     if is_noble_gas:
@@ -1296,6 +1460,8 @@ def interpret_comparison_fidelity(
         "drivers": drivers,
         "notes": notes,
         "coverage": coverage,
+        "category_scores": cats,
+        "core_model_fidelity": core_model_fidelity,
         "model_limitation": limitation,
         "fidelity_tier": fidelity_tier,
         "show_interpretation": fidelity_score is not None and (

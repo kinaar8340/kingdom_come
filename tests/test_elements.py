@@ -117,7 +117,9 @@ def test_flux_observables_cards_html():
     assert "kc-obs-val-table" in html
     assert "Magnetic Moment" in html
     assert "Direct measurement" in html
-    assert "Comparison fidelity" in html
+    assert "Overall Comparison Fidelity" in html
+    assert "Core Model Fidelity" in html
+    assert "Proxy Quality" in html
     assert "Electron Affinity" in html
     assert "Δz" in html or "stab z" in html
     assert "Atomic Radius" in html

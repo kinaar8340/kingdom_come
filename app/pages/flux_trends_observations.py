@@ -13,7 +13,7 @@ FLUX_TRENDS_MD = """
 ### Periodic Trends & Model Validation
 
 Cross-table views of how the flux flywheel model tracks laboratory observables.
-Points are colored by **period**; fidelity uses the composite score (μ 48% · IE 28% · radius 12% · EA 10% · EN 10%).
+Points are colored by **period**; fidelity uses overall comparison score (μ 28% · IE 22% · radius 18% · EA 16% · EN 16%).
 
 | Plot | What it shows |
 |------|----------------|

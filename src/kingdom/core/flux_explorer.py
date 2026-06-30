@@ -234,10 +234,13 @@ def build_observables_validation(z: int, extended: dict) -> dict:
         "atomic_radius": radius_cmp,
         "electronegativity": en_cmp,
     }
-    fidelity = calculate_comparison_fidelity(comparisons)
+    fidelity = calculate_comparison_fidelity(comparisons, z=z)
 
     return {
         "fidelity_score": fidelity["score"],
+        "fidelity_core_score": fidelity.get("core_model_fidelity"),
+        "fidelity_category_scores": fidelity.get("category_scores", {}),
+        "fidelity_proxy_quality": fidelity.get("proxy_quality", {}),
         "fidelity_details": fidelity["details"],
         "fidelity_note": fidelity["note"],
         "rows": table,
@@ -275,10 +278,16 @@ def flux_observables_table(extended: dict, z: int | None = None) -> list[list[st
 
     fidelity_score = extended.get("comparison_fidelity_score")
     if fidelity_score is not None:
-        rows.append(["Comparison fidelity (/10)", str(fidelity_score)])
+        rows.append(["Overall comparison fidelity (/10)", str(fidelity_score)])
+        core = extended.get("comparison_fidelity_core_score")
+        if core is not None:
+            rows.append(["Core model fidelity (/10)", str(core)])
+        for cat, cat_score in (extended.get("comparison_fidelity_category_scores") or {}).items():
+            label = "N/A" if cat_score is None else str(cat_score)
+            rows.append([f"  Category · {cat}", label])
         details = extended.get("comparison_fidelity_details") or {}
         for key, score in details.items():
-            rows.append([f"  Fidelity · {key}", str(score)])
+            rows.append([f"  Observable · {key}", str(score)])
 
     for entry in build_observables_table(z_val, extended):
         rows.append([f"— {entry['category']}", entry["experimental"]])
@@ -366,6 +375,9 @@ def explore_flux_element_extended(z: int) -> dict:
     extended = {
         **extended,
         "comparison_fidelity_score": validation["fidelity_score"],
+        "comparison_fidelity_core_score": validation.get("fidelity_core_score"),
+        "comparison_fidelity_category_scores": validation.get("fidelity_category_scores", {}),
+        "comparison_fidelity_proxy_quality": validation.get("fidelity_proxy_quality", {}),
         "comparison_fidelity_details": validation["fidelity_details"],
         "comparison_fidelity_note": validation["fidelity_note"],
     }

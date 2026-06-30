@@ -130,10 +130,27 @@ def test_covalent_radius_fallback():
 def test_calculate_comparison_fidelity_iron():
     extended = map_z_to_flywheel_extended(26)
     validation = build_observables_validation(26, extended)
-    fidelity = calculate_comparison_fidelity(validation["comparisons"])
+    fidelity = calculate_comparison_fidelity(validation["comparisons"], z=26)
     assert fidelity["score"] is not None
+    assert fidelity["overall_fidelity"] == fidelity["score"]
     assert fidelity["details"]["magnetic_moment"] == 10.0
+    assert fidelity["core_model_fidelity"] is not None
+    assert "Electronic" in fidelity["category_scores"]
+    assert fidelity["proxy_quality"]["ionization_energy"]["level"] == "high"
     assert fidelity["score"] >= 4.0
+
+
+def test_layered_fidelity_xenon():
+    extended = map_z_to_flywheel_extended(54)
+    validation = build_observables_validation(54, extended)
+    fidelity = calculate_comparison_fidelity(validation["comparisons"], z=54)
+    assert fidelity["score"] is not None
+    assert fidelity["score"] >= 6.5
+    assert fidelity["core_model_fidelity"] == 8.7
+    assert fidelity["category_scores"]["Structural"] == 10.0
+    assert fidelity["category_scores"]["Magnetic"] is None
+    assert fidelity["proxy_quality"]["electronegativity"]["level"] == "low"
+    assert fidelity["proxy_quality"]["magnetic_moment"]["level"] == "none"
 
 
 def test_compare_ionization_energy_relative_iron():
@@ -207,12 +224,16 @@ def test_interpret_comparison_fidelity_xenon():
         comparisons=validation["comparisons"],
         stability_score=extended["stability_score"],
         is_noble_gas=True,
+        core_model_fidelity=validation.get("fidelity_core_score"),
+        category_scores=validation.get("fidelity_category_scores"),
     )
     assert interp["coverage"]["label"].startswith("3/")
     assert interp["model_limitation"] == "noble_gas"
     assert interp["fidelity_tier"] == "solid"
     assert "Solid agreement" in interp["summary"]
     assert any("Electronegativity" in n for n in interp.get("notes", []))
+    assert validation.get("fidelity_core_score") == 8.7
+    assert validation["fidelity_category_scores"]["Structural"] == 10.0
 
 
 def test_compare_electronegativity_neon_high_allen():
