@@ -10,7 +10,7 @@ import pandas as pd
 import plotly.graph_objects as go
 
 from kingdom.core.elements import get_element
-from kingdom.core.experimental_data import get_period
+from kingdom.core.experimental_data import allen_electronegativity, get_period
 from kingdom.core.flux_explorer import build_observables_validation
 from kingdom.core.flux_flywheel import map_z_to_flywheel_extended
 from kingdom.core.periodic_meta import period_group_category
@@ -64,8 +64,10 @@ def observations_trends_dataframe(z_max: int = 118) -> pd.DataFrame:
             "fidelity_score": validation["fidelity_score"],
             "magnetic_moment_score": details.get("magnetic_moment"),
             "ie_score": details.get("ionization_energy"),
+            "en_score": details.get("electronegativity"),
             "ea_score": details.get("electron_affinity"),
             "radius_score": details.get("atomic_radius"),
+            "experimental_en": allen_electronegativity(z),
             "model_stability": extended["stability_score"],
             "experimental_ie": extended["real_ionization_energy_eV"],
             "soc_mu_BM": extended.get("magnetic_moment_soc_BM"),
@@ -201,6 +203,25 @@ def stability_ie_trend_dataframe(data: pd.DataFrame | None = None) -> pd.DataFra
     return out
 
 
+def stability_en_trend_dataframe(data: pd.DataFrame | None = None) -> pd.DataFrame:
+    """ScatterPlot-ready stability vs Allen electronegativity table."""
+    df = observations_trends_dataframe() if data is None else data
+    plot_df = df.dropna(subset=["experimental_en"]).copy()
+    out = plot_df[
+        [
+            "Z",
+            "element",
+            "model_stability",
+            "experimental_en",
+            "period",
+            "fidelity_score",
+            "en_score",
+        ]
+    ].copy()
+    out["period"] = out["period"].astype(int).astype(str)
+    return out
+
+
 def soc_mu_trend_dataframe(data: pd.DataFrame | None = None) -> pd.DataFrame:
     """ScatterPlot-ready SOC μ vs experimental μ table."""
     df = observations_trends_dataframe() if data is None else data
@@ -221,12 +242,13 @@ def soc_mu_trend_dataframe(data: pd.DataFrame | None = None) -> pd.DataFrame:
 def load_observations_trend_dataframes(
     z_max: int = 118,
     periods: list[int] | tuple[int, ...] | None = None,
-) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
-    """Return (fidelity, stability vs IE, SOC μ) DataFrames for ScatterPlot."""
+) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    """Return (fidelity, stability vs IE, stability vs EN, SOC μ) DataFrames."""
     df = filter_trends_by_period(observations_trends_dataframe(z_max), periods)
     return (
         fidelity_trend_dataframe(df),
         stability_ie_trend_dataframe(df),
+        stability_en_trend_dataframe(df),
         soc_mu_trend_dataframe(df),
     )
 
@@ -379,6 +401,95 @@ def create_stability_vs_ie_plot(data: pd.DataFrame | None = None) -> go.Figure:
     return _apply_dark_theme(fig)
 
 
+def create_stability_vs_en_plot(data: pd.DataFrame | None = None) -> go.Figure:
+    """Model stability vs Allen electronegativity with OLS trend and Pearson r."""
+    df = observations_trends_dataframe() if data is None else data
+    plot_df = df.dropna(subset=["experimental_en"]).copy()
+    fig = go.Figure()
+
+    if plot_df.empty:
+        fig.add_annotation(
+            text="No Allen electronegativity data in range",
+            xref="paper",
+            yref="paper",
+            x=0.5,
+            y=0.5,
+            showarrow=False,
+            font=dict(size=13, color="#8ecae6"),
+        )
+        return _apply_dark_theme(fig)
+
+    for period in sorted(plot_df["period"].unique()):
+        sub = plot_df[plot_df["period"] == period].sort_values("Z")
+        color = _PERIOD_COLORS[int(period - 1) % len(_PERIOD_COLORS)]
+        fig.add_trace(
+            go.Scatter(
+                x=sub["model_stability"],
+                y=sub["experimental_en"],
+                mode="markers",
+                name=f"Period {int(period)}",
+                marker=dict(size=8, color=color, line=dict(width=0.5, color="#0a1628")),
+                customdata=np.stack(
+                    [
+                        sub["Z"].astype(int),
+                        sub["element"],
+                        sub["fidelity_score"],
+                        sub["en_score"],
+                    ],
+                    axis=-1,
+                ),
+                hovertemplate=(
+                    "%{customdata[1]} (Z=%{customdata[0]})<br>"
+                    "Stability: %{x:.2f}<br>"
+                    "Allen EN: %{y:.3f}<br>"
+                    "Fidelity: %{customdata[2]}<br>"
+                    "EN score: %{customdata[3]}<br>"
+                    "<i>Click to open in Flux Flywheel</i><extra></extra>"
+                ),
+            )
+        )
+
+    x = plot_df["model_stability"].to_numpy(dtype=float)
+    y = plot_df["experimental_en"].to_numpy(dtype=float)
+    if len(x) >= 2:
+        coef = np.polyfit(x, y, 1)
+        x_line = np.linspace(float(x.min()), float(x.max()), 60)
+        y_line = coef[0] * x_line + coef[1]
+        corr = float(np.corrcoef(x, y)[0, 1])
+        fig.add_trace(
+            go.Scatter(
+                x=x_line,
+                y=y_line,
+                mode="lines",
+                name="OLS trend",
+                line=dict(color="#8ecae6", width=2, dash="dash"),
+                hoverinfo="skip",
+            )
+        )
+        fig.add_annotation(
+            x=0.03,
+            y=0.97,
+            xref="paper",
+            yref="paper",
+            text=f"Pearson r = {corr:+.3f}",
+            showarrow=False,
+            font=dict(size=12, color="#8ecae6"),
+            xanchor="left",
+            yanchor="top",
+            bgcolor="rgba(10, 22, 40, 0.75)",
+            bordercolor="#1e3a5f",
+            borderwidth=1,
+        )
+
+    fig.update_layout(
+        title="Model Stability Score vs Allen Electronegativity",
+        xaxis_title="Model Stability Score",
+        yaxis_title="Allen Electronegativity",
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, x=0),
+    )
+    return _apply_dark_theme(fig)
+
+
 def create_soc_mu_vs_experimental_plot(data: pd.DataFrame | None = None) -> go.Figure:
     """SOC magnetic moment vs experimental μ (elements with anchors)."""
     df = observations_trends_dataframe() if data is None else data
@@ -443,11 +554,12 @@ def create_soc_mu_vs_experimental_plot(data: pd.DataFrame | None = None) -> go.F
 def load_observations_trend_figures(
     z_max: int = 118,
     periods: list[int] | tuple[int, ...] | None = None,
-) -> tuple[go.Figure, go.Figure, go.Figure]:
-    """Return (fidelity trend, stability vs IE, SOC μ validation) figures."""
+) -> tuple[go.Figure, go.Figure, go.Figure, go.Figure]:
+    """Return (fidelity trend, stability vs IE, stability vs EN, SOC μ) figures."""
     df = filter_trends_by_period(observations_trends_dataframe(z_max), periods)
     return (
         create_fidelity_trend_plot(df),
         create_stability_vs_ie_plot(df),
+        create_stability_vs_en_plot(df),
         create_soc_mu_vs_experimental_plot(df),
     )

@@ -258,7 +258,7 @@ def _trend_select_noop():
 
 def on_fidelity_trend_select(evt: gr.SelectData, periods: list[str] | None):
     """Route fidelity ScatterPlot selection → Flux Flywheel for that Z."""
-    df, _, _ = load_observations_trend_dataframes(118, _normalize_periods(periods))
+    df, _, _, _ = load_observations_trend_dataframes(118, _normalize_periods(periods))
     z = z_from_scatter_select(evt, df, x_col="Z")
     if z is None:
         return _trend_select_noop()
@@ -267,7 +267,7 @@ def on_fidelity_trend_select(evt: gr.SelectData, periods: list[str] | None):
 
 def on_stability_trend_select(evt: gr.SelectData, periods: list[str] | None):
     """Route stability ScatterPlot selection → Flux Flywheel for that Z."""
-    _, df, _ = load_observations_trend_dataframes(118, _normalize_periods(periods))
+    _, df, _, _ = load_observations_trend_dataframes(118, _normalize_periods(periods))
     z = z_from_scatter_select(
         evt, df, x_col="model_stability", y_col="experimental_ie"
     )
@@ -276,9 +276,20 @@ def on_stability_trend_select(evt: gr.SelectData, periods: list[str] | None):
     return select_flux_z(z)
 
 
+def on_stability_en_trend_select(evt: gr.SelectData, periods: list[str] | None):
+    """Route stability vs EN ScatterPlot selection → Flux Flywheel for that Z."""
+    _, _, df, _ = load_observations_trend_dataframes(118, _normalize_periods(periods))
+    z = z_from_scatter_select(
+        evt, df, x_col="model_stability", y_col="experimental_en"
+    )
+    if z is None:
+        return _trend_select_noop()
+    return select_flux_z(z)
+
+
 def on_mu_trend_select(evt: gr.SelectData, periods: list[str] | None):
     """Route SOC μ ScatterPlot selection → Flux Flywheel for that Z."""
-    _, _, df = load_observations_trend_dataframes(118, _normalize_periods(periods))
+    _, _, _, df = load_observations_trend_dataframes(118, _normalize_periods(periods))
     z = z_from_scatter_select(
         evt, df, x_col="experimental_mu_BM", y_col="soc_mu_BM"
     )
@@ -603,21 +614,32 @@ def build_app() -> gr.Blocks:
                             y_title="Experimental IE (eV)",
                             **_trend_plot_kwargs,
                         )
-                    mu_validation_plot = gr.ScatterPlot(
-                        label="SOC μ vs experimental",
-                        x="experimental_mu_BM",
-                        y="soc_mu_BM",
-                        title="SOC Magnetic Moment vs Experimental μ",
-                        x_title="Experimental μ (BM)",
-                        y_title="SOC μ (BM)",
-                        height=380,
-                        color="period",
-                        color_map=PERIOD_COLOR_MAP,
-                        tooltip="all",
-                    )
+                    with gr.Row():
+                        stability_en_plot = gr.ScatterPlot(
+                            label="Stability vs Allen electronegativity",
+                            x="model_stability",
+                            y="experimental_en",
+                            title="Model Stability Score vs Allen Electronegativity",
+                            x_title="Model Stability Score",
+                            y_title="Allen Electronegativity",
+                            **_trend_plot_kwargs,
+                        )
+                        mu_validation_plot = gr.ScatterPlot(
+                            label="SOC μ vs experimental",
+                            x="experimental_mu_BM",
+                            y="soc_mu_BM",
+                            title="SOC Magnetic Moment vs Experimental μ",
+                            x_title="Experimental μ (BM)",
+                            y_title="SOC μ (BM)",
+                            height=380,
+                            color="period",
+                            color_map=PERIOD_COLOR_MAP,
+                            tooltip="all",
+                        )
                     flux_trends_outputs = [
                         fidelity_trend_plot,
                         stability_ie_plot,
+                        stability_en_plot,
                         mu_validation_plot,
                     ]
                     gr.Button("Refresh trend analysis", size="sm").click(
@@ -637,6 +659,11 @@ def build_app() -> gr.Blocks:
                     )
                     stability_ie_plot.select(
                         on_stability_trend_select,
+                        inputs=[period_trend_filter],
+                        outputs=flux_jump_outputs,
+                    )
+                    stability_en_plot.select(
+                        on_stability_en_trend_select,
                         inputs=[period_trend_filter],
                         outputs=flux_jump_outputs,
                     )

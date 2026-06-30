@@ -148,7 +148,9 @@ def test_layered_fidelity_xenon():
     assert fidelity["score"] >= 6.5
     assert fidelity["core_model_fidelity"] == 8.7
     assert fidelity["category_scores"]["Structural"] == 10.0
+    assert fidelity["category_scores"]["Electronic"] == 6.3
     assert fidelity["category_scores"]["Magnetic"] is None
+    assert fidelity["category_details"]["Electronic"] == ["IE 8.7", "EN 1.4"]
     assert fidelity["proxy_quality"]["electronegativity"]["level"] == "low"
     assert fidelity["proxy_quality"]["magnetic_moment"]["level"] == "none"
 

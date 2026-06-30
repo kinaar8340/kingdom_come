@@ -253,6 +253,13 @@ NEON_CSS = """
   flex-wrap: wrap;
   align-items: baseline;
   gap: 0.35rem 0.6rem;
+  padding: 0.55rem 0.65rem;
+  background: rgba(10, 22, 40, 0.55);
+  border-radius: 8px;
+}
+.kc-obs-fidelity-headline strong {
+  font-size: 1.65rem;
+  line-height: 1;
 }
 .kc-obs-fidelity strong {
   font-size: 1.15rem;
@@ -320,6 +327,14 @@ NEON_CSS = """
   grid-template-columns: 1fr 1fr;
   gap: 0.25rem 0.5rem;
   font-size: 0.68rem;
+  padding: 0.4rem 0.45rem;
+  background: rgba(18, 36, 61, 0.45);
+  border: 1px solid rgba(26, 143, 227, 0.18);
+  border-radius: 6px;
+}
+.kc-obs-fidelity-cat-breakdown {
+  color: #6a9bb8;
+  font-size: 0.58rem;
 }
 .kc-obs-fidelity-cat {
   color: #d4e4f7;
@@ -343,18 +358,47 @@ NEON_CSS = """
   color: #8ecae6;
   line-height: 1.5;
 }
-.kc-obs-fidelity-proxy dt {
+.kc-obs-fidelity-proxy-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.35rem;
+  margin-top: 0.2rem;
+}
+.kc-proxy-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 999px;
+  font-size: 0.58rem;
+  font-weight: 600;
+  border: 1px solid transparent;
+  cursor: help;
+}
+.kc-proxy-pill-label {
   color: #6a9bb8;
-  display: inline;
+  font-weight: 500;
 }
-.kc-obs-fidelity-proxy dd {
-  display: inline;
-  margin: 0 0.5rem 0 0.2rem;
+.kc-proxy-pill.kc-proxy-high {
+  color: #00c9b7;
+  background: rgba(0, 201, 183, 0.12);
+  border-color: rgba(0, 201, 183, 0.35);
 }
-.kc-proxy-high { color: #00c9b7; }
-.kc-proxy-medium { color: #ffd45a; }
-.kc-proxy-low { color: #ffb4a2; }
-.kc-proxy-none { color: #6a9bb8; }
+.kc-proxy-pill.kc-proxy-medium {
+  color: #ffd45a;
+  background: rgba(255, 212, 90, 0.12);
+  border-color: rgba(255, 212, 90, 0.35);
+}
+.kc-proxy-pill.kc-proxy-low {
+  color: #ffb4a2;
+  background: rgba(255, 180, 162, 0.12);
+  border-color: rgba(255, 180, 162, 0.35);
+}
+.kc-proxy-pill.kc-proxy-none {
+  color: #6a9bb8;
+  background: rgba(106, 155, 184, 0.1);
+  border-color: rgba(106, 155, 184, 0.28);
+}
 .kc-obs-fidelity-breakdown {
   font-size: 0.65rem;
   color: #8ecae6;
@@ -617,16 +661,27 @@ def _fidelity_class(score: float) -> str:
     return "kc-fidelity-low"
 
 
-def _category_score_html(category_scores: dict[str, float | None]) -> str:
+def _category_score_html(
+    category_scores: dict[str, float | None],
+    category_details: dict[str, list[str]] | None = None,
+) -> str:
     cat_meta = {
         "Magnetic": ("Magnetic Properties", "Magnetic moment"),
         "Electronic": ("Electronic Properties", "Ionization Energy + Electronegativity"),
         "Structural": ("Structural Properties", "Atomic Radius"),
         "Chemical": ("Chemical Reactivity", "Electron Affinity"),
     }
+    breakdowns = category_details or {}
     rows: list[str] = []
     for key, (title, subtitle) in cat_meta.items():
         val = category_scores.get(key)
+        parts = breakdowns.get(key, [])
+        breakdown_html = ""
+        if parts:
+            breakdown_html = (
+                f'<span class="kc-obs-fidelity-cat-breakdown">'
+                f"({' + '.join(parts)})</span>"
+            )
         if val is None:
             rows.append(
                 f'<div class="kc-obs-fidelity-cat kc-obs-fidelity-cat-na">'
@@ -635,20 +690,29 @@ def _category_score_html(category_scores: dict[str, float | None]) -> str:
         else:
             rows.append(
                 f'<div class="kc-obs-fidelity-cat">'
-                f'<strong>{val:.1f}</strong> / 10 · {title}<span>{subtitle}</span></div>'
+                f'<strong>{val:.1f}</strong> / 10 · {title}'
+                f'{breakdown_html}<span>{subtitle}</span></div>'
             )
     return f'<div class="kc-obs-fidelity-cats">{"".join(rows)}</div>'
+
+
+_PROXY_QUALITY_TIPS: dict[str, str] = {
+    "high": "Direct measurement or period-relative ranking — high trust.",
+    "medium": "Stability-based proxy — useful but less direct.",
+    "low": "Weak proxy for this element — down-weighted in category scores.",
+    "none": "No experimental anchor — excluded from scoring.",
+}
 
 
 def _proxy_quality_html(proxy_quality: dict[str, dict[str, str]]) -> str:
     if not proxy_quality:
         return ""
     labels = {
-        "magnetic_moment": "Magnetic Moment",
-        "ionization_energy": "Ionization Energy",
-        "atomic_radius": "Atomic Radius",
-        "electron_affinity": "Electron Affinity",
-        "electronegativity": "Electronegativity (Allen)",
+        "magnetic_moment": "MM",
+        "ionization_energy": "IE",
+        "atomic_radius": "Radius",
+        "electron_affinity": "EA",
+        "electronegativity": "EN",
     }
     items: list[str] = []
     for key in labels:
@@ -656,13 +720,14 @@ def _proxy_quality_html(proxy_quality: dict[str, dict[str, str]]) -> str:
         level = tag.get("level", "medium")
         label = tag.get("label", "Medium")
         note = tag.get("note", "")
+        tip = f"{_PROXY_QUALITY_TIPS.get(level, '')} {note}".strip()
         items.append(
-            f'<dt>{labels[key]}:</dt>'
-            f'<dd class="kc-proxy-{level}" title="{note}">{label}</dd>'
+            f'<span class="kc-proxy-pill kc-proxy-{level}" title="{tip}">'
+            f'<span class="kc-proxy-pill-label">{labels[key]}</span>{label}</span>'
         )
     return (
         '<div class="kc-obs-fidelity-proxy"><strong>Proxy Quality</strong> '
-        f'<dl>{"".join(items)}</dl></div>'
+        f'<div class="kc-obs-fidelity-proxy-pills">{"".join(items)}</div></div>'
     )
 
 
@@ -676,6 +741,7 @@ def flux_observables_fidelity_html(extended: dict, *, interpretation: dict | Non
     note = extended.get("comparison_fidelity_note", "")
     core = extended.get("comparison_fidelity_core_score")
     category_scores = extended.get("comparison_fidelity_category_scores") or {}
+    category_details = extended.get("comparison_fidelity_category_details") or {}
     proxy_quality = extended.get("comparison_fidelity_proxy_quality") or {}
     interp = interpretation or {}
     coverage = interp.get("coverage", {})
@@ -710,22 +776,27 @@ def flux_observables_fidelity_html(extended: dict, *, interpretation: dict | Non
 
     core_html = ""
     if core is not None:
+        gap_note = ""
+        if float(score) < core - 1.0:
+            gap_note = (
+                " — core exceeds overall; gaps are mainly in weaker proxy translations"
+            )
         core_html = (
             f'<div class="kc-obs-fidelity-core">'
             f'<strong>Core Model Fidelity: {core}</strong> / 10 — '
-            f"how well the stability score predicts IE & EN trends "
-            f"(high-trust proxies only)</div>"
+            f"stability → IE & EN period-relative trends "
+            f"(high-trust proxies only){gap_note}</div>"
         )
 
     return f"""
   <div class="kc-obs-fidelity-panel">
-    <div class="kc-metric-card kc-obs-fidelity {fidelity_class}">
+    <div class="kc-metric-card kc-obs-fidelity kc-obs-fidelity-headline {fidelity_class}">
       <span class="kc-obs-tip" title="{tip}">Overall Comparison Fidelity</span>
       <strong>{score}</strong><small>/ 10</small>{tier_html}{coverage_html}{breakdown_html}
       <span class="kc-obs-caption">{note}</span>
     </div>
     {core_html}
-    {_category_score_html(category_scores)}
+    {_category_score_html(category_scores, category_details)}
     {_proxy_quality_html(proxy_quality)}
   </div>"""
 
@@ -921,6 +992,7 @@ def flux_observables_cards_html(extended: dict) -> str:
         is_noble_gas=bool(extended.get("is_noble_gas")),
         core_model_fidelity=validation.get("fidelity_core_score"),
         category_scores=validation.get("fidelity_category_scores"),
+        category_details=validation.get("fidelity_category_details"),
     )
     interpretation["fidelity_score"] = validation["fidelity_score"]
     fidelity_card = flux_observables_fidelity_html({
@@ -928,6 +1000,7 @@ def flux_observables_cards_html(extended: dict) -> str:
         "comparison_fidelity_score": validation["fidelity_score"],
         "comparison_fidelity_core_score": validation.get("fidelity_core_score"),
         "comparison_fidelity_category_scores": validation.get("fidelity_category_scores", {}),
+        "comparison_fidelity_category_details": validation.get("fidelity_category_details", {}),
         "comparison_fidelity_proxy_quality": validation.get("fidelity_proxy_quality", {}),
         "comparison_fidelity_details": validation["fidelity_details"],
         "comparison_fidelity_note": validation["fidelity_note"],

@@ -19,6 +19,7 @@ Points are colored by **period**; fidelity uses overall comparison score (μ 28%
 |------|----------------|
 | **Fidelity vs Z** | Where the full validation stack agrees with experiment |
 | **Stability vs IE** | Global correlation of model stability with real ionization energy |
+| **Stability vs Allen EN** | Period-relative stability proxy vs Allen electronegativity |
 | **SOC μ vs Experimental** | Visual check of spin-orbit magnetic moment improvement |
 
 **Drag a narrow region on any point** to jump that element in the **Flux Flywheel** tab. Use the period filter to focus on specific rows.
@@ -33,6 +34,6 @@ def _normalize_periods(periods: list[str] | list[int] | None) -> tuple[int, ...]
 
 def render_flux_trend_plots(
     periods: list[str] | list[int] | None = None,
-) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
-    """Build all three validation trend tables for Gradio ScatterPlot outputs."""
+) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    """Build all four validation trend tables for Gradio ScatterPlot outputs."""
     return load_observations_trend_dataframes(118, _normalize_periods(periods))

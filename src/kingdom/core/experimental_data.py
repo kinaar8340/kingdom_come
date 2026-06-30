@@ -26,6 +26,8 @@ FIDELITY_WEIGHTS: dict[str, float] = {
 _FIDELITY_WEIGHTS_LABEL = "MM 28%, IE 22%, radius 18%, EA 16%, EN 16%"
 
 CORE_MODEL_OBSERVABLES: tuple[str, ...] = ("ionization_energy", "electronegativity")
+MIN_CORE_OBSERVABLES = 2
+LOW_PROXY_CATEGORY_WEIGHT = 0.5
 
 FIDELITY_CATEGORIES: dict[str, tuple[str, ...]] = {
     "Magnetic": ("magnetic_moment",),
@@ -1131,6 +1133,27 @@ def _average_fidelity_scores(scores: list[float | None]) -> float | None:
     return round(sum(valid) / len(valid), 1)
 
 
+def _weighted_average_fidelity(
+    scores_weights: list[tuple[float, float]],
+) -> float | None:
+    if not scores_weights:
+        return None
+    total_weight = sum(weight for _, weight in scores_weights)
+    if total_weight <= 0:
+        return None
+    weighted_sum = sum(score * weight for score, weight in scores_weights)
+    return round(weighted_sum / total_weight, 1)
+
+
+_FIDELITY_SHORT_LABELS: dict[str, str] = {
+    "magnetic_moment": "MM",
+    "ionization_energy": "IE",
+    "electron_affinity": "EA",
+    "atomic_radius": "radius",
+    "electronegativity": "EN",
+}
+
+
 def get_proxy_quality_tags(
     z: int,
     comparisons: dict[str, dict[str, Any]],
@@ -1192,18 +1215,34 @@ def get_proxy_quality_tags(
 def _category_scores(
     comparisons: dict[str, dict[str, Any]],
     details: dict[str, float],
-) -> dict[str, float | None]:
-    """Domain-level fidelity averages."""
+    proxy_quality: dict[str, dict[str, str]],
+) -> tuple[dict[str, float | None], dict[str, list[str]]]:
+    """Domain-level fidelity averages with low-proxy down-weighting."""
     out: dict[str, float | None] = {}
+    breakdown: dict[str, list[str]] = {}
     for cat, keys in FIDELITY_CATEGORIES.items():
-        scores: list[float | None] = []
+        weighted: list[tuple[float, float]] = []
+        components: list[str] = []
         for key in keys:
             if key in details:
-                scores.append(details[key])
+                score = details[key]
             else:
-                scores.append(_fidelity_component_score(comparisons.get(key, {})))
-        out[cat] = _average_fidelity_scores(scores)
-    return out
+                score = _fidelity_component_score(comparisons.get(key, {}))
+            if score is None:
+                continue
+            pq = proxy_quality.get(key, {})
+            weight = (
+                LOW_PROXY_CATEGORY_WEIGHT
+                if pq.get("level") == "low"
+                else 1.0
+            )
+            weighted.append((score, weight))
+            components.append(
+                f"{_FIDELITY_SHORT_LABELS.get(key, key)} {score:.1f}"
+            )
+        out[cat] = _weighted_average_fidelity(weighted)
+        breakdown[cat] = components
+    return out, breakdown
 
 
 def calculate_comparison_fidelity(
@@ -1216,8 +1255,9 @@ def calculate_comparison_fidelity(
     Layered fidelity: overall composite, core model, categories, and proxy tags.
 
     Overall weights default to FIDELITY_WEIGHTS and renormalize over available data.
-    Core model fidelity uses stability-driven observables (IE, EN) but excludes
-    Low-proxy tags so weak translations do not penalize the flux flywheel concept.
+    Core model fidelity averages IE and EN (period-relative stability proxies),
+    excluding Low-proxy tags. Requires at least MIN_CORE_OBSERVABLES scored core
+    observables before reporting. Category scores down-weight Low-proxy observables.
     """
     w = FIDELITY_WEIGHTS if weights is None else weights
     details: dict[str, float] = {}
@@ -1243,6 +1283,7 @@ def calculate_comparison_fidelity(
             "overall_fidelity": None,
             "core_model_fidelity": None,
             "category_scores": {},
+            "category_details": {},
             "details": {},
             "proxy_quality": proxy_quality,
             "note": "Insufficient experimental data",
@@ -1251,6 +1292,9 @@ def calculate_comparison_fidelity(
 
     overall = round(weighted_score / total_weight, 1)
 
+    core_available = sum(
+        1 for key in CORE_MODEL_OBSERVABLES if key in details
+    )
     core_scores: list[float] = []
     for key in CORE_MODEL_OBSERVABLES:
         if key not in details:
@@ -1259,22 +1303,21 @@ def calculate_comparison_fidelity(
         if pq.get("level") == "low":
             continue
         core_scores.append(details[key])
-    core_model = _average_fidelity_scores(core_scores)
+    core_model = (
+        _average_fidelity_scores(core_scores)
+        if core_available >= MIN_CORE_OBSERVABLES and core_scores
+        else None
+    )
 
-    category_scores = _category_scores(comparisons, details)
+    category_scores, category_details = _category_scores(
+        comparisons, details, proxy_quality
+    )
 
     active = [k for k in w if k in details]
     parts = []
-    short_labels = {
-        "magnetic_moment": "MM",
-        "ionization_energy": "IE",
-        "electron_affinity": "EA",
-        "atomic_radius": "radius",
-        "electronegativity": "EN",
-    }
     for k in active:
         pct = int(w[k] * 100)
-        parts.append(f"{short_labels.get(k, k)} {pct}%")
+        parts.append(f"{_FIDELITY_SHORT_LABELS.get(k, k)} {pct}%")
 
     note = f"Overall weighted: {', '.join(parts)} (renormalized over available data)"
     if core_model is not None:
@@ -1285,6 +1328,7 @@ def calculate_comparison_fidelity(
         "overall_fidelity": overall,
         "core_model_fidelity": core_model,
         "category_scores": category_scores,
+        "category_details": category_details,
         "details": details,
         "proxy_quality": proxy_quality,
         "note": note,
@@ -1344,6 +1388,7 @@ def interpret_comparison_fidelity(
     is_noble_gas: bool = False,
     core_model_fidelity: float | None = None,
     category_scores: dict[str, float | None] | None = None,
+    category_details: dict[str, list[str]] | None = None,
 ) -> dict[str, Any]:
     """
     Human-readable drivers for composite fidelity (esp. low scores).
@@ -1351,13 +1396,17 @@ def interpret_comparison_fidelity(
     coverage = fidelity_data_coverage(comparisons)
     drivers: list[str] = []
     cats = category_scores or {}
+    cat_breakdown = category_details or {}
 
     if cats:
         for cat, cat_score in sorted(cats.items(), key=lambda kv: kv[1] if kv[1] is not None else 11):
+            label = _CATEGORY_LABELS.get(cat, cat)
+            parts = cat_breakdown.get(cat, [])
+            parts_suffix = f" ({' + '.join(parts)})" if parts else ""
             if cat_score is None:
-                drivers.append(f"{_CATEGORY_LABELS.get(cat, cat)}: N/A (no scored data)")
+                drivers.append(f"{label}: N/A (no scored data)")
             elif cat_score < 7.0:
-                drivers.append(f"{_CATEGORY_LABELS.get(cat, cat)}: {cat_score}/10")
+                drivers.append(f"{label}: {cat_score}/10{parts_suffix}")
 
     if fidelity_score is not None and fidelity_details:
         weakest = sorted(fidelity_details.items(), key=lambda kv: kv[1])
