@@ -35,7 +35,13 @@ from app.components.periodic_picker import (
 )
 from app.components.markdown_math import kc_markdown
 from app.components.ui_math import UI_MATH_LABEL_JS, WG_TAB_LABEL
-from app.components.theme import HERO_HTML, build_kingdom_css, footer_html
+from app.components.theme import (
+    HERO_HTML,
+    background_head_html,
+    background_layer_html,
+    build_kingdom_css,
+    footer_html,
+)
 from app.pages.higgs_observations import (
     HIGGS_GALLERY,
     INVESTIGATION_4_ACCORDION_TITLE,
@@ -246,7 +252,14 @@ _KINGDOM_THEME = gr.themes.Base(
 ).set(
     body_background_fill="transparent",
     body_text_color="#d4e4f7",
+    background_fill_primary="transparent",
+    background_fill_secondary="transparent",
     block_background_fill="transparent",
+    block_label_background_fill="transparent",
+    input_background_fill="transparent",
+    panel_background_fill="transparent",
+    table_even_background_fill="transparent",
+    table_odd_background_fill="transparent",
     block_border_color="rgba(26,143,227,0.25)",
     button_primary_background_fill="#1a8fe3",
     button_primary_text_color="#ffffff",
@@ -254,7 +267,8 @@ _KINGDOM_THEME = gr.themes.Base(
 
 
 def build_app() -> gr.Blocks:
-    with gr.Blocks(title="Kingdom Come") as demo:
+    with gr.Blocks(title="Kingdom Come", head=background_head_html()) as demo:
+        gr.HTML(background_layer_html())
         gr.HTML(HERO_HTML)
 
         with gr.Tabs():

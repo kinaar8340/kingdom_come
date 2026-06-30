@@ -5,14 +5,46 @@ from __future__ import annotations
 import os
 
 KC_BG_IMAGE_FILE = "3d_map.png"
+KC_SPACE_ID_FALLBACK = "kinaar111/kingdom"
 
 
 def _background_image_url() -> str:
-    """Resolve 3d_map.png for local runs and Hugging Face Spaces."""
-    space_id = os.environ.get("SPACE_ID")
-    if space_id:
-        return f"https://huggingface.co/spaces/{space_id}/resolve/main/{KC_BG_IMAGE_FILE}"
-    return KC_BG_IMAGE_FILE
+    """Absolute URL for 3d_map.png (relative paths fail in injected Space CSS)."""
+    space_id = os.environ.get("SPACE_ID") or KC_SPACE_ID_FALLBACK
+    return f"https://huggingface.co/spaces/{space_id}/resolve/main/{KC_BG_IMAGE_FILE}"
+
+
+def background_head_html() -> str:
+    """Inject background on <html> before Gradio paints opaque theme fills."""
+    url = _background_image_url()
+    return f"""<style id="kc-page-bg-head">
+html {{
+  background: url('{url}') center center / cover no-repeat fixed !important;
+  background-color: transparent !important;
+}}
+body::before {{
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -9999;
+  pointer-events: none;
+  background: url('{url}') center center / cover no-repeat;
+}}
+</style>"""
+
+
+def background_layer_html() -> str:
+    """Fixed full-viewport background layer (backup if head/CSS is overridden)."""
+    url = _background_image_url()
+    return f"""
+<div id="kc-page-bg" aria-hidden="true" style="
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: url('{url}') center center / cover no-repeat;
+"></div>
+"""
 
 
 _KINGDOM_CSS_SHELL = """
@@ -24,39 +56,48 @@ _KINGDOM_CSS_SHELL = """
   --kc-gold: #c9a227;
   --kc-text: #d4e4f7;
 }
+:root,
+.gradio-container,
+.dark {
+  --body-background-fill: transparent !important;
+  --background-fill-primary: transparent !important;
+  --background-fill-secondary: transparent !important;
+  --block-background-fill: transparent !important;
+  --block-border-color: rgba(26, 143, 227, 0.25) !important;
+  --panel-background-fill: transparent !important;
+}
+.gradio-container {
+  position: relative !important;
+  z-index: 1 !important;
+}
 .gradio-container .block,
 .gradio-container .panel,
 .gradio-container .form,
 .gradio-container .tabs,
 .gradio-container .tabitem,
+.gradio-container .tab-nav,
 .gradio-container .contain,
 .gradio-container .column,
-.gradio-container .row {
-  background: transparent !important;
-  background-color: transparent !important;
-}
-.gradio-container .block.border,
+.gradio-container .row,
 .gradio-container .accordion,
 .gradio-container .image-container,
 .gradio-container .gallery,
-.gradio-container .plot {
-  background: rgba(18, 36, 61, 0.52) !important;
-  backdrop-filter: blur(5px);
-}
-.gradio-container .prose {
+.gradio-container .plot,
+.gradio-container .prose,
+.gradio-container footer,
+.gradio-container .wrap,
+.gradio-container .html-container {
   background: transparent !important;
-}
-.gradio-container footer {
-  background: transparent !important;
+  background-color: transparent !important;
+  backdrop-filter: none !important;
 }
 .kc-hero {
   text-align: center;
   padding: 2rem 1rem 1.5rem;
   border-bottom: 1px solid rgba(26, 143, 227, 0.25);
   margin-bottom: 1rem;
-  background: rgba(10, 22, 40, 0.28);
+  background: transparent !important;
   border-radius: 0 0 12px 12px;
-  backdrop-filter: blur(4px);
 }
 .kc-hero h1 {
   font-size: 2.2rem;
@@ -317,20 +358,72 @@ embed.kc-paper-frame {
 """
 
 
+_KC_TROUBLESHOOT_TRANSPARENCY = """
+/* Troubleshoot: strip every overlay so 3d_map.png is visible behind the UI */
+#root,
+#app,
+.app,
+.main,
+.wrap,
+.contain,
+.gradio-container,
+.gradio-container .block,
+.gradio-container .panel,
+.gradio-container .form,
+.gradio-container .tabs,
+.gradio-container .tabitem,
+.gradio-container .tab-nav,
+.gradio-container .accordion,
+.gradio-container .image-container,
+.gradio-container .gallery,
+.gradio-container .plot,
+.gradio-container .prose,
+.gradio-container footer,
+.gradio-container .html-container,
+.gradio-container input,
+.gradio-container textarea,
+.gradio-container select,
+.gradio-container .input-container,
+.gradio-container .checkbox-group,
+.gradio-container .slider,
+.gradio-container .dropdown,
+.gradio-container .button-group,
+.gradio-container label,
+.gradio-container .label-wrap,
+.kc-hero,
+.kc-card,
+.kc-showcase-card,
+.kc-showcase-thumb,
+.kc-paper-card,
+.kc-paper-toolbar,
+.kc-paper-brave-hint,
+.kc-paper-missing,
+.kc-paper-gallery img,
+.kc-obs-image-row img,
+.kc-element-card,
+.kc-metric-card,
+.kc-toe-strip,
+.kc-pt-cell,
+.kc-pt-wrap {
+  background: transparent !important;
+  background-color: transparent !important;
+  backdrop-filter: none !important;
+}
+"""
+
+
 def build_kingdom_css() -> str:
+    """Troubleshoot mode: no gradient overlays — only the 3d_map.png image layer."""
     bg_url = _background_image_url()
     shell = f"""
-html, body, .app, .main {{
-  background-color: #0a1628 !important;
-  background-image:
-    linear-gradient(
-      165deg,
-      rgba(10, 22, 40, 0.42) 0%,
-      rgba(13, 31, 53, 0.32) 45%,
-      rgba(10, 22, 40, 0.45) 100%
-    ),
-    url('{bg_url}') center center / cover no-repeat fixed !important;
+html, body, .app, .main, #root, #app {{
+  background: url('{bg_url}') center center / cover no-repeat fixed !important;
+  background-color: transparent !important;
   min-height: 100%;
+}}
+body {{
+  background: transparent !important;
+  background-color: transparent !important;
 }}
 .gradio-container {{
   background: transparent !important;
@@ -338,7 +431,7 @@ html, body, .app, .main {{
   color: var(--kc-text) !important;
 }}
 """
-    return shell + _KINGDOM_CSS_SHELL
+    return shell + _KINGDOM_CSS_SHELL + _KC_TROUBLESHOOT_TRANSPARENCY
 
 
 KINGDOM_CSS = build_kingdom_css()
