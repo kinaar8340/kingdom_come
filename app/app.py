@@ -512,7 +512,7 @@ def build_app() -> gr.Blocks:
                     show_progress="minimal",
                 )
 
-            with gr.Tab("Observations"):
+            with gr.Tab("Observations", elem_classes=["kc-observations-tab"]):
                 kc_markdown(OBSERVATIONS_INTRO_MD)
                 with gr.Accordion(
                     "Investigation 1: Catatumbo Lightning Hotspot — Earth",

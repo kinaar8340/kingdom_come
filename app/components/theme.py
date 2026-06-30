@@ -244,6 +244,15 @@ body,
   white-space: nowrap;
   flex-shrink: 0;
 }
+/* Observations accordions — Investigation N: matches active tab teal */
+.kc-inv-label-num {
+  color: var(--kc-teal) !important;
+  font-weight: 600;
+}
+.kc-inv-label-desc {
+  color: var(--kc-text) !important;
+  font-weight: 400;
+}
 .kc-higgs-header table {
   width: 100%;
   margin: 0.75rem 0 1.25rem;

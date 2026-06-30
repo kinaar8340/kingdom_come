@@ -8,7 +8,7 @@ WG_TAB_LABEL = "Constant"
 # Patches tab buttons / accordion summaries that cannot use kc_markdown LaTeX.
 UI_MATH_LABEL_JS = r"""
 () => {
-  const patch = (root) => {
+  const patchMath = (root) => {
     root.querySelectorAll("button, summary").forEach((el) => {
       if (el.dataset.kcMathPatched === "1") return;
       const text = el.textContent || "";
@@ -21,6 +21,22 @@ UI_MATH_LABEL_JS = r"""
       el.innerHTML = el.innerHTML.replace(/W_g\s*/g, 'W<sub>g</sub> ');
       el.dataset.kcMathPatched = "1";
     });
+  };
+  const patchInvestigationLabels = (root) => {
+    root.querySelectorAll("button, summary, .label-wrap").forEach((el) => {
+      if (el.dataset.kcInvPatched === "1") return;
+      const text = (el.textContent || "").trim();
+      const match = text.match(/^(Investigation \d+:)(.*)$/);
+      if (!match) return;
+      el.innerHTML =
+        '<span class="kc-inv-label-num">' + match[1] + '</span>' +
+        '<span class="kc-inv-label-desc">' + match[2] + '</span>';
+      el.dataset.kcInvPatched = "1";
+    });
+  };
+  const patch = (root) => {
+    patchMath(root);
+    patchInvestigationLabels(root);
   };
   patch(document);
   const obs = new MutationObserver(() => patch(document));
