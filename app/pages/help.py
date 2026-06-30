@@ -18,6 +18,8 @@ Use the **main tab bar** at the top of this page to switch between interactive m
 | **Home → The Papers** | Accordion summaries + inline page previews + PDF download | You want primary sources |
 | **Lattice Simulator** | Two-gyro gauged quaternion lattice (stable vs chaotic) | You want to see burst dynamics |
 | **Flux Flywheel** | Periodic table explorer Z = 1–180 + Magic Island heatmap | You want matter as flux configurations |
+| **Toroidal Periodic** | (1,7) coil × flux flywheel hybrid on a closed torus | You want global periodic topology |
+| **Monster Fingerprints** | 15×194 supersingular-prime heatmap for Monster irreps | You want the finite symmetry companion manifold |
 | **Observations** | Investigations — lightning, Jupiter, 3-body, Higgs, Schumann, Bitcoin π-cycle, cuprates, pulsars | You want nature-scale $W_{g}$ signatures |
 | **Showcase** | Card grid linking all HF Spaces | You want to jump to sibling demos |
 

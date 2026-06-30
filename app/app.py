@@ -109,6 +109,11 @@ from app.pages.toroidal_periodic import (
     TOROIDAL_INTRO_MD,
     render_toroidal_periodic,
 )
+from app.pages.monster_fingerprints import (
+    MONSTER_INTRO_MD,
+    MOONSHINE_ANCHOR_MD,
+    render_monster_heatmap,
+)
 from app.pages.flux_trends_observations import (
     FLUX_TRENDS_MD,
     render_flux_trend_plots,
@@ -152,6 +157,7 @@ BITCOIN_PI_DIR = ROOT / "app" / "assets" / "bitcoin_pi"
 SUPERCONDUCTORS_DIR = ROOT / "app" / "assets" / "superconductors"
 PULSARS_DIR = ROOT / "app" / "assets" / "pulsars"
 TOROIDAL_DIR = ROOT / "app" / "assets" / "toroidal"
+MONSTER_DIR = ROOT / "app" / "assets" / "monster"
 
 HOPF_PRESETS: dict[str, tuple[int, int, float, float, float]] = {
     "Classic Hopf": (8, 160, 0.6, 1.2, 1.0),
@@ -567,6 +573,50 @@ def build_app() -> gr.Blocks:
                     render_toroidal_periodic,
                     inputs=toroidal_inputs,
                     outputs=toroidal_plot,
+                    trigger_mode="once",
+                    show_progress="minimal",
+                )
+
+            with gr.Tab("Monster Fingerprints") as monster_tab:
+                kc_markdown(MONSTER_INTRO_MD)
+                with gr.Accordion("Monstrous Moonshine anchor", open=True):
+                    kc_markdown(MOONSHINE_ANCHOR_MD)
+                with gr.Row():
+                    monster_sort = gr.Dropdown(
+                        [
+                            "Exponent sum (heavy first)",
+                            "Irrep index (0–193)",
+                            "Degree (ascending)",
+                            "Degree (descending)",
+                        ],
+                        value="Exponent sum (heavy first)",
+                        label="Row sort",
+                    )
+                    monster_color = gr.Radio(
+                        ["Linear exponents", "Log(1 + exponent)"],
+                        value="Linear exponents",
+                        label="Color scale",
+                    )
+                    monster_highlight = gr.Slider(
+                        -1,
+                        193,
+                        value=1,
+                        step=1,
+                        label="Highlight irrep index (-1 = none)",
+                    )
+                monster_plot = gr.Plot(label="Supersingular prime exponent heatmap")
+                with gr.Row():
+                    monster_refresh = gr.Button("Update heatmap", variant="primary")
+                monster_inputs = [monster_sort, monster_color, monster_highlight]
+                monster_refresh.click(
+                    render_monster_heatmap,
+                    inputs=monster_inputs,
+                    outputs=monster_plot,
+                )
+                monster_tab.select(
+                    render_monster_heatmap,
+                    inputs=monster_inputs,
+                    outputs=monster_plot,
                     trigger_mode="once",
                     show_progress="minimal",
                 )
@@ -1051,6 +1101,7 @@ def main() -> None:
             str(SUPERCONDUCTORS_DIR),
             str(PULSARS_DIR),
             str(TOROIDAL_DIR),
+            str(MONSTER_DIR),
         ],
         inbrowser=not on_hf,
         # HF sets GRADIO_SSR_MODE=true by default; the Node SSR proxy can emit

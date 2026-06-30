@@ -69,6 +69,21 @@ The constant $W_{g} \\approx 350/\\pi \\approx 111.408$ emerges as a universal i
 ### Observer Synchronization
 
 Phase holonomy between linked fibers damps as $\\Delta\\theta(t) = \\Delta\\theta(0) \\cdot e^{-\\kappa t}$, providing a topological mechanism for observer-linked non-locality. This explains why certain burst events remain synchronized and difficult to detect externally.
+
+### Monstrous Moonshine (finite symmetry companion)
+
+The **Monster group** $\\mathbb{M}$ has exactly **194** irreducible representations (OEIS [A001379](https://oeis.org/A001379)).
+The first non-trivial degree is **196883**; moonshine identifies **196884 = 196883 + 1** as the
+coefficient of $q$ in the modular **$j$-invariant** — a bridge between finite sporadic symmetry
+and complex analysis.
+
+Kingdom Come treats this as a **second periodic manifold**: each irrep carries a
+**15-dimensional fingerprint** (exponents of the supersingular primes in its degree). Explore it
+in the **Monster Fingerprints** tab alongside the 118-element toroidal coil. This is interpretive
+topology, not a substitute for flux-flywheel physics — but the structural rhyme (closed labels,
+quantized classes, harmonic anchors) is deliberate.
+
+*Fingerprint data: [meta-introspector/monster](https://github.com/meta-introspector/monster)*
 """
 
 HOME_CLOCK_MD = """
@@ -162,6 +177,7 @@ document burst, echo, and observer effects.
 | **Hopf Visualizer** | Linked $S^3 \\to S^2$ fibers — geometric intuition |
 | **Lattice Simulator** | Two-gyro gauged quaternion lattice (stable vs chaotic) |
 | **Flux Flywheel** | Periodic table as flux flywheel stability proxy |
+| **Monster Fingerprints** | 15×194 supersingular-prime heatmap for Monster irreps |
 | **The Papers** (sub-tab) | Accordion summaries + inline page previews |
 | **Observations** | $W_{g} = 350/\\pi$ signatures in nature and markets |
 | **Showcase** | All seven HF Spaces in the ecosystem |
