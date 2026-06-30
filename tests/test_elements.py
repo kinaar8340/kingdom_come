@@ -123,6 +123,8 @@ def test_flux_observables_cards_html():
     assert "μ exp" in html
     assert "Δ SOC vs exp" in html
     assert "kc-obs-val-table" in html
+    assert "model-vs-experiment-table" in html
+    assert "kc-obs-val-delta-col" in html
     assert "Magnetic Moment" in html
     assert "Direct measurement" in html
     assert "Overall Comparison Fidelity" in html

@@ -200,6 +200,9 @@ NEON_CSS = """
 .kc-obs-val-wrap {
   grid-column: 1 / -1;
   margin-top: 0.25rem;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 .kc-obs-val-title {
   display: block;
@@ -209,42 +212,113 @@ NEON_CSS = """
   letter-spacing: 0.04em;
   margin-bottom: 0.3rem;
 }
-.kc-obs-val-table {
+.kc-obs-val-table,
+.model-vs-experiment-table {
   width: 100%;
+  max-width: 100%;
+  table-layout: auto;
   border-collapse: collapse;
-  font-size: 0.68rem;
-  line-height: 1.35;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  box-sizing: border-box;
 }
-.kc-obs-val-table th {
-  color: #6a9bb8;
+.kc-obs-val-table th,
+.model-vs-experiment-table th {
+  color: #9ca3af;
   font-weight: 600;
   text-align: left;
-  padding: 0.28rem 0.35rem;
-  border-bottom: 1px solid rgba(26, 143, 227, 0.22);
+  padding: 0.55rem 0.85rem;
+  border-bottom: 1px solid rgba(31, 41, 55, 0.85);
+  background: rgba(17, 24, 39, 0.65);
   text-transform: uppercase;
-  letter-spacing: 0.03em;
-  font-size: 0.62rem;
+  letter-spacing: 0.04em;
+  font-size: 0.8rem;
+  vertical-align: middle;
+  white-space: nowrap;
 }
-.kc-obs-val-table td {
+.kc-obs-val-table td,
+.model-vs-experiment-table td {
   color: #e8f4ff;
-  padding: 0.3rem 0.35rem;
-  border-bottom: 1px solid rgba(26, 143, 227, 0.1);
-  vertical-align: top;
+  padding: 0.55rem 0.85rem;
+  border-bottom: 1px solid rgba(26, 143, 227, 0.12);
+  vertical-align: middle;
+}
+.kc-obs-val-table tbody tr:nth-child(even) td,
+.model-vs-experiment-table tbody tr:nth-child(even) td {
+  background: rgba(18, 36, 61, 0.22);
+}
+.kc-obs-val-table tbody tr:hover td,
+.model-vs-experiment-table tbody tr:hover td {
+  background: rgba(26, 143, 227, 0.08);
 }
 .kc-obs-val-table tr:last-child td {
   border-bottom: none;
 }
 .kc-obs-val-table .kc-obs-val-cat {
   color: #00c9b7;
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 0.84rem;
   white-space: nowrap;
 }
-.kc-obs-val-table .kc-obs-val-delta-pos { color: #00c9b7; }
-.kc-obs-val-table .kc-obs-val-delta-neg { color: #ffb4a2; }
+.kc-obs-val-table .kc-obs-val-model-col {
+  font-size: 0.8rem;
+  color: #d4e4f7;
+}
+.kc-obs-val-table .kc-obs-val-soc-col {
+  font-size: 0.78rem;
+  color: #8ecae6;
+}
+.kc-obs-val-table .kc-obs-val-exp-col {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+  font-size: 0.86rem;
+  font-weight: 600;
+  min-width: 120px;
+  color: #e8f4ff;
+}
+.kc-obs-val-table .kc-obs-val-delta-col {
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+  min-width: 115px;
+  background: rgba(17, 24, 39, 0.45);
+}
+.kc-obs-val-table .kc-obs-val-delta-pos {
+  color: #22c55e;
+}
+.kc-obs-val-table .kc-obs-val-delta-neg {
+  color: #ef4444;
+}
+.kc-obs-val-table .kc-obs-val-delta-col.kc-obs-val-delta-pos {
+  color: #22c55e;
+  font-weight: 700;
+}
+.kc-obs-val-table .kc-obs-val-delta-col.kc-obs-val-delta-neg {
+  color: #ef4444;
+  font-weight: 700;
+}
+.kc-obs-val-table .kc-obs-val-source-col {
+  font-size: 0.76rem;
+  color: #8ecae6;
+  max-width: 140px;
+  word-break: break-word;
+}
 .kc-obs-val-table .kc-obs-val-quality {
   color: #8ecae6;
-  font-style: italic;
+  font-size: 0.74rem;
   white-space: nowrap;
+  min-width: 90px;
+}
+.kc-obs-val-table .kc-obs-val-quality-pill {
+  display: inline-block;
+  padding: 0.12rem 0.45rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-style: normal;
+  font-weight: 600;
+  background: rgba(26, 143, 227, 0.12);
+  border: 1px solid rgba(26, 143, 227, 0.25);
 }
 .kc-obs-val-info {
   cursor: help;
@@ -518,12 +592,13 @@ NEON_CSS = """
 .kc-obs-val-wrap details summary {
   cursor: pointer;
   color: #1a8fe3;
-  font-size: 0.76rem;
+  font-size: 0.82rem;
   font-weight: 600;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.35rem;
 }
 .kc-obs-val-delta-strong {
   font-weight: 700;
+  font-size: 1.02em;
 }
 .kc-obs-val-delta-icon {
   opacity: 0.85;
@@ -660,13 +735,14 @@ def flux_metrics_cards_html(flywheel: dict) -> str:
 
 
 def _delta_cell_class(delta_str: str) -> str:
+    base = "kc-obs-val-delta-col"
     if delta_str == "—" or delta_str.startswith("+0.00") or delta_str.startswith("+0.0 "):
-        return "kc-obs-val-delta-pos"
+        return f"{base} kc-obs-val-delta-pos"
     if delta_str.startswith("+"):
-        return "kc-obs-val-delta-pos"
+        return f"{base} kc-obs-val-delta-pos"
     if delta_str.startswith("-"):
-        return "kc-obs-val-delta-neg"
-    return ""
+        return f"{base} kc-obs-val-delta-neg"
+    return base
 
 
 def _delta_display(delta_str: str) -> str:
@@ -902,28 +978,28 @@ def flux_observables_validation_table_html(rows: list[dict]) -> str:
         body_rows.append(
             f"""<tr>
   <td class="kc-obs-val-cat">{row["category"]}</td>
-  <td>{row["model_spin_only"]}</td>
-  <td>{row["model_soc"]}</td>
-  <td>{row["experimental"]}</td>
+  <td class="kc-obs-val-model-col">{row["model_spin_only"]}</td>
+  <td class="kc-obs-val-soc-col">{row["model_soc"]}</td>
+  <td class="kc-obs-val-exp-col">{row["experimental"]}</td>
   <td class="{delta_class}">{_delta_display(row["delta"])}</td>
-  <td><span class="kc-obs-val-info" title="{source_tip}">{row["source"]}</span></td>
-  <td class="kc-obs-val-quality"><span class="kc-obs-val-info" title="{quality_tip}">{row["quality"]}</span></td>
+  <td class="kc-obs-val-source-col"><span class="kc-obs-val-info" title="{source_tip}">{row["source"]}</span></td>
+  <td class="kc-obs-val-quality"><span class="kc-obs-val-quality-pill kc-obs-val-info" title="{quality_tip}">{row["quality"]}</span></td>
 </tr>"""
         )
 
     return f"""
-<div class="kc-obs-val-wrap">
+<div class="kc-obs-val-wrap kc-neon-plugin">
   <details open>
   <summary>Model vs experiment ({len(rows)} observables)</summary>
-  <table class="kc-obs-val-table">
+  <table class="kc-obs-val-table model-vs-experiment-table">
     <thead><tr>
       <th>Category</th>
       <th>Spin-only / Model</th>
       <th>SOC</th>
-      <th>Experimental</th>
-      <th>Δ (model − exp)</th>
-      <th>Source</th>
-      <th>Quality</th>
+      <th class="kc-obs-val-exp-col">Experimental</th>
+      <th class="kc-obs-val-delta-col">Δ (model − exp)</th>
+      <th class="kc-obs-val-source-col">Source</th>
+      <th class="kc-obs-val-quality">Quality</th>
     </tr></thead>
     <tbody>{"".join(body_rows)}</tbody>
   </table>
