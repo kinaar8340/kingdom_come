@@ -157,6 +157,30 @@ def test_layered_fidelity_xenon():
     assert fidelity["proxy_quality"]["magnetic_moment"]["level"] == "none"
 
 
+def test_build_key_takeaways_xenon():
+    from kingdom.core.experimental_data import build_key_takeaways
+
+    extended = map_z_to_flywheel_extended(54)
+    validation = build_observables_validation(54, extended)
+    takeaways = build_key_takeaways(
+        54,
+        comparisons=validation["comparisons"],
+        fidelity_details=validation["fidelity_details"],
+        category_scores=validation.get("fidelity_category_scores"),
+        proxy_quality=validation.get("fidelity_proxy_quality"),
+        core_model_fidelity=validation.get("fidelity_core_score"),
+        overall_fidelity=validation.get("fidelity_score"),
+        is_noble_gas=True,
+        noble_gas_stability_bonus=float(extended.get("noble_gas_stability_bonus") or 0),
+    )
+    assert len(takeaways) >= 3
+    texts = " ".join(t["text"] for t in takeaways).lower()
+    assert any(t["kind"] == "positive" for t in takeaways)
+    assert any(t["kind"] == "caveat" for t in takeaways)
+    assert "structural" in texts or "electronic" in texts
+    assert "electronegativity" in texts or "magnetic" in texts
+
+
 def test_build_model_insights_xenon():
     from kingdom.core.experimental_data import build_model_insights
 

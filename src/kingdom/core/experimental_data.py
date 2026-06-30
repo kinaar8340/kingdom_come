@@ -1487,6 +1487,116 @@ def build_model_insights(
     return {"strengths": strengths[:4], "limitations": limitations[:4]}
 
 
+def build_key_takeaways(
+    z: int,
+    *,
+    comparisons: dict[str, dict[str, Any]],
+    fidelity_details: dict[str, float],
+    category_scores: dict[str, float | None] | None = None,
+    proxy_quality: dict[str, dict[str, str]] | None = None,
+    core_model_fidelity: float | None = None,
+    overall_fidelity: float | None = None,
+    is_noble_gas: bool = False,
+    noble_gas_stability_bonus: float = 0.0,
+) -> list[dict[str, str]]:
+    """Short scannable bullets for the left-column summary card."""
+    items: list[dict[str, str]] = []
+    cats = category_scores or {}
+    proxies = proxy_quality or {}
+
+    structural = cats.get("Structural")
+    electronic = cats.get("Electronic")
+    ie_score = fidelity_details.get("ionization_energy")
+    if (
+        (structural is not None and structural >= 8.0)
+        and (electronic is not None and electronic >= 7.0 or ie_score is not None and ie_score >= 7.0)
+    ):
+        items.append({
+            "kind": "positive",
+            "text": "Strong structural and period-relative electronic alignment",
+        })
+    elif structural is not None and structural >= 8.0:
+        items.append({
+            "kind": "positive",
+            "text": "Structural properties align well with experiment",
+        })
+    elif ie_score is not None and ie_score >= 7.0:
+        items.append({
+            "kind": "positive",
+            "text": "Period-relative ionization energy ranking is solid",
+        })
+
+    if is_noble_gas and noble_gas_stability_bonus > 0:
+        items.append({
+            "kind": "positive",
+            "text": "Shell-closure bonus improves stability as expected",
+        })
+
+    if overall_fidelity is not None and overall_fidelity >= 8.5:
+        items.append({
+            "kind": "positive",
+            "text": f"Overall comparison fidelity is strong ({overall_fidelity}/10)",
+        })
+    elif core_model_fidelity is not None and overall_fidelity is not None:
+        if core_model_fidelity - overall_fidelity >= 1.0:
+            items.append({
+                "kind": "positive",
+                "text": "Core stability ranking outperforms weaker proxy translations",
+            })
+
+    en_pq = proxies.get("electronegativity", {})
+    en_score = fidelity_details.get("electronegativity")
+    if en_pq.get("level") == "low" or (
+        is_noble_gas and get_period(z) >= 5 and en_score is not None and en_score < 7.0
+    ):
+        items.append({
+            "kind": "caveat",
+            "text": "Electronegativity proxy needs refinement for heavy nobles",
+        })
+    elif en_score is not None and en_score < 5.0:
+        items.append({
+            "kind": "caveat",
+            "text": "Electronegativity alignment remains modest for this element",
+        })
+
+    mm_cmp = comparisons.get("magnetic_moment", {})
+    ea_cmp = comparisons.get("electron_affinity", {})
+    mm_missing = not mm_cmp.get("available")
+    ea_missing = not ea_cmp.get("available")
+    if mm_missing and ea_missing:
+        items.append({
+            "kind": "caveat",
+            "text": "Limited data for magnetic and reactivity metrics",
+        })
+    elif mm_missing:
+        items.append({
+            "kind": "caveat",
+            "text": "Magnetic moment anchors are sparse for this configuration",
+        })
+    elif ea_missing:
+        items.append({
+            "kind": "caveat",
+            "text": "Electron affinity data limits chemical reactivity scoring",
+        })
+
+    chemical = cats.get("Chemical")
+    if chemical is not None and chemical < 6.0:
+        items.append({
+            "kind": "caveat",
+            "text": "Chemical reactivity proxies show larger divergence",
+        })
+
+    if not items:
+        items.append({
+            "kind": "positive",
+            "text": "Model stability score is within the calibrated flywheel range",
+        })
+
+    positives = [i for i in items if i["kind"] == "positive"][:3]
+    caveats = [i for i in items if i["kind"] == "caveat"][:2]
+    return positives + caveats
+
+
 def interpret_comparison_fidelity(
     z: int,
     *,

@@ -6,7 +6,11 @@ import base64
 from pathlib import Path
 from typing import Any
 
-from kingdom.core.experimental_data import build_model_insights, interpret_comparison_fidelity
+from kingdom.core.experimental_data import (
+    build_key_takeaways,
+    build_model_insights,
+    interpret_comparison_fidelity,
+)
 from kingdom.core.flux_explorer import build_observables_validation
 
 NEON_CSS = """
@@ -598,6 +602,7 @@ NEON_CSS = """
   display: flex;
   flex-direction: column;
   gap: 0.45rem;
+  flex: 1 1 auto;
   width: 100%;
   margin-top: 0.15rem;
   padding-top: 0.55rem;
@@ -647,6 +652,47 @@ NEON_CSS = """
 }
 .kc-model-insights li {
   margin-bottom: 0.12rem;
+}
+.kc-key-takeaways {
+  width: 100%;
+  flex: 1 1 auto;
+  padding: 0.4rem 0.5rem;
+  background: rgba(10, 22, 40, 0.45);
+  border: 1px solid rgba(26, 143, 227, 0.16);
+  border-radius: 8px;
+  font-size: 0.72rem;
+  line-height: 1.45;
+}
+.kc-key-takeaways-title {
+  margin: 0 0 0.35rem;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: #8ecae6;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+.kc-key-takeaways ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.kc-key-takeaways li {
+  margin-bottom: 0.28rem;
+  color: #d4e4f7;
+}
+.kc-key-takeaways li:last-child {
+  margin-bottom: 0;
+}
+.kc-key-takeaways-icon {
+  display: inline-block;
+  width: 1.1rem;
+  font-weight: 700;
+}
+.kc-key-takeaways li.kc-takeaway-positive .kc-key-takeaways-icon {
+  color: #22c55e;
+}
+.kc-key-takeaways li.kc-takeaway-caveat .kc-key-takeaways-icon {
+  color: #ffd45a;
 }
 .kc-flux-section-title {
   margin: 0 0 0.35rem;
@@ -1198,6 +1244,40 @@ def flux_observables_insights_html(extended: dict, bundle: dict[str, Any] | None
 </div>"""
 
 
+def flux_observables_takeaways_html(extended: dict, bundle: dict[str, Any] | None = None) -> str:
+    """Scannable key takeaways at the bottom of the chemistry analysis column."""
+    ctx = bundle or _observables_ui_bundle(extended)
+    validation = ctx["validation"]
+    takeaways = build_key_takeaways(
+        ctx["z"],
+        comparisons=validation["comparisons"],
+        fidelity_details=validation["fidelity_details"],
+        category_scores=validation.get("fidelity_category_scores"),
+        proxy_quality=validation.get("fidelity_proxy_quality"),
+        core_model_fidelity=validation.get("fidelity_core_score"),
+        overall_fidelity=validation.get("fidelity_score"),
+        is_noble_gas=bool(extended.get("is_noble_gas")),
+        noble_gas_stability_bonus=float(extended.get("noble_gas_stability_bonus") or 0),
+    )
+    rows: list[str] = []
+    for item in takeaways:
+        icon = "✓" if item["kind"] == "positive" else "△"
+        cls = (
+            "kc-takeaway-positive"
+            if item["kind"] == "positive"
+            else "kc-takeaway-caveat"
+        )
+        rows.append(
+            f'<li class="{cls}">'
+            f'<span class="kc-key-takeaways-icon">{icon}</span>{item["text"]}</li>'
+        )
+    return f"""
+<div class="kc-key-takeaways kc-neon-plugin">
+  <h4 class="kc-key-takeaways-title">Key Takeaways</h4>
+  <ul>{"".join(rows)}</ul>
+</div>"""
+
+
 def flux_observables_analysis_html(extended: dict) -> str:
     """Left column: proxy quality, fidelity interpretation, noble gas banner."""
     bundle = _observables_ui_bundle(extended)
@@ -1206,11 +1286,12 @@ def flux_observables_analysis_html(extended: dict) -> str:
     )
     interpretation = flux_observables_interpretation_html(bundle["interpretation"])
     insights = flux_observables_insights_html(extended, bundle)
-    if not (proxy or interpretation or bundle["noble_banner"] or insights):
+    takeaways = flux_observables_takeaways_html(extended, bundle)
+    if not (proxy or interpretation or bundle["noble_banner"] or insights or takeaways):
         return ""
     return (
         f'<div class="kc-flux-analysis-col kc-neon-plugin">'
-        f"{proxy}{interpretation}{bundle['noble_banner']}{insights}"
+        f"{proxy}{interpretation}{bundle['noble_banner']}{insights}{takeaways}"
         f"</div>"
     )
 
