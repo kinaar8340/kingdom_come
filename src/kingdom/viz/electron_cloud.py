@@ -9,6 +9,8 @@ from kingdom.core.elements import Element, shell_occupancies
 from kingdom.viz.hopf_plotly import ACCENT_GOLD, BG_DARK, FIBER_COLORS, GRID, kingdom_dark_theme
 
 SHELL_COLORS = ("#1a8fe3", "#00c9b7", "#4cc9f0", "#48bfe3", "#c9a227", "#7b2cbf", "#ef553b")
+FLUX_RING_COLOR = "rgba(201, 162, 39, 0.5)"
+FLUX_RING_GLOW_COLOR = "rgba(201, 162, 39, 0.25)"
 
 
 def build_electron_cloud_figure(
@@ -68,19 +70,19 @@ def build_electron_cloud_figure(
             )
         )
 
-    # Flux flywheel stability ring (TOE overlay) — glow scales with score
+    # Flux flywheel stability ring (TOE overlay) — thin 50% transparent gold
     flywheel_r = max_r * (0.52 + 0.045 * stability_score)
     ring_t = np.linspace(0, 2 * np.pi, 160)
     high_lock = stability_score >= 7.5 or element.is_noble_gas
-    ring_width = 6 if high_lock else (4 if stability_score >= 6.5 else 2)
+    ring_width = 1.5 if high_lock else (1.25 if stability_score >= 6.5 else 1.0)
     if high_lock:
-        glow_r = flywheel_r * 1.06
+        glow_r = flywheel_r * 1.04
         fig.add_trace(
             go.Scatter(
                 x=glow_r * np.cos(ring_t),
                 y=glow_r * np.sin(ring_t),
                 mode="lines",
-                line=dict(color="rgba(201,162,39,0.35)", width=ring_width + 4),
+                line=dict(color=FLUX_RING_GLOW_COLOR, width=ring_width + 0.75),
                 showlegend=False,
                 hoverinfo="skip",
             )
@@ -92,7 +94,7 @@ def build_electron_cloud_figure(
             mode="lines",
             name=f"Flux flywheel (score {stability_score:.1f})",
             line=dict(
-                color=ACCENT_GOLD,
+                color=FLUX_RING_COLOR,
                 width=ring_width,
                 dash="solid" if high_lock else "dash",
             ),
