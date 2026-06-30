@@ -29,7 +29,8 @@ from app.components.periodic_picker import (
     PERIODIC_CSS,
     PERIODIC_TABLE_JS,
     element_picker_choices,
-    periodic_table_html,
+    known_periodic_table_html,
+    superheavy_periodic_table_html,
     picker_label_for_z,
 )
 from app.components.markdown_math import kc_markdown
@@ -207,7 +208,8 @@ def _flux_panels(z: int):
         toe = synthetic_toe_strip_html(z, fly)
     return (
         picker_label_for_z(z),
-        periodic_table_html(z),
+        known_periodic_table_html(z),
+        superheavy_periodic_table_html(z),
         card,
         payload["cloud_fig"],
         payload["compare_fig"],
@@ -444,9 +446,17 @@ def build_app() -> gr.Blocks:
                         scale=2,
                     )
                     z_slider = gr.Slider(1, 180, value=2, step=1, label="Atomic number Z", scale=2)
-                with gr.Accordion("Periodic table (click any element)", open=True):
-                    periodic_table = gr.HTML(js_on_load=PERIODIC_TABLE_JS)
+                with gr.Accordion(
+                    "Periodic table of known elements (Z=1-118)",
+                    open=False,
+                ):
+                    known_periodic_table = gr.HTML(js_on_load=PERIODIC_TABLE_JS)
                     noble_jump_row = gr.Row()
+                with gr.Accordion(
+                    "Periodic table of unknown elements (Z=119-180) superheavy (predicted)",
+                    open=False,
+                ):
+                    superheavy_periodic_table = gr.HTML(js_on_load=PERIODIC_TABLE_JS)
                 # Hero: element card (left) · electron cloud plot (right, 2× width)
                 with gr.Row():
                     with gr.Column(scale=1, min_width=240):
@@ -463,7 +473,8 @@ def build_app() -> gr.Blocks:
                     magic_island_plot = gr.Plot()
                 flux_panel_outputs = [
                     z_dropdown,
-                    periodic_table,
+                    known_periodic_table,
+                    superheavy_periodic_table,
                     element_card,
                     electron_plot,
                     compare_plot,
@@ -482,7 +493,8 @@ def build_app() -> gr.Blocks:
                         )
                 z_slider.change(on_flux_slider, inputs=z_slider, outputs=flux_panel_outputs)
                 z_dropdown.change(on_flux_dropdown, inputs=z_dropdown, outputs=flux_jump_outputs)
-                periodic_table.pick(on_periodic_pick, outputs=flux_jump_outputs)
+                known_periodic_table.pick(on_periodic_pick, outputs=flux_jump_outputs)
+                superheavy_periodic_table.pick(on_periodic_pick, outputs=flux_jump_outputs)
                 flux_tab.select(
                     on_flux_slider,
                     inputs=z_slider,

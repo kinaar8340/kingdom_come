@@ -127,7 +127,7 @@ def picker_label_for_z(z: int) -> str:
     return f"Z={z:3d}"
 
 
-def _grid_position(z: int) -> tuple[int, int]:
+def _known_grid_position(z: int) -> tuple[int, int]:
     el = get_element(z)
     if el is None:
         return (0, 0)
@@ -139,15 +139,51 @@ def _grid_position(z: int) -> tuple[int, int]:
     return (el.period, group)
 
 
-def periodic_table_html(current_z: int) -> str:
-    """Render compact periodic table with active Z highlighted (Z = 1–118)."""
+def _superheavy_grid_position(z: int) -> tuple[int, int]:
+    """18-column extension grid for Z = 119–180 (period-8 block + overflow rows)."""
+    offset = z - (KNOWN_ELEMENT_MAX + 1)
+    if offset < 0:
+        return (0, 0)
+    return (1 + offset // 18, offset % 18 + 1)
+
+
+def _periodic_cell_html(z: int, current_z: int) -> str:
+    el = get_element(z)
+    if el is None:
+        return '<div class="kc-pt-gap">·</div>'
+    classes = ["kc-pt-cell"]
+    if z == current_z:
+        classes.append("kc-pt-active")
+    if z in NOBLE_GAS_Z:
+        classes.append("kc-pt-noble")
+    if z in MAGIC_NUMBER_Z:
+        classes.append("kc-pt-magic")
+    bg = _CATEGORY_COLORS.get(el.category, "rgba(18,36,61,0.75)")
+    synth = " — predicted" if el.is_synthetic else ""
+    return (
+        f'<button type="button" class="{" ".join(classes)}" style="background:{bg}" '
+        f'data-kc-z="{z}" title="{el.name} (Z={z}){synth}">'
+        f"{el.symbol}<sub>{z}</sub></button>"
+    )
+
+
+def _periodic_grid_html(
+    z_min: int,
+    z_max: int,
+    current_z: int,
+    position_fn,
+    legend: str,
+) -> str:
     grid: dict[tuple[int, int], int] = {}
-    for z in range(1, KNOWN_ELEMENT_MAX + 1):
-        pos = _grid_position(z)
+    for z in range(z_min, z_max + 1):
+        pos = position_fn(z)
         if pos[0] > 0:
             grid[pos] = z
 
-    max_row = max((r for r, _ in grid), default=7)
+    if not grid:
+        return ""
+
+    max_row = max(row for row, _ in grid)
     cells: list[str] = []
     for row in range(1, max_row + 1):
         for col in range(1, 19):
@@ -155,36 +191,38 @@ def periodic_table_html(current_z: int) -> str:
             if z is None:
                 cells.append('<div class="kc-pt-gap">·</div>')
                 continue
-            el = get_element(z)
-            if el is None:
-                continue
-            classes = ["kc-pt-cell"]
-            if z == current_z:
-                classes.append("kc-pt-active")
-            if z in NOBLE_GAS_Z:
-                classes.append("kc-pt-noble")
-            if z in MAGIC_NUMBER_Z:
-                classes.append("kc-pt-magic")
-            bg = _CATEGORY_COLORS.get(el.category, "rgba(18,36,61,0.75)")
-            cells.append(
-                f'<button type="button" class="{" ".join(classes)}" style="background:{bg}" '
-                f'data-kc-z="{z}" title="{el.name} (Z={z})">'
-                f"{el.symbol}<sub>{z}</sub></button>"
-            )
-
-    superheavy = ""
-    if current_z > KNOWN_ELEMENT_MAX:
-        el = get_element(current_z)
-        if el:
-            superheavy = (
-                f'<div class="kc-pt-superheavy">Superheavy zone · Z={current_z} · '
-                f"{el.name} ({el.symbol}) — theoretical / predicted</div>"
-            )
+            cells.append(_periodic_cell_html(z, current_z))
 
     return f"""
 <div class="kc-pt-wrap">
   <div class="kc-pt-grid">{"".join(cells)}</div>
-  <div class="kc-pt-legend">Click any element · ★ noble gas · ◆ magic number · gold = current Z</div>
-  {superheavy}
+  <div class="kc-pt-legend">{legend}</div>
 </div>
 """
+
+
+def known_periodic_table_html(current_z: int) -> str:
+    """Render known elements Z = 1–118."""
+    return _periodic_grid_html(
+        1,
+        KNOWN_ELEMENT_MAX,
+        current_z,
+        _known_grid_position,
+        "Click any element · ★ noble gas · ◆ magic number · gold = current Z",
+    )
+
+
+def superheavy_periodic_table_html(current_z: int) -> str:
+    """Render predicted superheavy elements Z = 119–180."""
+    return _periodic_grid_html(
+        KNOWN_ELEMENT_MAX + 1,
+        EXPLORER_Z_MAX,
+        current_z,
+        _superheavy_grid_position,
+        "Click any superheavy element · ◆ magic number (Z=129) · gold = current Z · all predicted",
+    )
+
+
+def periodic_table_html(current_z: int) -> str:
+    """Both tables — kept for backward compatibility in tests."""
+    return known_periodic_table_html(current_z) + superheavy_periodic_table_html(current_z)

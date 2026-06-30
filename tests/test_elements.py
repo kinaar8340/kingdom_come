@@ -3,7 +3,13 @@
 import plotly.graph_objects as go
 
 from app.components.neon import element_card_html, flux_metrics_cards_html, toe_strip_html
-from app.components.periodic_picker import element_picker_choices, periodic_table_html, picker_label_for_z
+from app.components.periodic_picker import (
+    element_picker_choices,
+    known_periodic_table_html,
+    periodic_table_html,
+    picker_label_for_z,
+    superheavy_periodic_table_html,
+)
 from kingdom.core.elements import EXPLORER_Z_MAX, get_element, shell_occupancies
 from kingdom.core.flux_explorer import element_art_path, explore_flux_element, flux_metrics_table
 from kingdom.core.superheavy import systematic_name_symbol
@@ -129,13 +135,17 @@ def test_element_picker_choices_count():
 
 
 def test_periodic_table_html_highlights():
-    html = periodic_table_html(26)
+    html = known_periodic_table_html(26)
     assert "kc-pt-active" in html
     assert "Fe" in html
     assert 'data-kc-z="26"' in html
     assert "<button" in html
-    html_sh = periodic_table_html(129)
-    assert "Superheavy zone" in html_sh
+    assert 'data-kc-z="129"' not in html
+    html_sh = superheavy_periodic_table_html(129)
+    assert "kc-pt-active" in html_sh
+    assert 'data-kc-z="129"' in html_sh
+    assert 'data-kc-z="180"' in html_sh
+    assert known_periodic_table_html(26) + superheavy_periodic_table_html(26) == periodic_table_html(26)
 
 
 def test_periodic_table_js_wires_pick_event():
