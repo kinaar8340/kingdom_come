@@ -43,7 +43,7 @@ Each point on \( S^2 \) has a **fiber** — a circle in \( S^3 \). Distinct fibe
 
 ### Flux Flywheels & Emergent Structure
 
-Detuning parameters \( (\Delta\omega, \text{gauge strength}, \text{layers}) \) select **stability islands** on the lattice. The Magic Island Sweep identified a noble-gas-like ultra-stable lock — a template for emergent element mapping.
+Detuning parameters \( (\Delta\omega,\ \text{gauge strength},\ \text{layers}) \) select **stability islands** on the lattice. The Magic Island Sweep identified a noble-gas-like ultra-stable lock — a template for emergent element mapping.
 
 The \( W_g \) constant \( (\approx 350 / \pi \approx 111.408) \) emerges as a universal invariant, acting as a critical threshold in the underlying clock-like accumulation mechanism (see **The Clock** tab).
 
@@ -96,9 +96,9 @@ This produces a **sawtooth waveform**: slow linear rise → sudden drop → repe
 | Sudden release + reset | Chime and mechanism reset |
 | Repetition | Quasi-periodic rhythm — period set by rate and threshold |
 
-The braiding phase also locks tightly (\( \approx 0.814 \)) alongside \( W_g \), reinforcing topological invariance.
-Full dynamics derive from the effective Lagrangian of the gauged Hopf lattice
-(*Lagrangian_Derivation.pdf* in **The Papers** tab).
+The braiding phase \( \phi_b \) also locks tightly (\( \phi_b \approx 0.814 \)) alongside \( W_g \),
+reinforcing topological invariance. Full dynamics derive from the effective Lagrangian of the
+gauged Hopf lattice (*Lagrangian_Derivation.pdf* in **The Papers** tab).
 """
 
 HOME_WG_MD = r"""
@@ -106,33 +106,13 @@ HOME_WG_MD = r"""
 
 The \( W_g \) constant emerges as a robust invariant from the gauged Hopf lattice dynamics.
 
-**Value:**  
+**Approximate Value:**  
 \( W_g \approx 350 / \pi \approx 111.408 \)
 
-This constant acts as a critical threshold in the accumulation-and-release mechanism (the "clock").
-When accumulated stress/twist reaches \( W_g \), the system triggers a punctuated burst event
-followed by a reset.
+This value acts as the critical threshold in the clock-like accumulation mechanism. When accumulated
+stress or twist reaches \( W_g \), the system undergoes a punctuated burst and reset.
 
-The subscript \( g \) refers to the **gauged** nature of the lattice.
-
-#### Why exactly \( 350 / \pi \)?
-
-| Factor | Origin |
-|--------|--------|
-| \( \pi \) | Hopf fibration \( S^1 \) fibers — phases, linking numbers, and angular integrations |
-| \( 350 \) | Lattice discretization, total flux quanta, embedding parameters, ~12 active elements |
-| Division by \( \pi \) | Normalizes rotational/circular contributions from flywheels and braiding |
-
-This value **emerges** across simulation runs — it is **not** an input parameter.
-
-#### Universal mechanism
-
-Because the model is proposed as a fundamental TOE substrate, the same
-**pressure-build → burst → reset** pattern applies from quantum-scale flux flywheels to
-macroscopic domains (tectonic stress, neuronal integrate-and-fire, volcanic instabilities,
-biological punctuated rhythms, cosmic events).
-
-The **Observations** tab visualizes macro/micro examples of this pattern across nature.
+The subscript \( g \) stands for **gauged**, reflecting the gauged nature of the Hopf lattice.
 """
 
 HOME_EXPLORE_MD = r"""
