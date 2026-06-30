@@ -99,13 +99,7 @@ from app.pages.observations import (
     OBSERVATIONS_INTRO_MD,
     THREEBODY_GALLERY,
 )
-from app.pages.papers import (
-    PAPERS_INTRO_MD,
-    default_paper_key,
-    load_paper,
-    paper_choices,
-    papers_index_html,
-)
+from app.pages.papers import PAPER_ENTRIES, PAPERS_INTRO_MD, paper_missing_md, resolve_paper_path
 from app.pages.showcase import SHOWCASE_HTML
 from app.pages.theory import DERIVATION_HOPF_MD, THEORY_MD
 
@@ -255,25 +249,18 @@ def build_app() -> gr.Blocks:
                         gr.Markdown(HOME_WG_MD)
                     with gr.Tab("Papers"):
                         gr.Markdown(PAPERS_INTRO_MD)
-                        gr.HTML(papers_index_html())
-                        with gr.Row():
-                            paper_dropdown = gr.Dropdown(
-                                choices=paper_choices(),
-                                value=default_paper_key(),
-                                label="Select paper",
-                                filterable=True,
-                                scale=2,
-                            )
-                            paper_download = gr.File(
-                                label="Download PDF",
-                                interactive=False,
-                                scale=1,
-                            )
-                        paper_description = gr.Markdown()
-                        paper_viewer = gr.HTML(label="PDF viewer")
-                        paper_outputs = [paper_download, paper_viewer, paper_description]
-                        paper_dropdown.change(load_paper, inputs=paper_dropdown, outputs=paper_outputs)
-                        demo.load(load_paper, inputs=paper_dropdown, outputs=paper_outputs)
+                        for paper in PAPER_ENTRIES:
+                            with gr.Accordion(paper.title, open=False):
+                                gr.Markdown(paper.summary_md.strip())
+                                paper_path = resolve_paper_path(paper)
+                                if paper_path is not None:
+                                    gr.File(
+                                        value=str(paper_path),
+                                        label=f"Download — {paper.filename}",
+                                        interactive=False,
+                                    )
+                                else:
+                                    gr.Markdown(paper_missing_md(paper))
                     with gr.Tab("Explore"):
                         gr.Markdown(HOME_EXPLORE_MD)
 
