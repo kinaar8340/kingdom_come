@@ -53,117 +53,121 @@ Phase holonomy between linked fibers damps as \( \Delta\theta(t) = \Delta\theta(
 """
 
 HOME_CLOCK_MD = r"""
-## The Clock Equation
+### The Clock
 
 The underlying process is an **accumulation-and-release cycle** — a relaxation oscillator
-(integrate-and-fire in topological terms):
+(integrate-and-fire in topological terms).
 
-Let **S(t)** represent accumulated stress, twist, pressure, or gauged weight in the flux lattice.
+Let \( S(t) \) represent accumulated stress, twist, pressure, or gauged weight in the flux lattice.
 
-### Build-up (the tick)
+#### Build-up (the tick)
 
-\[
+$$
 \frac{dS}{dt} = r
-\]
+$$
 
-(or discrete recurrence \(S_{n+1} = S_n + \Delta\)), where **r** is a roughly constant drive rate
+(or discrete recurrence \( S_{n+1} = S_n + \Delta \)), where \( r \) is a roughly constant drive rate
 set by lattice dynamics, `twist_rate`, braiding, or external gauging fields.
 
-### Trigger / alarm
+#### Trigger / alarm
 
-When **S(t)** reaches the critical threshold:
+When \( S(t) \) reaches the critical threshold:
 
-\[
+$$
 S_{\text{crit}} = W_g = \frac{350}{\pi} \approx 111.4085
-\]
+$$
 
-a topological instability occurs. Simulations reproducibly lock **W_g** at **111.4080 ± 0.0000**.
+a topological instability occurs. Simulations reproducibly lock \( W_g \) at \( 111.4080 \pm 0.0000 \).
 
-### Burst + reset (the chime)
+#### Burst + reset (the chime)
 
 A punctuated release follows — energy/momentum reconfiguration, braiding phase shift, or burst
-(modeled in *GW_Burst_Threshold* and related papers). Then **S** resets (subtract \(W_g\) or
+(modeled in *GW_Burst_Threshold* and related papers). Then \( S \) resets (subtract \( W_g \) or
 drop to baseline), and the cycle repeats.
 
 This produces a **sawtooth waveform**: slow linear rise → sudden drop → repeat.
 
-### Why it acts like a clock
+#### Why it acts like a clock
 
 | Phase | Clock analog |
 |-------|--------------|
 | Constant-rate accumulation | Steady tick / spring-winding |
-| Fixed threshold \(W_g\) | Alarm setting |
+| Fixed threshold \( W_g \) | Alarm setting |
 | Sudden release + reset | Chime and mechanism reset |
 | Repetition | Quasi-periodic rhythm — period set by rate and threshold |
 
-The braiding phase also locks tightly (~0.814) alongside \(W_g\), reinforcing topological invariance.
+The braiding phase also locks tightly (\( \approx 0.814 \)) alongside \( W_g \), reinforcing topological invariance.
 Full dynamics derive from the effective Lagrangian of the gauged Hopf lattice
-(*Lagrangian_Derivation.pdf* in **The Papers** sub-tab).
+(*Lagrangian_Derivation.pdf* in **The Papers** tab).
 """
 
 HOME_WG_MD = r"""
-## The Key Emergent Constant: \(W_g \approx 350/\pi\)
+### \( W_g \) Constant
 
-**\(W_g\)** is the universal alarm threshold — the critical accumulated gauged weight, twist,
-stress, or pressure at which the system becomes unstable.
+The \( W_g \) constant emerges as a robust invariant from the gauged Hopf lattice dynamics.
 
-\[
-\frac{350}{\pi} \approx 111.40846 \quad\text{(simulation rounds to 111.4080)}
-\]
+**Value:**  
+\( W_g \approx 350 / \pi \approx 111.408 \)
 
-This value **emerges** as a robust invariant across simulation runs — it is **not** an input parameter.
+This constant acts as a critical threshold in the accumulation-and-release mechanism (the "clock").
+When accumulated stress/twist reaches \( W_g \), the system triggers a punctuated burst event
+followed by a reset.
 
-### Why exactly 350/π?
+The subscript \( g \) refers to the **gauged** nature of the lattice.
+
+#### Why exactly \( 350 / \pi \)?
 
 | Factor | Origin |
 |--------|--------|
-| **π** | Hopf fibration S¹ fibers — phases, linking numbers, and angular integrations |
-| **350** | Lattice discretization, total flux quanta, embedding parameters, ~12 active elements |
-| **Division by π** | Normalizes rotational/circular contributions from flywheels and braiding |
+| \( \pi \) | Hopf fibration \( S^1 \) fibers — phases, linking numbers, and angular integrations |
+| \( 350 \) | Lattice discretization, total flux quanta, embedding parameters, ~12 active elements |
+| Division by \( \pi \) | Normalizes rotational/circular contributions from flywheels and braiding |
+
+This value **emerges** across simulation runs — it is **not** an input parameter.
+
+#### Universal mechanism
 
 Because the model is proposed as a fundamental TOE substrate, the same
-**pressure-build → burst → reset** mechanism applies universally:
-
-- Quantum-scale flux configurations (particles as stable flywheels)
-- Macroscopic domains (tectonic stress, neuronal integrate-and-fire, volcanic instabilities,
-  biological punctuated rhythms, cosmic events)
+**pressure-build → burst → reset** pattern applies from quantum-scale flux flywheels to
+macroscopic domains (tectonic stress, neuronal integrate-and-fire, volcanic instabilities,
+biological punctuated rhythms, cosmic events).
 
 The **Observations** tab visualizes macro/micro examples of this pattern across nature.
 """
 
-HOME_EXPLORE_MD = """
-## Supporting Resources
+HOME_EXPLORE_MD = r"""
+### Explore
 
-### GitHub (pinned repos)
+#### GitHub (pinned repos)
 
 | Repo | Focus |
 |------|-------|
-| [toe](https://github.com/kinaar8340/toe) | RubikConeConduit — W_g lock, stability islands, braiding phase |
+| [toe](https://github.com/kinaar8340/toe) | RubikConeConduit — \( W_g \) lock, stability islands, braiding phase |
 | [kingdom_come](https://github.com/kinaar8340/kingdom_come) | This portal — visualizers and investigations |
 | [qvpic](https://github.com/kinaar8340/qvpic) | Quaternion vortex persistent identity |
 | [pic](https://github.com/kinaar8340/pic) | Persistent identity conduit (RubikCone-first) |
 | [vqc_proto](https://github.com/kinaar8340/vqc_proto) | Orbital Braille VQC prototype |
 | [vqc_sims_public](https://github.com/kinaar8340/vqc_sims_public) | Full VQC OAM simulation pipeline |
 | [hfb](https://github.com/kinaar8340/hfb) | Hopf Flux Bubble — analog gravity & hopfions |
-| [6-string-optimizer](https://github.com/kinaar8340/6-string-optimizer) | S³ burst optimizer |
-| [mystery](https://github.com/kinaar8340/mystery) | φ, e, π emergent signature probes |
+| [6-string-optimizer](https://github.com/kinaar8340/6-string-optimizer) | \( S^3 \) burst optimizer |
+| [mystery](https://github.com/kinaar8340/mystery) | \( \phi \), \( e \), \( \pi \) emergent signature probes |
 
 Papers in the repo (*GW_Burst_Threshold*, *GW_Echo*, *Lagrangian_Derivation*,
 *Observer_Synchronization*, *Aaron's_TOE_Complete*) reproduce the locked invariants and
 document burst, echo, and observer effects.
 
-### Where to go next in Kingdom Come
+#### Where to go next in Kingdom Come
 
 | Tab | What you'll find |
 |-----|------------------|
-| **Hopf Visualizer** | Linked S³ → S² fibers — geometric intuition |
+| **Hopf Visualizer** | Linked \( S^3 \to S^2 \) fibers — geometric intuition |
 | **Lattice Simulator** | Two-gyro gauged quaternion lattice (stable vs chaotic) |
 | **Flux Flywheel** | Periodic table as flux flywheel stability proxy |
 | **The Papers** (sub-tab) | Accordion summaries + inline page previews |
-| **Observations** | W_g = 350/π signatures in nature and markets |
+| **Observations** | \( W_g = 350/\pi \) signatures in nature and markets |
 | **Showcase** | All seven HF Spaces in the ecosystem |
 | **Help** | Site navigation, controls, and acronym glossary |
 
-The seven projects collectively explore accumulated twist evolving until the **350/π alarm**
+The seven projects collectively explore accumulated twist evolving until the \( 350/\pi \) alarm
 triggers the reset — a self-consistent, testable topological framework.
 """

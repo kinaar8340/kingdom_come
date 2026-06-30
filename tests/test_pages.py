@@ -18,9 +18,10 @@ def test_home_covers_clock_mechanism():
     assert "Vision" in HOME_THE_MODEL_MD
     assert "Mathematical Backbone" in HOME_THE_MODEL_MD
     assert "Observer Synchronization" in HOME_THE_MODEL_MD
-    assert "dS" in HOME_CLOCK_MD or "S(t)" in HOME_CLOCK_MD
+    assert "frac{dS}{dt}" in HOME_CLOCK_MD or "S(t)" in HOME_CLOCK_MD
     assert "111.408" in HOME_CLOCK_MD or "350" in HOME_CLOCK_MD
-    assert "350" in HOME_WG_MD
+    assert "W_g" in HOME_WG_MD
+    assert r"\( W_g \)" in HOME_WG_MD or "W_g" in HOME_WG_MD
     assert "Observations" in HOME_EXPLORE_MD
 
 
