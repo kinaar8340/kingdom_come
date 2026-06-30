@@ -35,7 +35,7 @@ from app.components.periodic_picker import (
 )
 from app.components.markdown_math import kc_markdown
 from app.components.ui_math import UI_MATH_LABEL_JS, WG_TAB_LABEL
-from app.components.theme import HERO_HTML, KINGDOM_CSS, footer_html
+from app.components.theme import HERO_HTML, build_kingdom_css, footer_html
 from app.pages.higgs_observations import (
     HIGGS_GALLERY,
     INVESTIGATION_4_ACCORDION_TITLE,
@@ -745,7 +745,7 @@ def main() -> None:
     demo.launch(
         server_name="0.0.0.0",
         server_port=port,
-        css=KINGDOM_CSS + NEON_CSS + PERIODIC_CSS,
+        css=build_kingdom_css() + NEON_CSS + PERIODIC_CSS,
         theme=_KINGDOM_THEME,
         allowed_paths=[
             str(PAPERS_DIR),

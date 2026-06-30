@@ -1,6 +1,21 @@
 """Kingdom Come Gradio theme and shared styles."""
 
-KINGDOM_CSS = """
+from __future__ import annotations
+
+import os
+
+KC_BG_IMAGE_FILE = "3d_map.png"
+
+
+def _background_image_url() -> str:
+    """Resolve 3d_map.png for local runs and Hugging Face Spaces."""
+    space_id = os.environ.get("SPACE_ID")
+    if space_id:
+        return f"https://huggingface.co/spaces/{space_id}/resolve/main/{KC_BG_IMAGE_FILE}"
+    return KC_BG_IMAGE_FILE
+
+
+_KINGDOM_CSS_SHELL = """
 :root {
   --kc-bg: #0a1628;
   --kc-surface: #12243d;
@@ -9,15 +24,19 @@ KINGDOM_CSS = """
   --kc-gold: #c9a227;
   --kc-text: #d4e4f7;
 }
-.gradio-container {
-  background: linear-gradient(165deg, #0a1628 0%, #0d1f35 45%, #0a1628 100%) !important;
-  color: var(--kc-text) !important;
+.gradio-container .block,
+.gradio-container .panel,
+.gradio-container .form {
+  background: rgba(18, 36, 61, 0.9) !important;
+  backdrop-filter: blur(3px);
 }
 .kc-hero {
   text-align: center;
   padding: 2rem 1rem 1.5rem;
   border-bottom: 1px solid rgba(26, 143, 227, 0.25);
   margin-bottom: 1rem;
+  background: rgba(10, 22, 40, 0.55);
+  border-radius: 0 0 12px 12px;
 }
 .kc-hero h1 {
   font-size: 2.2rem;
@@ -276,6 +295,28 @@ embed.kc-paper-frame {
   margin-top: 2rem;
 }
 """
+
+
+def build_kingdom_css() -> str:
+    bg_url = _background_image_url()
+    shell = f"""
+.gradio-container {{
+  background-color: #0a1628 !important;
+  background-image:
+    linear-gradient(
+      165deg,
+      rgba(10, 22, 40, 0.84) 0%,
+      rgba(13, 31, 53, 0.78) 45%,
+      rgba(10, 22, 40, 0.86) 100%
+    ),
+    url('{bg_url}') center center / cover no-repeat fixed !important;
+  color: var(--kc-text) !important;
+}}
+"""
+    return shell + _KINGDOM_CSS_SHELL
+
+
+KINGDOM_CSS = build_kingdom_css()
 
 HERO_HTML = """
 <div class="kc-hero">
