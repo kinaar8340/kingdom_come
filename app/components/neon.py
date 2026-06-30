@@ -109,6 +109,9 @@ NEON_CSS = """
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.35rem;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 .kc-observables-grid .kc-metric-card strong {
   color: #00c9b7;
@@ -310,6 +313,46 @@ NEON_CSS = """
   display: flex;
   flex-direction: column;
   gap: 0.45rem;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+.kc-obs-fidelity-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  width: 100%;
+  align-items: stretch;
+}
+.kc-obs-fidelity-header .kc-obs-fidelity-headline {
+  flex: 1 1 260px;
+  min-width: 0;
+}
+.kc-obs-fidelity-core-card {
+  flex: 1 1 200px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.15rem;
+  padding: 0.55rem 0.65rem;
+  background: rgba(26, 143, 227, 0.1);
+  border: 1px solid rgba(26, 143, 227, 0.28);
+  border-radius: 8px;
+}
+.kc-obs-fidelity-core-card strong {
+  font-size: 1.35rem;
+  line-height: 1;
+  color: #4cc9f0;
+}
+.kc-obs-fidelity-core-card small {
+  color: #6a9bb8;
+  font-size: 0.78rem;
+}
+.kc-obs-fidelity-core-card .kc-obs-fidelity-core-note {
+  font-size: 0.62rem;
+  color: #8ecae6;
+  line-height: 1.35;
 }
 .kc-obs-fidelity-core {
   font-size: 0.74rem;
@@ -318,6 +361,8 @@ NEON_CSS = """
   background: rgba(26, 143, 227, 0.08);
   border-radius: 6px;
   border: 1px solid rgba(26, 143, 227, 0.2);
+  width: 100%;
+  box-sizing: border-box;
 }
 .kc-obs-fidelity-core strong {
   color: #4cc9f0;
@@ -331,6 +376,9 @@ NEON_CSS = """
   background: rgba(18, 36, 61, 0.45);
   border: 1px solid rgba(26, 143, 227, 0.18);
   border-radius: 6px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 .kc-obs-fidelity-cat-breakdown {
   color: #6a9bb8;
@@ -357,6 +405,8 @@ NEON_CSS = """
   font-size: 0.62rem;
   color: #8ecae6;
   line-height: 1.5;
+  width: 100%;
+  box-sizing: border-box;
 }
 .kc-obs-fidelity-proxy-pills {
   display: flex;
@@ -521,6 +571,11 @@ NEON_CSS = """
   50% { box-shadow: 0 0 12px rgba(0,201,183,0.85), 0 0 22px rgba(26,143,227,0.5); }
 }
 """
+
+
+def install_neon_plugin() -> str:
+    """Return Kingdom Come neon plugin CSS for Gradio ``css=`` injection."""
+    return NEON_CSS
 
 
 def _art_inset_html(art_path: str | None) -> str:
@@ -774,28 +829,37 @@ def flux_observables_fidelity_html(extended: dict, *, interpretation: dict | Non
     if breakdown:
         breakdown_html = f'<span class="kc-obs-fidelity-breakdown">{breakdown}</span>'
 
-    core_html = ""
+    core_card_html = ""
+    core_gap_note = ""
     if core is not None:
-        gap_note = ""
         if float(score) < core - 1.0:
-            gap_note = (
-                " — core exceeds overall; gaps are mainly in weaker proxy translations"
+            core_gap_note = (
+                "Core exceeds overall — gaps are mainly in weaker proxy translations, "
+                "not the underlying stability ranking."
             )
-        core_html = (
-            f'<div class="kc-obs-fidelity-core">'
-            f'<strong>Core Model Fidelity: {core}</strong> / 10 — '
-            f"stability → IE & EN period-relative trends "
-            f"(high-trust proxies only){gap_note}</div>"
+        core_card_html = (
+            f'<div class="kc-metric-card kc-obs-fidelity-core-card">'
+            f'<span class="kc-obs-tip" title="IE & EN period-relative trends (high-trust proxies)">'
+            f"Core Model Fidelity</span>"
+            f"<strong>{core}</strong><small>/ 10</small>"
+            f'<span class="kc-obs-fidelity-core-note">{core_gap_note or "Stability → IE & EN (high-trust proxies)"}</span>'
+            f"</div>"
         )
 
+    header_html = (
+        f'<div class="kc-obs-fidelity-header">'
+        f'<div class="kc-metric-card kc-obs-fidelity kc-obs-fidelity-headline {fidelity_class}">'
+        f'<span class="kc-obs-tip" title="{tip}">Overall Comparison Fidelity</span>'
+        f"<strong>{score}</strong><small>/ 10</small>{tier_html}{coverage_html}{breakdown_html}"
+        f'<span class="kc-obs-caption">{note}</span>'
+        f"</div>"
+        f"{core_card_html}"
+        f"</div>"
+    )
+
     return f"""
-  <div class="kc-obs-fidelity-panel">
-    <div class="kc-metric-card kc-obs-fidelity kc-obs-fidelity-headline {fidelity_class}">
-      <span class="kc-obs-tip" title="{tip}">Overall Comparison Fidelity</span>
-      <strong>{score}</strong><small>/ 10</small>{tier_html}{coverage_html}{breakdown_html}
-      <span class="kc-obs-caption">{note}</span>
-    </div>
-    {core_html}
+  <div class="kc-obs-fidelity-panel kc-neon-plugin">
+    {header_html}
     {_category_score_html(category_scores, category_details)}
     {_proxy_quality_html(proxy_quality)}
   </div>"""
@@ -1028,7 +1092,7 @@ def flux_observables_cards_html(extended: dict) -> str:
   </details>"""
 
     return f"""
-<div class="{grid_class}">{fidelity_card}{interpretation_card}{noble_banner}
+<div class="{grid_class} kc-neon-plugin">{fidelity_card}{interpretation_card}{noble_banner}
   <div class="kc-metric-card">
     <span class="kc-obs-tip" title="Flux flywheel stability score (magic-island calibrated)">Model score</span>
     <strong>{extended["stability_score"]}</strong>

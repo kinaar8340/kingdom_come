@@ -3,11 +3,19 @@
 import plotly.graph_objects as go
 
 from app.components.neon import (
+    NEON_CSS,
     element_card_html,
     flux_metrics_cards_html,
     flux_observables_cards_html,
+    install_neon_plugin,
     toe_strip_html,
 )
+
+
+def test_install_neon_plugin_returns_css():
+    assert install_neon_plugin() == NEON_CSS
+    assert ".kc-neon-noble" in install_neon_plugin()
+    assert ".kc-obs-fidelity-panel" in install_neon_plugin()
 from app.components.periodic_picker import (
     element_picker_choices,
     known_periodic_table_html,
@@ -119,6 +127,8 @@ def test_flux_observables_cards_html():
     assert "Direct measurement" in html
     assert "Overall Comparison Fidelity" in html
     assert "Core Model Fidelity" in html
+    assert "kc-obs-fidelity-header" in html
+    assert "kc-neon-plugin" in html
     assert "Proxy Quality" in html
     assert "Electron Affinity" in html
     assert "Δz" in html or "stab z" in html

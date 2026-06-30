@@ -18,7 +18,7 @@ from kingdom.viz.hopf_plotly import build_hopf_fibration_figure_auto, default_vi
 
 from app.build_info import get_build_label
 from app.components.neon import (
-    NEON_CSS,
+    install_neon_plugin,
     element_card_html,
     flux_metrics_cards_html,
     flux_observables_cards_html,
@@ -919,7 +919,7 @@ def main() -> None:
     demo.launch(
         server_name="0.0.0.0",
         server_port=port,
-        css=build_kingdom_css() + NEON_CSS + PERIODIC_CSS + FLUX_PERIODIC_CSS,
+        css=build_kingdom_css() + install_neon_plugin() + PERIODIC_CSS + FLUX_PERIODIC_CSS,
         theme=_KINGDOM_THEME,
         allowed_paths=[
             str(PAPERS_DIR),
