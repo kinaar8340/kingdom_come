@@ -7,8 +7,6 @@ mark distinct fibers with Hopf linking number 1.
 """
 
 HOPF_PANEL_GUIDE_MD = """
-**What you're looking at (panels ①–④)**
-
 | Panel | Meaning |
 |-------|---------|
 | **① $\\mathbb{R}^3$ xy** | Linked Villarceau circles — stereographic view of Hopf fibers |
