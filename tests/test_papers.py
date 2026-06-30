@@ -38,7 +38,9 @@ def test_paper_viewer_html_and_file_path():
     assert path.endswith("Aarons_TOE_Complete.pdf")
     assert "kc-paper-frame" in html
     assert "/gradio_api/file=" in html
-    assert "data:application/pdf;base64," not in html
+    assert "data:application/pdf;base64," in html
+    assert "kc-paper-open-btn" in html
+    assert "kc-paper-brave-hint" in html
     assert "Theory of Everything" in description
 
 

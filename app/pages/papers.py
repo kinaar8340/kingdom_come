@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import base64
 from dataclasses import dataclass
+from functools import lru_cache
 from pathlib import Path
 from urllib.parse import quote
 
@@ -135,8 +137,18 @@ def discover_paper_pdfs() -> list[Path]:
 
 
 def paper_file_url(path: Path) -> str:
-    """Gradio static file URL for an allowed-path PDF."""
+    """Gradio static file URL for direct download / new tab."""
     return f"/gradio_api/file={quote(str(path.resolve()), safe='/')}"
+
+
+@lru_cache(maxsize=16)
+def _pdf_data_uri(resolved_path: str) -> str:
+    """Base64 data URI for inline embed (Firefox-friendly srcdoc iframe)."""
+    path = Path(resolved_path)
+    if not path.is_file():
+        return ""
+    encoded = base64.b64encode(path.read_bytes()).decode("ascii")
+    return f"data:application/pdf;base64,{encoded}"
 
 
 def _missing_paper_html(entry: PaperEntry) -> str:
@@ -157,24 +169,44 @@ def _missing_paper_html(entry: PaperEntry) -> str:
 
 
 def paper_viewer_html(entry: PaperEntry) -> str:
-    """Inline PDF viewer served via Gradio allowed_paths (HF-safe)."""
+    """Inline PDF viewer with Firefox embed + Brave new-tab fallback."""
     path = resolve_paper_path(entry)
     if path is None:
         return _missing_paper_html(entry)
 
     url = paper_file_url(path)
+    data_uri = _pdf_data_uri(str(path))
+
+    # srcdoc + base64: reliable inline view in Firefox and most Chromium builds.
+    embed_html = (
+        f"<embed src='{data_uri}' type='application/pdf' title='{entry.title}' />"
+        if data_uri
+        else f"<p style='color:#ddd;padding:2rem;text-align:center;'>"
+        f"Inline embed unavailable — use <strong>Open PDF in new tab</strong>.</p>"
+    )
+    srcdoc = (
+        "<!DOCTYPE html><html><head><meta charset='utf-8'>"
+        "<style>html,body{margin:0;height:100%;overflow:hidden;background:#0d1f35;}"
+        "embed{width:100%;height:100%;border:0;}</style></head><body>"
+        f"{embed_html}"
+        "</body></html>"
+    )
+    safe_srcdoc = srcdoc.replace("&", "&amp;").replace('"', "&quot;")
+
     return f"""
 <div class="kc-paper-viewer">
   <div class="kc-paper-toolbar">
     <strong>{entry.title}</strong>
-    <a href="{url}" target="_blank" rel="noopener">Open PDF ↗</a>
+    <a class="kc-paper-open-btn" href="{url}" target="_blank" rel="noopener">
+      Open PDF in new tab →
+    </a>
   </div>
-  <iframe class="kc-paper-frame" src="{url}" title="{entry.title}"></iframe>
-  <p class="kc-paper-fallback">
-    PDF not rendering inline?
-    <a href="{url}" target="_blank" rel="noopener">Open in new tab</a>
-    or use <strong>Download PDF</strong> below.
-  </p>
+  <iframe class="kc-paper-frame" srcdoc="{safe_srcdoc}" title="{entry.title}"></iframe>
+  <div class="kc-paper-brave-hint">
+    <strong>PDF not loading in Brave or other privacy browsers?</strong><br>
+    Click <strong>Open PDF in new tab</strong> above — that bypasses strict iframe
+    shields and usually works perfectly. You can also use <strong>Download PDF</strong> below.
+  </div>
 </div>
 """
 

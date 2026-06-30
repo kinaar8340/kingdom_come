@@ -203,6 +203,27 @@ KINGDOM_CSS = """
 .kc-paper-toolbar a:hover {
   color: var(--kc-teal);
 }
+.kc-paper-open-btn {
+  background: #3b82f6 !important;
+  color: #ffffff !important;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-weight: 500;
+}
+.kc-paper-open-btn:hover {
+  background: #2563eb !important;
+  color: #ffffff !important;
+}
+.kc-paper-brave-hint {
+  margin-top: 0.5rem;
+  padding: 10px 14px;
+  background: #1f2a44;
+  border: 1px solid rgba(26, 143, 227, 0.2);
+  border-radius: 6px;
+  font-size: 0.88rem;
+  color: #b8c9dc;
+  line-height: 1.45;
+}
 .kc-paper-frame,
 iframe.kc-paper-frame,
 embed.kc-paper-frame {
