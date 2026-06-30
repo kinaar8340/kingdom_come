@@ -105,8 +105,14 @@ def test_compare_atomic_radius_iron():
 
 def test_estimate_model_covalent_radius_pm_bounds():
     r = estimate_model_covalent_radius_pm(8.0, 2)
-    assert 38 <= r <= 225
+    assert 40 <= r <= 220
     assert estimate_model_covalent_radius_pm(5.0, 29) > 0
+
+
+def test_estimate_model_covalent_radius_pm_iron_closer_to_experiment():
+    model = estimate_model_covalent_radius_pm(5.5, 26)
+    assert 110 <= model <= 140
+    assert abs(model - 132) < 20
 
 
 def test_covalent_radius_fallback():

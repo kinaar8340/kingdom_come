@@ -4,7 +4,10 @@ from __future__ import annotations
 
 import plotly.graph_objects as go
 
-from kingdom.viz.observations_trends import load_observations_trend_figures
+from kingdom.viz.observations_trends import (
+    DEFAULT_TREND_PERIODS,
+    load_observations_trend_figures,
+)
 
 FLUX_TRENDS_MD = """
 ### Periodic Trends & Model Validation
@@ -18,10 +21,18 @@ Points are colored by **period**; fidelity uses the composite score (μ 48% · I
 | **Stability vs IE** | Global correlation of model stability with real ionization energy |
 | **SOC μ vs Experimental** | Visual check of spin-orbit magnetic moment improvement |
 
-Trends load once when you open this section (Z = 1–118).
+**Click any point** to jump that element in the **Flux Flywheel** tab. Use the period filter to focus on specific rows.
 """
 
 
-def render_flux_trend_plots() -> tuple[go.Figure, go.Figure, go.Figure]:
+def _normalize_periods(periods: list[str] | list[int] | None) -> tuple[int, ...]:
+    if not periods:
+        return DEFAULT_TREND_PERIODS
+    return tuple(sorted({int(p) for p in periods}))
+
+
+def render_flux_trend_plots(
+    periods: list[str] | list[int] | None = None,
+) -> tuple[go.Figure, go.Figure, go.Figure]:
     """Build all three validation trend figures for Gradio Plot outputs."""
-    return load_observations_trend_figures(118)
+    return load_observations_trend_figures(118, _normalize_periods(periods))

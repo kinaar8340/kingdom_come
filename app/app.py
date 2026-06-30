@@ -102,6 +102,7 @@ from app.pages.home import (
 )
 from app.pages.hopf_guide import HF_VIEW_MODE_MD, HOPF_INTRO_MD, HOPF_PANEL_GUIDE_MD
 from app.pages.flux_trends_observations import FLUX_TRENDS_MD, render_flux_trend_plots
+from kingdom.viz.observations_trends import z_from_plot_select
 from app.pages.observations import (
     CATATUMBO_GALLERY,
     INVESTIGATION_1_MD,
@@ -241,6 +242,14 @@ def on_flux_dropdown(label: str):
 def on_periodic_pick(evt: gr.EventData):
     """Handle periodic-table cell click from gr.HTML js_on_load trigger."""
     return select_flux_z(int(evt.z))
+
+
+def on_trend_plot_select(evt: gr.SelectData):
+    """Route Observations trend plot click → Flux Flywheel for that Z."""
+    z = z_from_plot_select(evt)
+    if z is None:
+        return tuple(gr.update() for _ in range(11))
+    return select_flux_z(z)
 
 
 _KINGDOM_THEME = gr.themes.Base(
@@ -527,6 +536,12 @@ def build_app() -> gr.Blocks:
                     open=True,
                 ):
                     kc_markdown(FLUX_TRENDS_MD)
+                    period_trend_filter = gr.Dropdown(
+                        choices=[str(p) for p in range(1, 8)],
+                        value=[str(p) for p in range(1, 8)],
+                        multiselect=True,
+                        label="Filter by period(s)",
+                    )
                     with gr.Row():
                         fidelity_trend_plot = gr.Plot(label="Fidelity score trend")
                         stability_ie_plot = gr.Plot(label="Stability vs ionization energy")
@@ -538,8 +553,23 @@ def build_app() -> gr.Blocks:
                     ]
                     gr.Button("Refresh trend analysis", size="sm").click(
                         render_flux_trend_plots,
+                        inputs=[period_trend_filter],
                         outputs=flux_trends_outputs,
                     )
+                    period_trend_filter.change(
+                        render_flux_trend_plots,
+                        inputs=[period_trend_filter],
+                        outputs=flux_trends_outputs,
+                    )
+                    for trend_plot in (
+                        fidelity_trend_plot,
+                        stability_ie_plot,
+                        mu_validation_plot,
+                    ):
+                        trend_plot.select(
+                            on_trend_plot_select,
+                            outputs=flux_jump_outputs,
+                        )
                 with gr.Accordion(
                     "Investigation 1: Catatumbo Lightning Hotspot — Earth",
                     open=False,
@@ -756,6 +786,7 @@ def build_app() -> gr.Blocks:
                 kc_markdown(OBSERVATIONS_FOOTER_MD)
                 observations_tab.select(
                     render_flux_trend_plots,
+                    inputs=[period_trend_filter],
                     outputs=flux_trends_outputs,
                     trigger_mode="once",
                     show_progress="minimal",

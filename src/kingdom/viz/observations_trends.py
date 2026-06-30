@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from functools import lru_cache
+from typing import Any
 
 import numpy as np
 import pandas as pd
@@ -25,6 +26,8 @@ _PERIOD_COLORS = (
     "#48bfe3",
     "#ef553b",
 )
+
+DEFAULT_TREND_PERIODS: tuple[int, ...] = tuple(range(1, 8))
 
 
 @lru_cache(maxsize=4)
@@ -57,6 +60,7 @@ def observations_trends_dataframe(z_max: int = 118) -> pd.DataFrame:
             "magnetic_moment_score": details.get("magnetic_moment"),
             "ie_score": details.get("ionization_energy"),
             "ea_score": details.get("electron_affinity"),
+            "radius_score": details.get("atomic_radius"),
             "model_stability": extended["stability_score"],
             "experimental_ie": extended["real_ionization_energy_eV"],
             "soc_mu_BM": extended.get("magnetic_moment_soc_BM"),
@@ -69,10 +73,55 @@ def observations_trends_dataframe(z_max: int = 118) -> pd.DataFrame:
     return pd.DataFrame(records)
 
 
+def filter_trends_by_period(
+    df: pd.DataFrame,
+    periods: list[int] | tuple[int, ...] | None,
+) -> pd.DataFrame:
+    """Subset trend dataframe to selected periods (all if empty/None)."""
+    if not periods:
+        return df
+    period_set = {int(p) for p in periods}
+    return df[df["period"].isin(period_set)].copy()
+
+
+def z_from_plot_select(evt: Any) -> int | None:
+    """
+    Extract atomic number Z from a Gradio Plot select event.
+
+    Expects Z as the first customdata field on scatter traces.
+    """
+    if evt is None:
+        return None
+
+    value = getattr(evt, "value", None)
+    if isinstance(value, (list, tuple)) and value:
+        try:
+            z = int(float(value[0]))
+            if 1 <= z <= 180:
+                return z
+        except (TypeError, ValueError):
+            pass
+
+    index = getattr(evt, "index", None)
+    if isinstance(index, (list, tuple)) and index:
+        try:
+            z = int(float(index[0]))
+            if 1 <= z <= 180:
+                return z
+        except (TypeError, ValueError):
+            pass
+
+    return None
+
+
 def _apply_dark_theme(fig: go.Figure, *, height: int = 440) -> go.Figure:
     fig.update_layout(**kingdom_dark_theme(), height=height)
     fig.update_xaxes(gridcolor="#1e3a5f", zerolinecolor="#1e3a5f")
     fig.update_yaxes(gridcolor="#1e3a5f", zerolinecolor="#1e3a5f")
+    fig.update_layout(
+        clickmode="event+select",
+        dragmode="zoom",
+    )
     return fig
 
 
@@ -82,8 +131,8 @@ def create_fidelity_trend_plot(data: pd.DataFrame | None = None) -> go.Figure:
     plot_df = df.dropna(subset=["fidelity_score"]).copy()
     fig = go.Figure()
 
-    for i, period in enumerate(sorted(plot_df["period"].unique())):
-        sub = plot_df[plot_df["period"] == period]
+    for period in sorted(plot_df["period"].unique()):
+        sub = plot_df[plot_df["period"] == period].sort_values("Z")
         color = _PERIOD_COLORS[int(period - 1) % len(_PERIOD_COLORS)]
         fig.add_trace(
             go.Scatter(
@@ -93,14 +142,20 @@ def create_fidelity_trend_plot(data: pd.DataFrame | None = None) -> go.Figure:
                 name=f"Period {int(period)}",
                 marker=dict(size=9, color=color, line=dict(width=0.5, color="#0a1628")),
                 customdata=np.stack(
-                    [sub["element"], sub["magnetic_moment_score"], sub["ie_score"]],
+                    [
+                        sub["Z"].astype(int),
+                        sub["element"],
+                        sub["magnetic_moment_score"],
+                        sub["ie_score"],
+                    ],
                     axis=-1,
                 ),
                 hovertemplate=(
-                    "%{customdata[0]} (Z=%{x})<br>"
+                    "%{customdata[1]} (Z=%{customdata[0]})<br>"
                     "Fidelity: %{y:.1f}/10<br>"
-                    "μ score: %{customdata[1]}<br>"
-                    "IE score: %{customdata[2]}<extra></extra>"
+                    "μ score: %{customdata[2]}<br>"
+                    "IE score: %{customdata[3]}<br>"
+                    "<i>Click to open in Flux Flywheel</i><extra></extra>"
                 ),
             )
         )
@@ -142,8 +197,8 @@ def create_stability_vs_ie_plot(data: pd.DataFrame | None = None) -> go.Figure:
     df = observations_trends_dataframe() if data is None else data
     fig = go.Figure()
 
-    for i, period in enumerate(sorted(df["period"].unique())):
-        sub = df[df["period"] == period]
+    for period in sorted(df["period"].unique()):
+        sub = df[df["period"] == period].sort_values("Z")
         color = _PERIOD_COLORS[int(period - 1) % len(_PERIOD_COLORS)]
         fig.add_trace(
             go.Scatter(
@@ -152,12 +207,16 @@ def create_stability_vs_ie_plot(data: pd.DataFrame | None = None) -> go.Figure:
                 mode="markers",
                 name=f"Period {int(period)}",
                 marker=dict(size=8, color=color, line=dict(width=0.5, color="#0a1628")),
-                customdata=np.stack([sub["element"], sub["Z"], sub["fidelity_score"]], axis=-1),
+                customdata=np.stack(
+                    [sub["Z"].astype(int), sub["element"], sub["fidelity_score"]],
+                    axis=-1,
+                ),
                 hovertemplate=(
-                    "%{customdata[0]} (Z=%{customdata[1]})<br>"
+                    "%{customdata[1]} (Z=%{customdata[0]})<br>"
                     "Stability: %{x:.2f}<br>"
                     "IE: %{y:.2f} eV<br>"
-                    "Fidelity: %{customdata[2]}<extra></extra>"
+                    "Fidelity: %{customdata[2]}<br>"
+                    "<i>Click to open in Flux Flywheel</i><extra></extra>"
                 ),
             )
         )
@@ -235,8 +294,8 @@ def create_soc_mu_vs_experimental_plot(data: pd.DataFrame | None = None) -> go.F
         )
     )
 
-    for i, period in enumerate(sorted(plot_df["period"].unique())):
-        sub = plot_df[plot_df["period"] == period]
+    for period in sorted(plot_df["period"].unique()):
+        sub = plot_df[plot_df["period"] == period].sort_values("Z")
         color = _PERIOD_COLORS[int(period - 1) % len(_PERIOD_COLORS)]
         fig.add_trace(
             go.Scatter(
@@ -245,11 +304,12 @@ def create_soc_mu_vs_experimental_plot(data: pd.DataFrame | None = None) -> go.F
                 mode="markers",
                 name=f"Period {int(period)}",
                 marker=dict(size=9, color=color, line=dict(width=0.5, color="#0a1628")),
-                customdata=np.stack([sub["element"], sub["Z"]], axis=-1),
+                customdata=np.stack([sub["Z"].astype(int), sub["element"]], axis=-1),
                 hovertemplate=(
-                    "%{customdata[0]} (Z=%{customdata[1]})<br>"
+                    "%{customdata[1]} (Z=%{customdata[0]})<br>"
                     "Exp μ: %{x:.2f} BM<br>"
-                    "SOC μ: %{y:.2f} BM<extra></extra>"
+                    "SOC μ: %{y:.2f} BM<br>"
+                    "<i>Click to open in Flux Flywheel</i><extra></extra>"
                 ),
             )
         )
@@ -263,9 +323,12 @@ def create_soc_mu_vs_experimental_plot(data: pd.DataFrame | None = None) -> go.F
     return _apply_dark_theme(fig, height=380)
 
 
-def load_observations_trend_figures(z_max: int = 118) -> tuple[go.Figure, go.Figure, go.Figure]:
+def load_observations_trend_figures(
+    z_max: int = 118,
+    periods: list[int] | tuple[int, ...] | None = None,
+) -> tuple[go.Figure, go.Figure, go.Figure]:
     """Return (fidelity trend, stability vs IE, SOC μ validation) figures."""
-    df = observations_trends_dataframe(z_max)
+    df = filter_trends_by_period(observations_trends_dataframe(z_max), periods)
     return (
         create_fidelity_trend_plot(df),
         create_stability_vs_ie_plot(df),

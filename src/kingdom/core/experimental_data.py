@@ -611,17 +611,49 @@ def experimental_entry(z: int, observable: DataObservable) -> dict[str, Any] | N
     return _EXPERIMENTAL_DATA.get(z, {}).get(observable)
 
 
+_PERIOD_FIRST_Z: dict[int, int] = {
+    1: 1,
+    2: 3,
+    3: 11,
+    4: 19,
+    5: 37,
+    6: 55,
+    7: 87,
+    8: 119,
+}
+
+_PERIOD_BASE_RADIUS_PM: dict[int, float] = {
+    1: 50.0,
+    2: 90.0,
+    3: 135.0,
+    4: 145.0,
+    5: 155.0,
+    6: 160.0,
+    7: 165.0,
+    8: 170.0,
+}
+
+
 def estimate_model_covalent_radius_pm(stability_score: float, z: int) -> float:
     """
-    Stability-based proxy for covalent radius (pm).
+    Period-aware stability-based covalent radius proxy (pm).
 
-    Higher stability → more compact distribution → smaller radius.
-    Base radius decreases with Z (main periodic trend).
+    Higher stability → smaller radius. d-block periods use a softer stability term.
     """
-    base_radius = 185.0 - (z ** 0.72) * 2.1
-    stability_adjustment = (stability_score - 5.0) * 3.4
-    radius = base_radius - stability_adjustment
-    return round(max(38.0, min(radius, 225.0)), 1)
+    period = get_period(z)
+    period_base = _PERIOD_BASE_RADIUS_PM.get(period, 150.0)
+    start_z = _PERIOD_FIRST_Z.get(period, 1)
+    position = max(0, z - start_z)
+    base = period_base - (position * 2.8)
+
+    stability_multiplier = 3.0 if period in (4, 5) else 3.5
+    stability_adjust = (stability_score - 5.0) * stability_multiplier
+    radius = base - stability_adjust
+
+    if 57 <= z <= 71 or 89 <= z <= 103:
+        radius += 3.0
+
+    return round(max(40.0, min(radius, 220.0)), 1)
 
 
 def compare_atomic_radius(
