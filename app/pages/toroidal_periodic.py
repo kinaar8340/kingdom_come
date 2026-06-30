@@ -34,9 +34,12 @@ stability scores and block color-coding.
 | **Period banding** | Faint color wash along the gold coil by IUPAC period |
 | **Focus mode** | Dims the manifold to spotlight one element + its flux ring |
 | **Hover** | Electron config, stability class, and chemistry ↔ flux note |
+| **Manifold view** | Elements only · Monster irrep coil (194) · **Dual overlay** (gold + purple coils) |
+| **Z↔irrep map** | Exploratory pairing schemes (linear, stability rank, noble lock, period×group) |
 
 Use **Highlight Z** to inspect one element, then **Open in Flux Flywheel** for full
-electron-shell + validation detail.
+electron-shell + validation detail. In **Dual overlay**, dashed violet links connect Z to
+its mapped Monster irrep (see **Monster Fingerprints** for the exponent heatmap).
 """
 
 TOROIDAL_HF_NOTE_MD = """
@@ -57,6 +60,10 @@ def render_toroidal_periodic(
     show_period_bands: bool,
     focus_mode: bool,
     projection_2d: str,
+    manifold_view: str,
+    z_irrep_mapping: str,
+    show_z_irrep_links: bool,
+    show_all_z_irrep_links: bool,
     view_mode: str,
 ):
     mode = "2d" if is_hf_space() or str(view_mode).lower().startswith("2") else "3d"
@@ -80,5 +87,9 @@ def render_toroidal_periodic(
         show_period_bands=show_period_bands,
         focus_mode=bool(focus_mode),
         projection_2d=projection,  # type: ignore[arg-type]
+        manifold_mode=manifold_view,
+        z_irrep_scheme=z_irrep_mapping,
+        show_z_irrep_links=bool(show_z_irrep_links),
+        show_all_z_irrep_links=bool(show_all_z_irrep_links),
         view_mode=mode,  # type: ignore[arg-type]
     )

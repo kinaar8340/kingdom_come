@@ -533,6 +533,31 @@ def build_app() -> gr.Blocks:
                     toroidal_period_bands = gr.Checkbox(value=True, label="Period banding on coil")
                     toroidal_focus_mode = gr.Checkbox(value=False, label="Focus mode (highlight only)")
                 with gr.Row():
+                    toroidal_manifold = gr.Radio(
+                        ["Elements only", "Monster irreps only", "Dual overlay"],
+                        value="Elements only",
+                        label="Manifold view",
+                    )
+                    toroidal_z_irrep_map = gr.Dropdown(
+                        [
+                            "Linear (Z−1 → irrep)",
+                            "Stability rank",
+                            "Noble lock",
+                            "Period × group",
+                        ],
+                        value="Linear (Z−1 → irrep)",
+                        label="Z↔irrep mapping (exploratory)",
+                    )
+                with gr.Row():
+                    toroidal_show_links = gr.Checkbox(
+                        value=True,
+                        label="Show Z↔irrep links (dual / highlight)",
+                    )
+                    toroidal_show_all_links = gr.Checkbox(
+                        value=False,
+                        label="Show all 118 links (dual only)",
+                    )
+                with gr.Row():
                     if _toroidal_on_hf:
                         toroidal_view_mode = gr.State("2D projection")
                     else:
@@ -562,6 +587,10 @@ def build_app() -> gr.Blocks:
                     toroidal_period_bands,
                     toroidal_focus_mode,
                     toroidal_projection,
+                    toroidal_manifold,
+                    toroidal_z_irrep_map,
+                    toroidal_show_links,
+                    toroidal_show_all_links,
                     toroidal_view_mode,
                 ]
                 toroidal_refresh.click(

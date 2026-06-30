@@ -625,11 +625,45 @@ def build_toroidal_periodic_figure(
     focus_mode: bool = False,
     projection_2d: Projection2D = "xy",
     view_mode: ToroidalViewMode = "3d",
+    manifold_mode: str = "elements",
+    z_irrep_scheme: str = "linear",
+    show_z_irrep_links: bool = True,
+    show_all_z_irrep_links: bool = False,
     height: int = 580,
 ) -> go.Figure:
     """
     Toroidal (1,7) coil of all 118 elements with Kingdom Come flux flywheel overlays.
+    Optional Monster irrep overlay modes: elements | irreps | dual.
     """
+    from kingdom.viz.toroidal_monster_manifold import (
+        _parse_mode,
+        _parse_scheme,
+        build_toroidal_monster_manifold_figure,
+    )
+
+    mode = _parse_mode(manifold_mode)
+    if mode != "elements":
+        highlight = z_highlight if z_highlight is not None else None
+        return build_toroidal_monster_manifold_figure(
+            z_highlight=highlight,
+            major_r=major_r,
+            minor_r=minor_r,
+            show_wireframe=show_wireframe,
+            show_coil=show_coil,
+            show_flux_rings=show_flux_rings,
+            show_noble_locks=show_noble_locks,
+            show_labels=show_labels,
+            show_period_bands=show_period_bands,
+            focus_mode=focus_mode,
+            projection_2d=projection_2d,
+            view_mode=view_mode,
+            manifold_mode=mode,
+            z_irrep_scheme=_parse_scheme(z_irrep_scheme),
+            show_z_irrep_links=show_z_irrep_links,
+            show_all_z_irrep_links=show_all_z_irrep_links,
+            height=height,
+        )
+
     layout = _element_layout(major_r=major_r, minor_r=minor_r)
     highlight = z_highlight if z_highlight is not None else None
 
