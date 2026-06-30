@@ -21,8 +21,8 @@ FILENAME_ALIASES: dict[str, tuple[str, ...]] = {
     "Aarons_TOE_Complete.pdf": ("Aarons_TOE_Complete.pdf", "Aaron's_TOE_Complete.pdf"),
 }
 
-DEFAULT_MAX_PAGES = 12
-DEFAULT_DPI = 130
+DEFAULT_MAX_PAGES = 8
+DEFAULT_DPI = 110
 
 PAPERS_INTRO_MD = """
 ## Papers
@@ -31,9 +31,8 @@ Manuscripts from Aaron's Hopf Fibration Theory of Everything — sourced from
 [toe/papers](https://github.com/kinaar8340/toe/tree/main/papers) and
 [kingdom_come/papers](https://github.com/kinaar8340/kingdom_come/tree/main/papers).
 
-Expand any section for a summary, click **Load Paper Pages** for an inline page
-preview (rendered as images — works in Brave and all browsers), or use
-**Download PDF** for the full manuscript.
+Expand any section — page previews load automatically as images (Brave-safe).
+Use **Download PDF** for the full manuscript file.
 """
 
 
@@ -260,3 +259,8 @@ def get_pdf_page_images(
 def load_paper_gallery(key: str) -> list[Image.Image]:
     """Gradio callback — inline page preview for a paper."""
     return get_pdf_page_images(key)
+
+
+def load_all_paper_galleries() -> list[list[Image.Image]]:
+    """Pre-render all paper page galleries on app startup."""
+    return [load_paper_gallery(entry.key) for entry in PAPER_ENTRIES]

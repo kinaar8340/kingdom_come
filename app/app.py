@@ -102,7 +102,7 @@ from app.pages.observations import (
 from app.pages.papers import (
     PAPER_ENTRIES,
     PAPERS_INTRO_MD,
-    load_paper_gallery,
+    load_all_paper_galleries,
     paper_missing_md,
     paper_summary_md,
     resolve_paper_path,
@@ -256,28 +256,22 @@ def build_app() -> gr.Blocks:
                         gr.Markdown(HOME_WG_MD)
                     with gr.Tab("Papers"):
                         gr.Markdown(PAPERS_INTRO_MD)
+                        paper_galleries: list[gr.Gallery] = []
                         for paper in PAPER_ENTRIES:
                             with gr.Accordion(paper.title, open=False):
                                 gr.Markdown(paper_summary_md(paper.key))
+                                gr.Markdown("### Paper pages (inline preview)")
+                                page_gallery = gr.Gallery(
+                                    label="PDF pages",
+                                    columns=1,
+                                    object_fit="contain",
+                                    height=800,
+                                    show_label=False,
+                                    elem_classes=["kc-paper-gallery"],
+                                )
+                                paper_galleries.append(page_gallery)
                                 paper_path = resolve_paper_path(paper)
                                 if paper_path is not None:
-                                    gr.Markdown("### Paper pages (inline preview)")
-                                    page_gallery = gr.Gallery(
-                                        label="PDF pages",
-                                        columns=1,
-                                        object_fit="contain",
-                                        height=900,
-                                        show_label=False,
-                                        elem_classes=["kc-paper-gallery"],
-                                    )
-                                    gr.Button(
-                                        "Load Paper Pages",
-                                        variant="primary",
-                                        size="sm",
-                                    ).click(
-                                        fn=lambda key=paper.key: load_paper_gallery(key),
-                                        outputs=page_gallery,
-                                    )
                                     gr.File(
                                         value=str(paper_path),
                                         label=f"Download — {paper.filename}",
@@ -285,6 +279,10 @@ def build_app() -> gr.Blocks:
                                     )
                                 else:
                                     gr.Markdown(paper_missing_md(paper))
+                        demo.load(
+                            load_all_paper_galleries,
+                            outputs=paper_galleries,
+                        )
                     with gr.Tab("Explore"):
                         gr.Markdown(HOME_EXPLORE_MD)
 

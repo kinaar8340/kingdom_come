@@ -7,6 +7,7 @@ from app.pages.papers import (
     discover_paper_pdfs,
     get_paper_summary,
     get_pdf_page_images,
+    load_all_paper_galleries,
     load_paper_gallery,
     paper_missing_md,
     paper_summary_md,
@@ -78,3 +79,9 @@ def test_load_paper_gallery_matches_images():
     gallery = load_paper_gallery("lagrangian")
     assert len(gallery) >= 1
     assert gallery[0].width > 0
+
+
+def test_load_all_paper_galleries():
+    galleries = load_all_paper_galleries()
+    assert len(galleries) == len(PAPER_ENTRIES)
+    assert all(len(g) >= 1 for g in galleries)
