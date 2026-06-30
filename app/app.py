@@ -108,7 +108,7 @@ from app.pages.observations import (
 from app.pages.papers import (
     PAPER_ENTRIES,
     PAPERS_INTRO_MD,
-    load_all_paper_galleries,
+    load_paper_gallery,
     paper_missing_md,
     paper_summary_md,
     resolve_paper_path,
@@ -265,9 +265,8 @@ def build_app() -> gr.Blocks:
                         gr.Markdown(HOME_WG_MD)
                     with gr.Tab("The Papers"):
                         gr.Markdown(PAPERS_INTRO_MD)
-                        paper_galleries: list[gr.Gallery] = []
                         for paper in PAPER_ENTRIES:
-                            with gr.Accordion(paper.title, open=False):
+                            with gr.Accordion(paper.title, open=False) as paper_accordion:
                                 gr.Markdown(paper_summary_md(paper.key))
                                 gr.Markdown("### Paper pages (inline preview)")
                                 page_gallery = gr.Gallery(
@@ -278,7 +277,6 @@ def build_app() -> gr.Blocks:
                                     show_label=False,
                                     elem_classes=["kc-paper-gallery"],
                                 )
-                                paper_galleries.append(page_gallery)
                                 paper_path = resolve_paper_path(paper)
                                 if paper_path is not None:
                                     gr.File(
@@ -288,10 +286,11 @@ def build_app() -> gr.Blocks:
                                     )
                                 else:
                                     gr.Markdown(paper_missing_md(paper))
-                        demo.load(
-                            load_all_paper_galleries,
-                            outputs=paper_galleries,
-                        )
+                                paper_accordion.expand(
+                                    fn=lambda key=paper.key: load_paper_gallery(key),
+                                    outputs=page_gallery,
+                                    show_progress="minimal",
+                                )
                     with gr.Tab("Explore"):
                         gr.Markdown(HOME_EXPLORE_MD)
 

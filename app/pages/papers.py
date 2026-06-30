@@ -7,7 +7,6 @@ from functools import lru_cache
 from io import BytesIO
 from pathlib import Path
 
-import fitz  # PyMuPDF
 from PIL import Image
 
 _REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -31,7 +30,7 @@ Manuscripts from Aaron's Hopf Fibration Theory of Everything — sourced from
 [toe/papers](https://github.com/kinaar8340/toe/tree/main/papers) and
 [kingdom_come/papers](https://github.com/kinaar8340/kingdom_come/tree/main/papers).
 
-Expand any section — page previews load automatically as images (Brave-safe).
+Expand any section — page previews load on first open as images (Brave-safe).
 Use **Download PDF** for the full manuscript file.
 """
 
@@ -229,6 +228,8 @@ def _render_pdf_pages(
         return ()
 
     try:
+        import fitz  # PyMuPDF — lazy import keeps HF cold-start fast
+
         doc = fitz.open(pdf_path)
         pages: list[bytes] = []
         for i in range(min(len(doc), max_pages)):
