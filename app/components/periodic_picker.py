@@ -19,20 +19,30 @@ PERIODIC_CSS = """
   text-align: center;
   font-size: 0.68rem;
   font-weight: 600;
-  padding: 0.22rem 0.1rem;
+  padding: 0.24rem 0.1rem;
   border-radius: 5px;
-  border: 1px solid rgba(26, 143, 227, 0.35);
-  background: rgba(26, 50, 85, 0.72);
-  color: #d4e4f7;
+  border: 1px solid rgba(90, 170, 255, 0.55);
+  background: rgba(40, 75, 130, 0.85);
+  color: #ffffff;
   line-height: 1.1;
   cursor: pointer;
   font-family: inherit;
   width: 100%;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+.kc-pt-symbol {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 0.02em;
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.45);
+  line-height: 1.15;
 }
 button.kc-pt-cell:hover {
-  border-color: #1a8fe3;
-  filter: brightness(1.12);
-  box-shadow: 0 0 8px rgba(26, 143, 227, 0.35);
+  border-color: #5eb8ff;
+  filter: brightness(1.18) saturate(1.15);
+  box-shadow: 0 0 10px rgba(26, 143, 227, 0.45);
 }
 button.kc-pt-cell:focus-visible {
   outline: 2px solid #c9a227;
@@ -45,14 +55,22 @@ button.kc-pt-cell:focus-visible {
   color: #8ecae6;
 }
 .kc-pt-cell.kc-pt-active {
-  border-color: #c9a227;
-  box-shadow: 0 0 10px rgba(201, 162, 39, 0.55);
-  color: #ffe8a3;
-  background: rgba(201, 162, 39, 0.48) !important;
+  border-color: #ffd45a;
+  box-shadow: 0 0 12px rgba(255, 210, 80, 0.65);
+  color: #fff8dc;
+  background: rgba(220, 170, 40, 0.82) !important;
+}
+.kc-pt-cell.kc-pt-active .kc-pt-symbol {
+  color: #fffbe8;
+  text-shadow: 0 0 10px rgba(255, 230, 140, 0.75);
 }
 .kc-pt-cell.kc-pt-noble {
-  color: #00f5ff;
-  border-color: rgba(0, 201, 183, 0.45);
+  color: #d8ffff;
+  border-color: rgba(0, 245, 255, 0.72);
+}
+.kc-pt-cell.kc-pt-noble .kc-pt-symbol {
+  color: #e8ffff;
+  text-shadow: 0 0 10px rgba(0, 245, 255, 0.7);
 }
 .kc-pt-cell.kc-pt-magic::after {
   content: "✦";
@@ -92,11 +110,17 @@ FLUX_PERIODIC_CSS = """
   background: transparent !important;
 }
 .kc-flux-page .kc-pt-cell {
-  border-color: rgba(26, 143, 227, 0.42) !important;
-  color: #e8f4ff !important;
+  border-color: rgba(110, 185, 255, 0.62) !important;
+  color: #ffffff !important;
+  filter: saturate(1.12);
+}
+.kc-flux-page .kc-pt-symbol {
+  color: #ffffff !important;
+  font-weight: 800 !important;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.55) !important;
 }
 .kc-flux-page .kc-pt-cell sub {
-  color: #9ec8e8 !important;
+  color: #b8ddf5 !important;
 }
 .kc-flux-page .kc-pt-legend {
   color: #a8cce8 !important;
@@ -120,16 +144,16 @@ watch('value', wirePtClicks);
 """
 
 _CATEGORY_COLORS = {
-    "noble gas": "rgba(0,201,183,0.58)",
-    "alkali metal": "rgba(239,85,59,0.52)",
-    "alkaline earth metal": "rgba(255,180,100,0.50)",
-    "transition metal": "rgba(26,143,227,0.52)",
-    "post-transition metal": "rgba(100,160,220,0.50)",
-    "metalloid": "rgba(150,120,200,0.48)",
-    "nonmetal": "rgba(80,200,160,0.45)",
-    "halogen": "rgba(0,200,180,0.50)",
-    "lanthanide": "rgba(180,140,255,0.48)",
-    "actinide": "rgba(200,100,180,0.48)",
+    "noble gas": "rgba(0, 235, 215, 0.84)",
+    "alkali metal": "rgba(255, 88, 72, 0.82)",
+    "alkaline earth metal": "rgba(255, 188, 95, 0.82)",
+    "transition metal": "rgba(45, 155, 255, 0.82)",
+    "post-transition metal": "rgba(115, 175, 255, 0.80)",
+    "metalloid": "rgba(175, 135, 255, 0.80)",
+    "nonmetal": "rgba(75, 225, 165, 0.78)",
+    "halogen": "rgba(0, 225, 195, 0.82)",
+    "lanthanide": "rgba(190, 145, 255, 0.80)",
+    "actinide": "rgba(225, 105, 195, 0.80)",
 }
 
 
@@ -185,12 +209,12 @@ def _periodic_cell_html(z: int, current_z: int) -> str:
         classes.append("kc-pt-noble")
     if z in MAGIC_NUMBER_Z:
         classes.append("kc-pt-magic")
-    bg = _CATEGORY_COLORS.get(el.category, "rgba(26,50,85,0.72)")
+    bg = _CATEGORY_COLORS.get(el.category, "rgba(40,75,130,0.85)")
     synth = " — predicted" if el.is_synthetic else ""
     return (
         f'<button type="button" class="{" ".join(classes)}" style="background:{bg}" '
         f'data-kc-z="{z}" title="{el.name} (Z={z}){synth}">'
-        f"{el.symbol}<sub>{z}</sub></button>"
+        f'<span class="kc-pt-symbol">{el.symbol}</span><sub>{z}</sub></button>'
     )
 
 
