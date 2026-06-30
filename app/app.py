@@ -80,8 +80,14 @@ from app.pages.pulsars_observations import (
     REFERENCE_PULSAR_HZ,
     pulsar_quick_check,
 )
-from app.pages.help import HELP_MD, QUICKSTART_MD
-from app.pages.home import HOME_MD, ONBOARDING_MD, SHOWCASE_CARDS
+from app.pages.help import (
+    HELP_ACRONYMS_MD,
+    HELP_CONTROLS_MD,
+    HELP_GETTING_STARTED_MD,
+    HELP_NAVIGATE_MD,
+    HELP_TECH_MD,
+)
+from app.pages.home import HOME_CLOCK_MD, HOME_EXPLORE_MD, HOME_FOUNDATION_MD, HOME_WG_MD
 from app.pages.hopf_guide import HF_VIEW_MODE_MD, HOPF_INTRO_MD, HOPF_PANEL_GUIDE_MD
 from app.pages.observations import (
     CATATUMBO_GALLERY,
@@ -239,14 +245,49 @@ def build_app() -> gr.Blocks:
 
         with gr.Tabs():
             with gr.Tab("Home"):
-                gr.Markdown(QUICKSTART_MD)
-                with gr.Accordion("First-time visitor? Start here", open=False):
-                    gr.Markdown(ONBOARDING_MD)
-                gr.Markdown(HOME_MD)
-                gr.HTML(SHOWCASE_CARDS)
+                with gr.Tabs():
+                    with gr.Tab("Foundation"):
+                        gr.Markdown(HOME_FOUNDATION_MD)
+                    with gr.Tab("The Clock"):
+                        gr.Markdown(HOME_CLOCK_MD)
+                    with gr.Tab("W_g Constant"):
+                        gr.Markdown(HOME_WG_MD)
+                    with gr.Tab("Papers"):
+                        gr.Markdown(PAPERS_INTRO_MD)
+                        gr.HTML(papers_index_html())
+                        with gr.Row():
+                            paper_dropdown = gr.Dropdown(
+                                choices=paper_choices(),
+                                value=default_paper_key(),
+                                label="Select paper",
+                                filterable=True,
+                                scale=2,
+                            )
+                            paper_download = gr.File(
+                                label="Download PDF",
+                                interactive=False,
+                                scale=1,
+                            )
+                        paper_description = gr.Markdown()
+                        paper_viewer = gr.HTML(label="PDF viewer")
+                        paper_outputs = [paper_download, paper_viewer, paper_description]
+                        paper_dropdown.change(load_paper, inputs=paper_dropdown, outputs=paper_outputs)
+                        demo.load(load_paper, inputs=paper_dropdown, outputs=paper_outputs)
+                    with gr.Tab("Explore"):
+                        gr.Markdown(HOME_EXPLORE_MD)
 
             with gr.Tab("Help"):
-                gr.Markdown(HELP_MD)
+                with gr.Tabs():
+                    with gr.Tab("Navigate"):
+                        gr.Markdown(HELP_NAVIGATE_MD)
+                    with gr.Tab("Getting Started"):
+                        gr.Markdown(HELP_GETTING_STARTED_MD)
+                    with gr.Tab("Controls"):
+                        gr.Markdown(HELP_CONTROLS_MD)
+                    with gr.Tab("Acronyms"):
+                        gr.Markdown(HELP_ACRONYMS_MD)
+                    with gr.Tab("Tech Stack"):
+                        gr.Markdown(HELP_TECH_MD)
 
             with gr.Tab("Hopf Visualizer"):
                 gr.Markdown(HOPF_INTRO_MD)
@@ -331,28 +372,6 @@ def build_app() -> gr.Blocks:
                 gr.Markdown(THEORY_MD)
                 with gr.Accordion("Derivation: Hopf Map via Quaternions", open=True):
                     gr.Markdown(DERIVATION_HOPF_MD)
-
-            with gr.Tab("Papers"):
-                gr.Markdown(PAPERS_INTRO_MD)
-                gr.HTML(papers_index_html())
-                with gr.Row():
-                    paper_dropdown = gr.Dropdown(
-                        choices=paper_choices(),
-                        value=default_paper_key(),
-                        label="Select paper",
-                        filterable=True,
-                        scale=2,
-                    )
-                    paper_download = gr.File(
-                        label="Download PDF",
-                        interactive=False,
-                        scale=1,
-                    )
-                paper_description = gr.Markdown()
-                paper_viewer = gr.HTML(label="PDF viewer")
-                paper_outputs = [paper_download, paper_viewer, paper_description]
-                paper_dropdown.change(load_paper, inputs=paper_dropdown, outputs=paper_outputs)
-                demo.load(load_paper, inputs=paper_dropdown, outputs=paper_outputs)
 
             with gr.Tab("Lattice Simulator"):
                 gr.Markdown(
