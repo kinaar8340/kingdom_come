@@ -2,7 +2,12 @@
 
 import plotly.graph_objects as go
 
-from app.components.neon import element_card_html, flux_metrics_cards_html, toe_strip_html
+from app.components.neon import (
+    element_card_html,
+    flux_metrics_cards_html,
+    flux_observables_cards_html,
+    toe_strip_html,
+)
 from app.components.periodic_picker import (
     element_picker_choices,
     known_periodic_table_html,
@@ -11,7 +16,12 @@ from app.components.periodic_picker import (
     superheavy_periodic_table_html,
 )
 from kingdom.core.elements import EXPLORER_Z_MAX, get_element, shell_occupancies
-from kingdom.core.flux_explorer import element_art_path, explore_flux_element, flux_metrics_table
+from kingdom.core.flux_explorer import (
+    element_art_path,
+    explore_flux_element,
+    explore_flux_element_extended,
+    flux_metrics_table,
+)
 from kingdom.core.superheavy import systematic_name_symbol
 from kingdom.viz.electron_cloud import build_electron_cloud_figure
 from kingdom.viz.magic_island import build_magic_island_heatmap
@@ -90,6 +100,15 @@ def test_flux_metrics_cards_html():
     payload = explore_flux_element(2)
     html = flux_metrics_cards_html(payload["flywheel"])
     assert "kc-metrics-grid" in html
+
+
+def test_flux_observables_cards_html():
+    payload = explore_flux_element_extended(26)
+    html = flux_observables_cards_html(payload["flywheel"])
+    assert "kc-observables-grid" in html
+    assert "7.9" in html
+    assert "4" in html
+    assert "Alignment" in html
 
 
 def test_compact_element_card_with_art_inset():

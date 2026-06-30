@@ -102,6 +102,42 @@ NEON_CSS = """
   font-weight: 600;
 }
 .kc-metric-wide { grid-column: 1 / -1; }
+.kc-observables-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.35rem;
+}
+.kc-observables-grid .kc-metric-card strong {
+  color: #00c9b7;
+}
+.kc-obs-align {
+  grid-column: 1 / -1;
+}
+.kc-align-track {
+  margin-top: 0.35rem;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(26, 143, 227, 0.18);
+  overflow: hidden;
+}
+.kc-align-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #1a8fe3, #00c9b7);
+}
+.kc-align-fill.kc-align-mid {
+  background: linear-gradient(90deg, #c9a227, #ffd45a);
+}
+.kc-align-fill.kc-align-low {
+  background: linear-gradient(90deg, #ef553b, #ffb4a2);
+}
+.kc-obs-caption {
+  display: block;
+  margin-top: 0.25rem;
+  color: #6a9bb8;
+  font-size: 0.68rem;
+  line-height: 1.35;
+}
 .kc-toe-strip {
   background: rgba(18, 36, 61, 0.40);
   border: 1px solid rgba(201, 162, 39, 0.22);
@@ -222,6 +258,48 @@ def flux_metrics_cards_html(flywheel: dict) -> str:
   </div>
   <div class="kc-metric-card kc-metric-wide">
     <span>Class</span><strong>{stability_class}</strong>
+  </div>
+</div>
+"""
+
+
+def flux_observables_cards_html(extended: dict) -> str:
+    """Laboratory observables + model alignment (Flux Flywheel secondary row)."""
+    alignment = float(extended["model_vs_reality_alignment"])
+    align_pct = max(0.0, min(100.0, alignment * 10.0))
+    if alignment >= 8.0:
+        fill_class = "kc-align-fill"
+    elif alignment >= 6.0:
+        fill_class = "kc-align-fill kc-align-mid"
+    else:
+        fill_class = "kc-align-fill kc-align-low"
+    diamagnetic = extended["is_diamagnetic"]
+    spin_label = "Diamagnetic" if diamagnetic else "Paramagnetic"
+    return f"""
+<div class="kc-observables-grid">
+  <div class="kc-metric-card">
+    <span>Model score</span>
+    <strong>{extended["stability_score"]}</strong>
+  </div>
+  <div class="kc-metric-card">
+    <span>Real IE (eV)</span>
+    <strong>{extended["real_ionization_energy_eV"]}</strong>
+  </div>
+  <div class="kc-metric-card">
+    <span>Unpaired e⁻</span>
+    <strong>{extended["unpaired_electrons"]}</strong>
+  </div>
+  <div class="kc-metric-card">
+    <span>μ (BM)</span>
+    <strong>{extended["magnetic_moment_BM"]}</strong>
+  </div>
+  <div class="kc-metric-card kc-obs-align">
+    <span>Alignment · {spin_label}</span>
+    <strong>{alignment:.1f}/10</strong>
+    <div class="kc-align-track" title="Model ↔ reality alignment">
+      <div class="{fill_class}" style="width:{align_pct:.0f}%"></div>
+    </div>
+    <span class="kc-obs-caption">{extended["validation_notes"]}</span>
   </div>
 </div>
 """

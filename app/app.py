@@ -12,7 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "src"))
 
-from kingdom.core.flux_explorer import explore_flux_element
+from kingdom.core.flux_explorer import explore_flux_element_extended
 from kingdom.simulations.lattice import build_lattice_figure, run_lattice_comparison
 from kingdom.viz.hopf_plotly import build_hopf_fibration_figure_auto, default_view_mode, is_hf_space
 
@@ -21,6 +21,7 @@ from app.components.neon import (
     NEON_CSS,
     element_card_html,
     flux_metrics_cards_html,
+    flux_observables_cards_html,
     synthetic_toe_strip_html,
     synthetic_z_html,
     toe_strip_html,
@@ -197,7 +198,7 @@ NOBLE_GAS_JUMP = ((2, "He"), (10, "Ne"), (18, "Ar"), (36, "Kr"), (54, "Xe"), (86
 def _flux_panels(z: int):
     """Render all Flux Flywheel panels for atomic number Z."""
     z = max(1, min(180, int(z)))
-    payload = explore_flux_element(z)
+    payload = explore_flux_element_extended(z)
     element = payload["element"]
     fly = payload["flywheel"]
     art = payload["element_art"]
@@ -215,6 +216,7 @@ def _flux_panels(z: int):
         payload["cloud_fig"],
         payload["compare_fig"],
         flux_metrics_cards_html(fly),
+        flux_observables_cards_html(fly),
         toe,
         payload["magic_island"],
     )
@@ -476,7 +478,11 @@ def build_app() -> gr.Blocks:
                         with gr.Column(scale=1):
                             compare_plot = gr.Plot(label="Chemistry vs TOE flux")
                         with gr.Column(scale=1):
-                            flux_metrics_panel = gr.HTML(label="Flux metrics")
+                            with gr.Row(equal_height=True):
+                                with gr.Column(scale=1):
+                                    flux_metrics_panel = gr.HTML(label="Flux metrics")
+                                with gr.Column(scale=1):
+                                    flux_observables_panel = gr.HTML(label="Observables")
                     toe_panel = gr.HTML(label="TOE interpretation")
                     with gr.Accordion("Magic Island heatmap", open=False):
                         magic_island_plot = gr.Plot()
@@ -488,6 +494,7 @@ def build_app() -> gr.Blocks:
                         electron_plot,
                         compare_plot,
                         flux_metrics_panel,
+                        flux_observables_panel,
                         toe_panel,
                         magic_island_plot,
                     ]
