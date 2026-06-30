@@ -13,6 +13,9 @@ from app.pages.home import HOME_CLOCK_MD, HOME_EXPLORE_MD, HOME_FOUNDATION_MD, H
 def test_home_covers_clock_mechanism():
     assert "flux flywheels" in HOME_FOUNDATION_MD
     assert "RubikConeConduit" in HOME_FOUNDATION_MD
+    assert "Vision" in HOME_FOUNDATION_MD
+    assert "Mathematical Backbone" in HOME_FOUNDATION_MD
+    assert "Observer Synchronization" in HOME_FOUNDATION_MD
     assert "dS" in HOME_CLOCK_MD or "S(t)" in HOME_CLOCK_MD
     assert "111.408" in HOME_CLOCK_MD or "350" in HOME_CLOCK_MD
     assert "350" in HOME_WG_MD

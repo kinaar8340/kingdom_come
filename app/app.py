@@ -108,7 +108,7 @@ from app.pages.papers import (
     resolve_paper_path,
 )
 from app.pages.showcase import SHOWCASE_HTML
-from app.pages.theory import DERIVATION_HOPF_MD, THEORY_MD
+from app.pages.theory import DERIVATION_HOPF_MD
 
 PAPERS_DIR = ROOT / "app" / "assets" / "papers"
 PAPERS_SOURCE_DIR = ROOT / "papers"
@@ -247,9 +247,10 @@ def build_app() -> gr.Blocks:
 
         with gr.Tabs():
             with gr.Tab("Home"):
+                gr.Markdown(HOME_FOUNDATION_MD)
+                with gr.Accordion("Derivation: Hopf Map via Quaternions", open=False):
+                    gr.Markdown(DERIVATION_HOPF_MD)
                 with gr.Tabs():
-                    with gr.Tab("Foundation"):
-                        gr.Markdown(HOME_FOUNDATION_MD)
                     with gr.Tab("The Clock"):
                         gr.Markdown(HOME_CLOCK_MD)
                     with gr.Tab("W_g Constant"):
@@ -377,11 +378,6 @@ def build_app() -> gr.Blocks:
                     fn=reset_hopf_defaults,
                     outputs=hopf_inputs,
                 ).then(render_hopf_visualizer, inputs=hopf_inputs, outputs=hopf_plot)
-
-            with gr.Tab("The Model"):
-                gr.Markdown(THEORY_MD)
-                with gr.Accordion("Derivation: Hopf Map via Quaternions", open=True):
-                    gr.Markdown(DERIVATION_HOPF_MD)
 
             with gr.Tab("Lattice Simulator"):
                 gr.Markdown(

@@ -10,10 +10,10 @@ Use the **main tab bar** at the top of this page to switch between interactive m
 
 | Tab | What it does | Start here if… |
 |-----|--------------|----------------|
-| **Home** | TOE foundation — flux flywheels, \(W_g = 350/\pi\) clock mechanism | You want the big picture first |
+| **Home** | Merged foundation + model — vision, math backbone, clock mechanism | You want the big picture first |
 | **Help** | This page — navigation, controls, acronyms | You need orientation or a term defined |
 | **Hopf Visualizer** | Linked S³ → S² fiber plots (2D on HF, 3D WebGL locally) | You want geometric intuition |
-| **The Model** | Core postulates and quaternion Hopf derivation | You want the theory in prose + math |
+
 | **Home → Papers** | Accordion summaries + inline page previews + PDF download | You want primary sources |
 | **Lattice Simulator** | Two-gyro gauged quaternion lattice (stable vs chaotic) | You want to see burst dynamics |
 | **Flux Flywheel** | Periodic table explorer Z = 1–180 + Magic Island heatmap | You want matter as flux configurations |
@@ -55,12 +55,11 @@ linking topology, quaternions, flux lattices, and emergent matter models.
 
 ### Recommended first visit
 
-1. Read **Home → Foundation** and **Home → The Clock** for the \(W_g = 350/\pi\) mechanism.
+1. Read **Home** (foundation + vision) and **Home → The Clock** for the \(W_g = 350/\pi\) mechanism.
 2. Open **Hopf Visualizer** → click **Classic Hopf** preset → **Update visualization**.
 3. Study the four panels: linked fibers (xy/xz), S² base chart, phase-colored highlight.
 4. Open **Lattice Simulator** → **Run lattice comparison** (stable vs chaotic).
-5. Open **The Model** for core postulates.
-6. Try **Flux Flywheel** at Z = 2 (He — noble gas lock), Z = 10 (Ne), or Z = 129 (Magic Island ID).
+5. Try **Flux Flywheel** at Z = 2 (He — noble gas lock), Z = 10 (Ne), or Z = 129 (Magic Island ID).
 
 ### First-time visitor shortcut
 
@@ -69,8 +68,7 @@ linking topology, quaternions, flux lattices, and emergent matter models.
 | 1 | Hopf Visualizer | **Classic Hopf** preset (auto-loads parameters) |
 | 2 | Hopf Visualizer | Read panels ①–④ in the accordion |
 | 3 | Lattice Simulator | **Run lattice comparison** |
-| 4 | The Model | Read four core postulates |
-| 5 | Flux Flywheel | Set Z = 2 for the Magic Island anchor |
+| 4 | Flux Flywheel | Set Z = 2 for the Magic Island anchor |
 
 *Tip: use **Reset defaults** in Hopf Visualizer anytime.*
 """

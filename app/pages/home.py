@@ -1,28 +1,71 @@
-"""Home / landing page — TOE clock mechanism foundation."""
+"""Home / landing page — merged foundation + model content."""
 
-HOME_FOUNDATION_MD = """
+HOME_FOUNDATION_MD = r"""
 ## Emergent Reality
 
-Aaron's Theory of Everything treats fundamental reality as **stable topological configurations**
-of rotating, braided **flux flywheels** inside a **gauged Hopf lattice** (based on the Hopf fibration)
-embedded in a porous vacuum **sponge**. Particles, forces, and phenomena emerge from these geometric
-and dynamic constraints.
+Aaron's Theory of Everything models fundamental reality as **stable topological configurations**
+of rotating, braided **flux flywheels** inside a **gauged Hopf lattice**, embedded in a porous
+vacuum *sponge*. Particles, forces, and physical phenomena emerge from the geometric and dynamic
+constraints of this system.
 
-The framework is implemented in the **RubikConeConduit** simulation
-([github.com/kinaar8340/toe](https://github.com/kinaar8340/toe)) and explored across seven
-Hugging Face Spaces ([kinaar111/spaces](https://huggingface.co/kinaar111/spaces)).
+The framework is implemented in the [RubikConeConduit](https://github.com/kinaar8340/toe) simulation
+and explored across [seven Hugging Face Spaces](https://huggingface.co/kinaar111/spaces).
 
-### Core substrate
+### Core Substrate
 
 | Concept | Role |
 |---------|------|
-| **Hopf fibration** | S³ → S² backbone — linked circular fibers supply the lattice geometry |
+| **Hopf fibration** | \(S^3 \to S^2\) backbone — linked circular fibers supply the lattice geometry |
 | **Flux flywheels** | Stable rotating flux configurations — emergent particles and periodic-table proxy |
 | **Gauged Hopf lattice** | Porous vacuum sponge with twist, braiding, and gauge dynamics |
 | **Observer synchronization** | Embedded observers share the lattice — bursts may not appear as external signals |
 
-> **Start here.** This clock mechanism is the foundation for every other tab in Kingdom Come.
-> Use **Help → Navigate** for a site map and quick links.
+---
+
+## Vision
+
+Physics emerges from **topologically protected flux structures** on a gauged Hopf lattice embedded
+in a porous vacuum. The Hopf fibration \(S^3 \to S^2\) supplies the geometric backbone. Quaternions
+provide the algebra, while stable **flux flywheels** anchor emergent matter and the periodic table.
+
+---
+
+## Mathematical Backbone
+
+The Hopf map sends a unit 4-vector \((x_1, x_2, x_3, x_4) \in S^3\) to a point on \(S^2\):
+
+\[
+y_1 = x_1^2 - x_2^2, \quad y_2 = 2 x_1 x_2, \quad y_3 = 2(x_3 x_4 + x_1 x_2)
+\]
+
+Each point on \(S^2\) has a **fiber** — a circle in \(S^3\). Distinct fibers are **linked** with
+Hopf invariant \(Q_H = 1\). Stereographic projection reveals these as linked Villarceau circles
+(nested tori) in \(\mathbb{R}^3\).
+
+---
+
+## Flux Flywheels & Emergent Structure
+
+Detuning parameters \((\Delta\omega, \text{gauge strength}, \text{layers})\) select **stability islands**
+on the lattice. The *Magic Island Sweep* identified a noble-gas-like ultra-stable lock — a template
+for emergent element mapping.
+
+The **\(W_g\)** constant (\(\approx 350/\pi \approx 111.408\)) emerges as a universal invariant,
+acting as a critical threshold in the underlying clock-like accumulation mechanism (see **The Clock**
+tab below).
+
+---
+
+## Observer Synchronization
+
+Phase holonomy between linked fibers damps as \(\Delta\theta(t) = \Delta\theta(0) \cdot e^{-\kappa t}\),
+providing a topological mechanism for observer-linked non-locality. This explains why certain burst
+events remain synchronized and difficult to detect externally.
+
+---
+
+**Start here.** This topological clock mechanism is the foundation for every other tab in Kingdom Come.
+Use **Help → Navigate** for a site map and quick links.
 """
 
 HOME_CLOCK_MD = r"""
@@ -71,7 +114,7 @@ This produces a **sawtooth waveform**: slow linear rise → sudden drop → repe
 
 The braiding phase also locks tightly (~0.814) alongside \(W_g\), reinforcing topological invariance.
 Full dynamics derive from the effective Lagrangian of the gauged Hopf lattice
-(*Lagrangian_Derivation.pdf* in the repo).
+(*Lagrangian_Derivation.pdf* in **Papers** below).
 """
 
 HOME_WG_MD = r"""
@@ -130,10 +173,9 @@ document burst, echo, and observer effects.
 | Tab | What you'll find |
 |-----|------------------|
 | **Hopf Visualizer** | Linked S³ → S² fibers — geometric intuition |
-| **The Model** | Four core postulates and derivations |
 | **Lattice Simulator** | Two-gyro gauged quaternion lattice (stable vs chaotic) |
 | **Flux Flywheel** | Periodic table as flux flywheel stability proxy |
-| **Papers** (this tab bar) | Accordion summaries + inline page previews |
+| **Papers** (below) | Accordion summaries + inline page previews |
 | **Observations** | W_g = 350/π signatures in nature and markets |
 | **Showcase** | All seven HF Spaces in the ecosystem |
 | **Help** | Site navigation, controls, and acronym glossary |
