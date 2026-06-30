@@ -307,7 +307,7 @@ def build_app() -> gr.Blocks:
                     with gr.Tab("Tech Stack"):
                         gr.Markdown(HELP_TECH_MD)
 
-            with gr.Tab("Hopf Visualizer"):
+            with gr.Tab("Hopf Visualizer") as hopf_tab:
                 gr.Markdown(HOPF_INTRO_MD)
                 if is_hf_space():
                     gr.Markdown(HF_VIEW_MODE_MD)
@@ -356,7 +356,13 @@ def build_app() -> gr.Blocks:
                     view_mode,
                 ]
                 refresh.click(render_hopf_visualizer, inputs=hopf_inputs, outputs=hopf_plot)
-                demo.load(render_hopf_visualizer, inputs=hopf_inputs, outputs=hopf_plot)
+                hopf_tab.select(
+                    render_hopf_visualizer,
+                    inputs=hopf_inputs,
+                    outputs=hopf_plot,
+                    trigger_mode="once",
+                    show_progress="minimal",
+                )
 
                 def apply_preset(name: str):
                     n_f, n_p, e, x, s = HOPF_PRESETS[name]
@@ -386,7 +392,7 @@ def build_app() -> gr.Blocks:
                     outputs=hopf_inputs,
                 ).then(render_hopf_visualizer, inputs=hopf_inputs, outputs=hopf_plot)
 
-            with gr.Tab("Lattice Simulator"):
+            with gr.Tab("Lattice Simulator") as lattice_tab:
                 gr.Markdown(
                     "Two-gyro **gauged quaternion lattice** from the toe repo — "
                     "compare stable (gauge=0.85) vs chaotic (gauge=0.08) flux flywheel dynamics."
@@ -403,13 +409,15 @@ def build_app() -> gr.Blocks:
                     inputs=[lat_frames, lat_sites, lat_gauge],
                     outputs=[lattice_plot, lattice_summary],
                 )
-                demo.load(
+                lattice_tab.select(
                     render_lattice_sim,
                     inputs=[lat_frames, lat_sites, lat_gauge],
                     outputs=[lattice_plot, lattice_summary],
+                    trigger_mode="once",
+                    show_progress="minimal",
                 )
 
-            with gr.Tab("Flux Flywheel"):
+            with gr.Tab("Flux Flywheel") as flux_tab:
                 gr.Markdown(
                     "**Element explorer + flux flywheel** — pick any Z from the table or dropdown. "
                     "Z = 1–118 known · Z = 119–180 superheavy (predicted) · Z = 129 Magic Island ID."
@@ -462,7 +470,13 @@ def build_app() -> gr.Blocks:
                 z_slider.change(on_flux_slider, inputs=z_slider, outputs=flux_panel_outputs)
                 z_dropdown.change(on_flux_dropdown, inputs=z_dropdown, outputs=flux_jump_outputs)
                 periodic_table.pick(on_periodic_pick, outputs=flux_jump_outputs)
-                demo.load(on_flux_slider, inputs=z_slider, outputs=flux_panel_outputs)
+                flux_tab.select(
+                    on_flux_slider,
+                    inputs=z_slider,
+                    outputs=flux_panel_outputs,
+                    trigger_mode="once",
+                    show_progress="minimal",
+                )
 
             with gr.Tab("Observations"):
                 gr.Markdown(OBSERVATIONS_INTRO_MD)
