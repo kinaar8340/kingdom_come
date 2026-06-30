@@ -9,6 +9,7 @@ import numpy as np
 
 from kingdom.core.elements import get_element
 from kingdom.core.experimental_data import (
+    compare_atomic_radius,
     ea_model_implied_ev,
     first_electron_affinity_ev,
     magnetic_moment_validation,
@@ -85,6 +86,9 @@ _EXTENDED_ONLY_KEYS = frozenset({
     "real_electron_affinity_eV",
     "ea_model_implied_eV",
     "ea_delta_eV",
+    "model_covalent_radius_pm",
+    "covalent_radius_exp_pm",
+    "radius_delta_pm",
     "comparison_fidelity_score",
     "comparison_fidelity_details",
     "comparison_fidelity_note",
@@ -452,6 +456,7 @@ def map_z_to_flywheel_extended(
         ie_weight=ie_weight,
         ie_scale_ev=ie_scale_ev,
     )
+    radius_cmp = compare_atomic_radius(z, base["stability_score"])
     heavy = z >= 80
     validation_notes = (
         f"Model stability {base['stability_score']} vs real IE {real_ie:.2f} eV "
@@ -483,6 +488,9 @@ def map_z_to_flywheel_extended(
         "real_electron_affinity_eV": round(real_ea, 2),
         "ea_model_implied_eV": implied_ea,
         "ea_delta_eV": ea_delta,
+        "model_covalent_radius_pm": radius_cmp.get("model_value"),
+        "covalent_radius_exp_pm": radius_cmp.get("experimental_value"),
+        "radius_delta_pm": radius_cmp.get("delta"),
         "unpaired_electrons": n_unpaired,
         **moment,
         **mu_validation,

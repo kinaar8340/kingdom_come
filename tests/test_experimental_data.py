@@ -3,6 +3,7 @@
 from kingdom.core.experimental_data import (
     calculate_comparison_fidelity,
     compare_atomic_radius,
+    estimate_model_covalent_radius_pm,
     compare_ionization_energy_relative,
     compare_to_experiment,
     covalent_radius_pm,
@@ -82,6 +83,8 @@ def test_build_observables_validation_iron():
     assert rows[2]["category"] == "Electron Affinity"
     assert rows[3]["category"] == "Atomic Radius (Covalent)"
     assert "132 pm" in rows[3]["experimental"]
+    assert "pm" in rows[3]["model_spin_only"]
+    assert rows[3]["delta"].endswith("pm")
     assert validation["fidelity_score"] is not None
     assert "magnetic_moment" in validation["fidelity_details"]
 
@@ -92,11 +95,18 @@ def test_build_observables_table_backward_compat():
 
 
 def test_compare_atomic_radius_iron():
-    result = compare_atomic_radius(26)
+    result = compare_atomic_radius(26, 5.5)
     assert result["available"] is True
     assert result["experimental_value"] == 132
-    assert result["delta"] is None
+    assert result["model_value"] == estimate_model_covalent_radius_pm(5.5, 26)
+    assert result["delta"] == round(result["model_value"] - 132, 1)
     assert "Cordero" in result["source"]
+
+
+def test_estimate_model_covalent_radius_pm_bounds():
+    r = estimate_model_covalent_radius_pm(8.0, 2)
+    assert 38 <= r <= 225
+    assert estimate_model_covalent_radius_pm(5.0, 29) > 0
 
 
 def test_covalent_radius_fallback():

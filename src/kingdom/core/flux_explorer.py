@@ -186,20 +186,24 @@ def build_observables_validation(z: int, extended: dict) -> dict:
         note=note_ea,
     ))
 
-    radius_cmp = compare_atomic_radius(z)
+    radius_cmp = compare_atomic_radius(z, stability)
     if radius_cmp["available"]:
+        model_radius = radius_cmp.get("model_value")
+        model_display = f"{model_radius:.1f} pm" if model_radius is not None else "—"
+        delta_radius = (
+            f"{radius_cmp['delta']:+.1f} pm"
+            if radius_cmp.get("delta") is not None
+            else "—"
+        )
         table.append(_observable_table_row(
             category="Atomic Radius (Covalent)",
-            model_spin_only="—",
+            model_spin_only=model_display,
             model_soc="—",
             experimental=radius_cmp["experimental_display"] or "—",
-            delta="—",
+            delta=delta_radius,
             source=radius_cmp["source"] or "—",
             quality=radius_cmp["quality"],
-            note=(
-                f"{radius_cmp['note']} — model radius proxy not yet implemented; "
-                "experimental reference only"
-            ),
+            note=radius_cmp["note"],
         ))
 
     comparisons = {

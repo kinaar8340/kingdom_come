@@ -13,9 +13,10 @@ DataObservable = Literal[
 ]
 
 FIDELITY_WEIGHTS: dict[str, float] = {
-    "magnetic_moment": 0.50,
-    "ionization_energy": 0.30,
-    "electron_affinity": 0.20,
+    "magnetic_moment": 0.48,
+    "ionization_energy": 0.28,
+    "electron_affinity": 0.12,
+    "atomic_radius": 0.12,
 }
 
 # z → observable → {value, low?, high?, source, quality, note}
@@ -610,15 +611,33 @@ def experimental_entry(z: int, observable: DataObservable) -> dict[str, Any] | N
     return _EXPERIMENTAL_DATA.get(z, {}).get(observable)
 
 
-def compare_atomic_radius(z: int) -> dict[str, Any]:
-    """Experimental covalent radius (pm) — no model comparison yet."""
+def estimate_model_covalent_radius_pm(stability_score: float, z: int) -> float:
+    """
+    Stability-based proxy for covalent radius (pm).
+
+    Higher stability → more compact distribution → smaller radius.
+    Base radius decreases with Z (main periodic trend).
+    """
+    base_radius = 185.0 - (z ** 0.72) * 2.1
+    stability_adjustment = (stability_score - 5.0) * 3.4
+    radius = base_radius - stability_adjustment
+    return round(max(38.0, min(radius, 225.0)), 1)
+
+
+def compare_atomic_radius(
+    z: int,
+    stability_score: float | None = None,
+) -> dict[str, Any]:
+    """Experimental covalent radius (pm) with optional stability-based model comparison."""
     entry = experimental_entry(z, "atomic_radius")
     if entry is None:
         return {
             "available": False,
             "experimental_value": None,
             "experimental_display": None,
+            "model_value": None,
             "delta": None,
+            "percent_delta": None,
             "source": None,
             "quality": "No data",
             "note": "Covalent radius data not available for this element",
@@ -626,16 +645,32 @@ def compare_atomic_radius(z: int) -> dict[str, Any]:
         }
 
     value = int(entry["value"])
-    return {
+    result: dict[str, Any] = {
         "available": True,
         "experimental_value": value,
         "experimental_display": f"{value} pm",
+        "model_value": None,
         "delta": None,
+        "percent_delta": None,
         "source": entry.get("source", "Unknown"),
         "quality": entry.get("quality", "Good"),
         "note": entry.get("note", "Covalent radius"),
         "within_range": None,
     }
+
+    if stability_score is not None:
+        model_radius = estimate_model_covalent_radius_pm(stability_score, z)
+        delta = round(model_radius - value, 1)
+        result["model_value"] = model_radius
+        result["delta"] = delta
+        if value != 0:
+            result["percent_delta"] = round(delta / value * 100.0, 1)
+        result["note"] = (
+            f"{entry.get('note', 'Covalent radius')}. "
+            f"Model proxy: stability + Z trend (higher stability → smaller radius)."
+        )
+
+    return result
 
 
 def covalent_radius_pm(z: int) -> float:
@@ -777,7 +812,7 @@ def calculate_comparison_fidelity(
     """
     Composite 0–10 fidelity from compare_to_experiment() results.
 
-    Weights default to FIDELITY_WEIGHTS (MM 50%, IE 30%, EA 20%).
+    Weights default to FIDELITY_WEIGHTS (MM 48%, IE 28%, EA 12%, radius 12%).
     Renormalizes over observables that have experimental anchors.
     """
     w = FIDELITY_WEIGHTS if weights is None else weights
@@ -795,6 +830,8 @@ def calculate_comparison_fidelity(
 
         if comp.get("score") is not None:
             score = float(comp["score"])
+        elif comp.get("delta") is None:
+            continue
         else:
             delta = abs(comp.get("delta") or 0.0)
             exp_val = float(comp["experimental_value"])
@@ -822,7 +859,7 @@ def calculate_comparison_fidelity(
             "score": None,
             "details": {},
             "note": "Insufficient experimental data",
-            "weights_label": "MM 50%, IE 30%, EA 20%",
+            "weights_label": "MM 48%, IE 28%, EA 12%, radius 12%",
         }
 
     active = [k for k in w if k in details]
@@ -831,6 +868,7 @@ def calculate_comparison_fidelity(
         "magnetic_moment": "MM",
         "ionization_energy": "IE",
         "electron_affinity": "EA",
+        "atomic_radius": "radius",
     }
     for k in active:
         pct = int(w[k] * 100)
@@ -840,7 +878,7 @@ def calculate_comparison_fidelity(
         "score": round(weighted_score / total_weight, 1),
         "details": details,
         "note": f"Weighted: {', '.join(parts)} (renormalized over available data)",
-        "weights_label": "MM 50%, IE 30%, EA 20%",
+        "weights_label": "MM 48%, IE 28%, EA 12%, radius 12%",
     }
 
 

@@ -122,6 +122,7 @@ def test_flux_observables_cards_html():
     assert "Δz" in html or "stab z" in html
     assert "Atomic Radius" in html
     assert "132 pm" in html
+    assert "pm" in html  # model radius proxy line
 
 
 def test_flux_observables_heavy_element_caveat():

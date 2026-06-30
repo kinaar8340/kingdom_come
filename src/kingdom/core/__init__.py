@@ -6,6 +6,7 @@ from .experimental_data import (
     compare_ionization_energy_relative,
     compare_to_experiment,
     covalent_radius_pm,
+    estimate_model_covalent_radius_pm,
 )
 from .flux_flywheel import (
     effective_magnetic_moment_with_soc,
@@ -35,6 +36,7 @@ __all__ = [
     "compare_ionization_energy_relative",
     "compare_to_experiment",
     "covalent_radius_pm",
+    "estimate_model_covalent_radius_pm",
     "effective_magnetic_moment_with_soc",
     "lande_g_factor",
     "map_z_to_flywheel",
