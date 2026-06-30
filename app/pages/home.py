@@ -45,7 +45,7 @@ Each point on $S^2$ has a **fiber** — a circle in $S^3$. Distinct fibers are *
 
 Detuning parameters $(\\Delta\\omega,\\ \\text{gauge strength},\\ \\text{layers})$ select **stability islands** on the lattice. The Magic Island Sweep identified a noble-gas-like ultra-stable lock — a template for emergent element mapping.
 
-The $W_g$ constant $(\\approx 350 / \\pi \\approx 111.408)$ emerges as a universal invariant, acting as a critical threshold in the underlying clock-like accumulation mechanism (see **The Clock** tab).
+The constant $W_{g} \\approx 350/\\pi \\approx 111.408$ emerges as a universal invariant, acting as a critical threshold in the underlying clock-like accumulation mechanism (see **The Clock** tab).
 
 ### Observer Synchronization
 
@@ -74,15 +74,15 @@ set by lattice dynamics, `twist_rate`, braiding, or external gauging fields.
 When $S(t)$ reaches the critical threshold:
 
 $$
-S_{\\text{crit}} = W_g = \\frac{350}{\\pi} \\approx 111.4085
+S_{\\text{crit}} = W_{g} = \\frac{350}{\\pi} \\approx 111.4085
 $$
 
-a topological instability occurs. Simulations reproducibly lock $W_g$ at $111.4080 \\pm 0.0000$.
+a topological instability occurs. Simulations reproducibly lock $W_{g}$ at $111.4080 \\pm 0.0000$.
 
 #### Burst + reset (the chime)
 
 A punctuated release follows — energy/momentum reconfiguration, braiding phase shift, or burst
-(modeled in *GW_Burst_Threshold* and related papers). Then $S$ resets (subtract $W_g$ or
+(modeled in *GW_Burst_Threshold* and related papers). Then $S$ resets (subtract $W_{g}$ or
 drop to baseline), and the cycle repeats.
 
 This produces a **sawtooth waveform**: slow linear rise → sudden drop → repeat.
@@ -92,25 +92,25 @@ This produces a **sawtooth waveform**: slow linear rise → sudden drop → repe
 | Phase | Clock analog |
 |-------|--------------|
 | Constant-rate accumulation | Steady tick / spring-winding |
-| Fixed threshold $W_g$ | Alarm setting |
+| Fixed threshold W<sub>g</sub> | Alarm setting |
 | Sudden release + reset | Chime and mechanism reset |
 | Repetition | Quasi-periodic rhythm — period set by rate and threshold |
 
-The braiding phase $\\phi_b$ also locks tightly ($\\phi_b \\approx 0.814$) alongside $W_g$,
+The braiding phase $\\phi_b$ also locks tightly ($\\phi_b \\approx 0.814$) alongside $W_{g}$,
 reinforcing topological invariance. Full dynamics derive from the effective Lagrangian of the
 gauged Hopf lattice (*Lagrangian_Derivation.pdf* in **The Papers** tab).
 """
 
 HOME_WG_MD = """
-### $W_g$ Constant
+### W<sub>g</sub> Constant
 
-The $W_g$ constant emerges as a robust invariant from the gauged Hopf lattice dynamics.
+The constant $W_{g}$ emerges as a robust invariant from the gauged Hopf lattice dynamics.
 
 **Approximate Value:**  
-$W_g \\approx 350 / \\pi \\approx 111.408$
+$W_{g} = 350/\\pi \\approx 111.408$
 
 This value acts as the critical threshold in the clock-like accumulation mechanism. When accumulated
-stress or twist reaches $W_g$, the system undergoes a punctuated burst and reset.
+stress or twist reaches $W_{g}$, the system undergoes a punctuated burst and reset.
 
 The subscript $g$ stands for **gauged**, reflecting the gauged nature of the Hopf lattice.
 """
@@ -122,7 +122,7 @@ HOME_EXPLORE_MD = """
 
 | Repo | Focus |
 |------|-------|
-| [toe](https://github.com/kinaar8340/toe) | RubikConeConduit — $W_g$ lock, stability islands, braiding phase |
+| [toe](https://github.com/kinaar8340/toe) | RubikConeConduit — $W_{g}$ lock, stability islands, braiding phase |
 | [kingdom_come](https://github.com/kinaar8340/kingdom_come) | This portal — visualizers and investigations |
 | [qvpic](https://github.com/kinaar8340/qvpic) | Quaternion vortex persistent identity |
 | [pic](https://github.com/kinaar8340/pic) | Persistent identity conduit (RubikCone-first) |
@@ -144,7 +144,7 @@ document burst, echo, and observer effects.
 | **Lattice Simulator** | Two-gyro gauged quaternion lattice (stable vs chaotic) |
 | **Flux Flywheel** | Periodic table as flux flywheel stability proxy |
 | **The Papers** (sub-tab) | Accordion summaries + inline page previews |
-| **Observations** | $W_g = 350/\\pi$ signatures in nature and markets |
+| **Observations** | $W_{g} = 350/\\pi$ signatures in nature and markets |
 | **Showcase** | All seven HF Spaces in the ecosystem |
 | **Help** | Site navigation, controls, and acronym glossary |
 
