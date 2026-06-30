@@ -6,10 +6,14 @@ from kingdom.viz.observations_trends import (
     create_fidelity_trend_plot,
     create_soc_mu_vs_experimental_plot,
     create_stability_vs_ie_plot,
+    fidelity_trend_dataframe,
     filter_trends_by_period,
+    load_observations_trend_dataframes,
     load_observations_trend_figures,
     observations_trends_dataframe,
+    stability_ie_trend_dataframe,
     z_from_plot_select,
+    z_from_scatter_select,
 )
 
 
@@ -57,6 +61,42 @@ def test_filter_trends_by_period():
 def test_z_from_plot_select_customdata():
     evt = SimpleNamespace(value=[26, "Fe"], index=(0, 3))
     assert z_from_plot_select(evt) == 26
+
+
+def test_z_from_scatter_select_fidelity_midpoint():
+    df = fidelity_trend_dataframe(observations_trends_dataframe(30))
+    evt = SimpleNamespace(index=(25.5, 26.5), selected=True)
+    assert z_from_scatter_select(evt, df, x_col="Z") == 26
+
+
+def test_z_from_scatter_select_stability_lookup():
+    df = stability_ie_trend_dataframe(observations_trends_dataframe(30))
+    row = df[df["element"] == "Fe"].iloc[0]
+    evt = SimpleNamespace(
+        index=(
+            row["model_stability"] - 0.01,
+            row["model_stability"] + 0.01,
+            row["experimental_ie"] - 0.01,
+            row["experimental_ie"] + 0.01,
+        ),
+        selected=True,
+    )
+    assert z_from_scatter_select(
+        evt,
+        df,
+        x_col="model_stability",
+        y_col="experimental_ie",
+    ) == 26
+
+
+def test_load_observations_trend_dataframes_tuple():
+    dfs = load_observations_trend_dataframes(30)
+    assert len(dfs) == 3
+    fidelity_df, stability_df, mu_df = dfs
+    assert "Z" in fidelity_df.columns
+    assert "fidelity_score" in fidelity_df.columns
+    assert "model_stability" in stability_df.columns
+    assert list(mu_df.columns)
 
 
 def test_fidelity_plot_customdata_includes_z():

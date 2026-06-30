@@ -27,6 +27,11 @@ _PERIOD_COLORS = (
     "#ef553b",
 )
 
+PERIOD_COLOR_MAP: dict[str, str] = {
+    str(period): _PERIOD_COLORS[(period - 1) % len(_PERIOD_COLORS)]
+    for period in range(1, 8)
+}
+
 DEFAULT_TREND_PERIODS: tuple[int, ...] = tuple(range(1, 8))
 
 
@@ -84,34 +89,146 @@ def filter_trends_by_period(
     return df[df["period"].isin(period_set)].copy()
 
 
-def z_from_plot_select(evt: Any) -> int | None:
-    """
-    Extract atomic number Z from a Gradio Plot select event.
+def _z_in_range(z: float | int) -> int | None:
+    try:
+        parsed = int(round(float(z)))
+    except (TypeError, ValueError):
+        return None
+    if 1 <= parsed <= 180:
+        return parsed
+    return None
 
-    Expects Z as the first customdata field on scatter traces.
+
+def _axis_bounds(index: tuple | list, start: int = 0) -> tuple[float, float] | None:
+    try:
+        lo = float(index[start])
+        hi = float(index[start + 1])
+    except (IndexError, TypeError, ValueError):
+        return None
+    return min(lo, hi), max(lo, hi)
+
+
+def _pick_z_from_subset(sub: pd.DataFrame, df: pd.DataFrame, x_col: str, x_center: float) -> int | None:
+    if sub.empty:
+        idx = (df[x_col] - x_center).abs().idxmin()
+        return _z_in_range(df.loc[idx, "Z"])
+    if len(sub) == 1:
+        return _z_in_range(sub.iloc[0]["Z"])
+    idx = (sub[x_col] - x_center).abs().idxmin()
+    return _z_in_range(sub.loc[idx, "Z"])
+
+
+def z_from_scatter_select(
+    evt: Any,
+    df: pd.DataFrame,
+    *,
+    x_col: str = "Z",
+    y_col: str | None = None,
+) -> int | None:
     """
+    Extract atomic number Z from a Gradio ScatterPlot region-select event.
+
+    Native plots report axis bounds in ``SelectData.index``. When ``x_col`` is
+    ``Z`` the midpoint is used directly; otherwise the matching row in ``df`` is
+    resolved using optional ``y_col`` bounds when present.
+    """
+    if evt is None or getattr(evt, "selected", True) is False:
+        return None
+    if df is None or df.empty or "Z" not in df.columns or x_col not in df.columns:
+        return None
+
+    index = getattr(evt, "index", None)
+    if not isinstance(index, (list, tuple)) or len(index) < 2:
+        return z_from_plot_select(evt)
+
+    x_bounds = _axis_bounds(index, 0)
+    if x_bounds is None:
+        return z_from_plot_select(evt)
+    lo_x, hi_x = x_bounds
+    x_center = (lo_x + hi_x) / 2
+
+    if x_col == "Z":
+        return _z_in_range(x_center)
+
+    sub = df[(df[x_col] >= lo_x) & (df[x_col] <= hi_x)]
+    if y_col and y_col in df.columns and len(index) >= 4:
+        y_bounds = _axis_bounds(index, 2)
+        if y_bounds is not None:
+            lo_y, hi_y = y_bounds
+            sub = sub[(sub[y_col] >= lo_y) & (sub[y_col] <= hi_y)]
+
+    return _pick_z_from_subset(sub, df, x_col, x_center)
+
+
+def z_from_plot_select(evt: Any) -> int | None:
+    """Legacy Plotly customdata helper kept for unit tests."""
     if evt is None:
         return None
 
     value = getattr(evt, "value", None)
     if isinstance(value, (list, tuple)) and value:
-        try:
-            z = int(float(value[0]))
-            if 1 <= z <= 180:
-                return z
-        except (TypeError, ValueError):
-            pass
+        z = _z_in_range(value[0])
+        if z is not None:
+            return z
 
     index = getattr(evt, "index", None)
     if isinstance(index, (list, tuple)) and index:
-        try:
-            z = int(float(index[0]))
-            if 1 <= z <= 180:
-                return z
-        except (TypeError, ValueError):
-            pass
+        z = _z_in_range(index[0])
+        if z is not None:
+            return z
 
     return None
+
+
+def fidelity_trend_dataframe(data: pd.DataFrame | None = None) -> pd.DataFrame:
+    """ScatterPlot-ready fidelity vs Z table."""
+    df = observations_trends_dataframe() if data is None else data
+    plot_df = df.dropna(subset=["fidelity_score"]).copy()
+    out = plot_df[
+        ["Z", "element", "fidelity_score", "period", "magnetic_moment_score", "ie_score"]
+    ].copy()
+    out["period"] = out["period"].astype(int).astype(str)
+    return out
+
+
+def stability_ie_trend_dataframe(data: pd.DataFrame | None = None) -> pd.DataFrame:
+    """ScatterPlot-ready stability vs experimental IE table."""
+    df = observations_trends_dataframe() if data is None else data
+    out = df[
+        ["Z", "element", "model_stability", "experimental_ie", "period", "fidelity_score"]
+    ].copy()
+    out["period"] = out["period"].astype(int).astype(str)
+    return out
+
+
+def soc_mu_trend_dataframe(data: pd.DataFrame | None = None) -> pd.DataFrame:
+    """ScatterPlot-ready SOC μ vs experimental μ table."""
+    df = observations_trends_dataframe() if data is None else data
+    plot_df = df[df["mu_exp_available"]].dropna(
+        subset=["soc_mu_BM", "experimental_mu_BM"]
+    ).copy()
+    if plot_df.empty:
+        return pd.DataFrame(
+            columns=["Z", "element", "experimental_mu_BM", "soc_mu_BM", "period"]
+        )
+    out = plot_df[
+        ["Z", "element", "experimental_mu_BM", "soc_mu_BM", "period"]
+    ].copy()
+    out["period"] = out["period"].astype(int).astype(str)
+    return out
+
+
+def load_observations_trend_dataframes(
+    z_max: int = 118,
+    periods: list[int] | tuple[int, ...] | None = None,
+) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    """Return (fidelity, stability vs IE, SOC μ) DataFrames for ScatterPlot."""
+    df = filter_trends_by_period(observations_trends_dataframe(z_max), periods)
+    return (
+        fidelity_trend_dataframe(df),
+        stability_ie_trend_dataframe(df),
+        soc_mu_trend_dataframe(df),
+    )
 
 
 def _apply_dark_theme(fig: go.Figure, *, height: int = 440) -> go.Figure:

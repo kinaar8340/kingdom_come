@@ -2,11 +2,11 @@
 
 from __future__ import annotations
 
-import plotly.graph_objects as go
+import pandas as pd
 
 from kingdom.viz.observations_trends import (
     DEFAULT_TREND_PERIODS,
-    load_observations_trend_figures,
+    load_observations_trend_dataframes,
 )
 
 FLUX_TRENDS_MD = """
@@ -21,7 +21,7 @@ Points are colored by **period**; fidelity uses the composite score (μ 48% · I
 | **Stability vs IE** | Global correlation of model stability with real ionization energy |
 | **SOC μ vs Experimental** | Visual check of spin-orbit magnetic moment improvement |
 
-**Click any point** to jump that element in the **Flux Flywheel** tab. Use the period filter to focus on specific rows.
+**Drag a narrow region on any point** to jump that element in the **Flux Flywheel** tab. Use the period filter to focus on specific rows.
 """
 
 
@@ -33,6 +33,6 @@ def _normalize_periods(periods: list[str] | list[int] | None) -> tuple[int, ...]
 
 def render_flux_trend_plots(
     periods: list[str] | list[int] | None = None,
-) -> tuple[go.Figure, go.Figure, go.Figure]:
-    """Build all three validation trend figures for Gradio Plot outputs."""
-    return load_observations_trend_figures(118, _normalize_periods(periods))
+) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    """Build all three validation trend tables for Gradio ScatterPlot outputs."""
+    return load_observations_trend_dataframes(118, _normalize_periods(periods))
