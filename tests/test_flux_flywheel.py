@@ -1,8 +1,10 @@
 """Tests for flux flywheel mapping."""
 
 from kingdom.core.flux_flywheel import (
+    base_flywheel_keys,
     map_z_to_flywheel,
     map_z_to_flywheel_extended,
+    model_reality_alignment,
     spin_only_magnetic_moment_bm,
     unpaired_electrons,
 )
@@ -23,11 +25,17 @@ def test_z_returns_required_keys():
     assert "gauge_strength" in result
 
 
-def test_extended_preserves_base_flywheel_keys():
-    base = map_z_to_flywheel(10)
-    ext = map_z_to_flywheel_extended(10)
-    for key in ("Z", "delta_omega", "stability_score", "stability_class", "pseudo_Z"):
-        assert ext[key] == base[key]
+def test_extended_preserves_entire_base_flywheel_output():
+    """Extended wrapper must not alter any map_z_to_flywheel() field."""
+    keys = base_flywheel_keys()
+    for z in (1, 2, 10, 24, 26, 41, 79, 118, 129):
+        if z > 180:
+            continue
+        base = map_z_to_flywheel(z)
+        ext = map_z_to_flywheel_extended(z)
+        assert keys == base_flywheel_keys()
+        for key in keys:
+            assert ext[key] == base[key], f"Z={z} key={key}"
 
 
 def test_extended_helium_observables():
@@ -49,3 +57,18 @@ def test_extended_iron_magnetism():
 
 def test_unpaired_from_aufbau_neon():
     assert unpaired_electrons(10) == 0
+
+
+def test_unpaired_transition_metal_overrides():
+    assert unpaired_electrons(24) == 6  # Cr
+    assert unpaired_electrons(29) == 1  # Cu
+    assert unpaired_electrons(41) == 5  # Nb
+    assert unpaired_electrons(42) == 6  # Mo
+    assert unpaired_electrons(46) == 0  # Pd
+
+
+def test_alignment_weights_are_tunable():
+    default = model_reality_alignment(5.5, 7.90)
+    ie_heavy = model_reality_alignment(5.5, 7.90, stability_weight=0.2, ie_weight=0.8)
+    stab_heavy = model_reality_alignment(5.5, 7.90, stability_weight=0.8, ie_weight=0.2)
+    assert ie_heavy < default < stab_heavy

@@ -17,19 +17,37 @@ _IONIZATION_ENERGY_EV: dict[int, float] = {
     26: 7.90,
     36: 13.99,
     54: 12.13,
+    24: 6.77,
+    29: 7.73,
+    41: 8.10,
+    42: 7.09,
     79: 9.23,
     86: 10.75,
     118: 8.0,
 }
 
-# Override unpaired e⁻ where aufbau + Hund differs from common lab reporting.
+# Ground-state unpaired e⁻ overrides (Aufbau deviations: Cr, Mo, Nb, Pd, etc.).
 _UNPAIRED_OVERRIDE: dict[int, int] = {
     2: 0,
     10: 0,
-    26: 4,
+    24: 6,   # Cr — 3d⁵4s¹
+    26: 4,   # Fe — high-spin 3d⁶
+    29: 1,   # Cu — 3d¹⁰4s¹
+    41: 5,   # Nb — 4d⁴5s¹
+    42: 6,   # Mo — 4d⁵5s¹
+    46: 0,   # Pd — 4d¹⁰ diamagnetic
     79: 1,
     118: 0,
 }
+
+_EXTENDED_ONLY_KEYS = frozenset({
+    "real_ionization_energy_eV",
+    "unpaired_electrons",
+    "magnetic_moment_BM",
+    "is_diamagnetic",
+    "model_vs_reality_alignment",
+    "validation_notes",
+})
 
 _ORBITAL_CAPACITY = {"s": 2, "p": 6, "d": 10, "f": 14}
 _SUBSHELL_RE = re.compile(r"(\d+)([spdf])(\d+)")
@@ -144,13 +162,39 @@ def spin_only_magnetic_moment_bm(n_unpaired: int) -> float:
     return float(np.sqrt(n_unpaired * (n_unpaired + 2)))
 
 
-def model_reality_alignment(stability_score: float, ionization_ev: float) -> float:
+def model_reality_alignment(
+    stability_score: float,
+    ionization_ev: float,
+    *,
+    stability_weight: float = 0.5,
+    ie_weight: float = 0.5,
+    ie_scale_ev: float = 25.0,
+) -> float:
     """Blend model stability and normalized IE into a 0–10 alignment score."""
-    ie_norm = min(ionization_ev / 25.0, 1.0)
-    return round(10.0 * (0.5 * (stability_score / 8.0) + 0.5 * ie_norm), 1)
+    total = stability_weight + ie_weight
+    if total <= 0:
+        raise ValueError("alignment weights must sum to a positive value")
+    w_stab = stability_weight / total
+    w_ie = ie_weight / total
+    ie_norm = min(ionization_ev / ie_scale_ev, 1.0)
+    score = 10.0 * (w_stab * (stability_score / 8.0) + w_ie * ie_norm)
+    return round(score, 1)
 
 
-def map_z_to_flywheel_extended(z: int, n_sites: int = 96, frames: int = 300) -> dict[str, Any]:
+def base_flywheel_keys() -> frozenset[str]:
+    """Keys produced by map_z_to_flywheel (regression guard for extended wrapper)."""
+    return frozenset(map_z_to_flywheel(1)) - _EXTENDED_ONLY_KEYS
+
+
+def map_z_to_flywheel_extended(
+    z: int,
+    n_sites: int = 96,
+    frames: int = 300,
+    *,
+    stability_weight: float = 0.5,
+    ie_weight: float = 0.5,
+    ie_scale_ev: float = 25.0,
+) -> dict[str, Any]:
     """
     Extended mapping: flywheel parameters plus laboratory-style observables.
 
@@ -161,7 +205,13 @@ def map_z_to_flywheel_extended(z: int, n_sites: int = 96, frames: int = 300) -> 
     real_ie = first_ionization_energy_ev(z)
     n_unpaired = unpaired_electrons(z)
     magnetic_moment = spin_only_magnetic_moment_bm(n_unpaired)
-    alignment = model_reality_alignment(base["stability_score"], real_ie)
+    alignment = model_reality_alignment(
+        base["stability_score"],
+        real_ie,
+        stability_weight=stability_weight,
+        ie_weight=ie_weight,
+        ie_scale_ev=ie_scale_ev,
+    )
 
     return {
         **base,
