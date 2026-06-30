@@ -8,7 +8,7 @@ from pathlib import Path
 import plotly.graph_objects as go
 
 from kingdom.core.elements import EXPLORER_Z_MAX, NOBLE_GAS_Z, get_element, is_explorable_element
-from kingdom.core.experimental_data import compare_to_experiment
+from kingdom.core.experimental_data import calculate_comparison_fidelity, compare_to_experiment
 from kingdom.core.flux_flywheel import map_z_to_flywheel, map_z_to_flywheel_extended
 from kingdom.viz.electron_cloud import build_chemistry_vs_toe_figure, build_electron_cloud_figure
 from kingdom.viz.hopf_plotly import kingdom_dark_theme
@@ -62,11 +62,34 @@ def _cached_magic_island(z: int) -> go.Figure:
     return build_magic_island_heatmap(z)
 
 
-def build_observables_table(z: int, extended: dict) -> list[dict]:
-    """
-    Structured model-vs-experiment rows for the Observables validation table.
+def _observable_table_row(
+    *,
+    category: str,
+    model_spin_only: str,
+    model_soc: str,
+    experimental: str,
+    delta: str,
+    source: str,
+    quality: str,
+    note: str,
+) -> dict:
+    return {
+        "category": category,
+        "model_spin_only": model_spin_only,
+        "model_soc": model_soc,
+        "experimental": experimental,
+        "delta": delta,
+        "source": source,
+        "quality": quality,
+        "note": note,
+    }
 
-    Each row: category, model_spin_only, model_soc, experimental, delta, source, quality, note.
+
+def build_observables_validation(z: int, extended: dict) -> dict:
+    """
+    Model-vs-experiment validation bundle: fidelity score + table rows.
+
+    Returns fidelity_score, fidelity_details, fidelity_note, rows, comparisons.
     """
     table: list[dict] = []
 
@@ -86,16 +109,16 @@ def build_observables_table(z: int, extended: dict) -> list[dict]:
     exp_mu = f"{mu_cmp['experimental_display']} BM" if mu_cmp["available"] else "—"
     delta_mu = f"{mu_cmp['delta']:+.2f} BM" if mu_cmp["delta"] is not None else "—"
 
-    table.append({
-        "category": "Magnetic Moment",
-        "model_spin_only": f"{spin_only:.2f} BM",
-        "model_soc": soc_display,
-        "experimental": exp_mu,
-        "delta": delta_mu,
-        "source": mu_cmp["source"] or "—",
-        "quality": mu_cmp["quality"],
-        "note": mu_cmp["note"],
-    })
+    table.append(_observable_table_row(
+        category="Magnetic Moment",
+        model_spin_only=f"{spin_only:.2f} BM",
+        model_soc=soc_display,
+        experimental=exp_mu,
+        delta=delta_mu,
+        source=mu_cmp["source"] or "—",
+        quality=mu_cmp["quality"],
+        note=mu_cmp["note"],
+    ))
 
     implied_ie = float(extended.get("ie_model_implied_eV", 0.0))
     real_ie = float(extended["real_ionization_energy_eV"])
@@ -114,18 +137,64 @@ def build_observables_table(z: int, extended: dict) -> list[dict]:
         quality_ie = "Estimated"
         note_ie = "No NIST anchor — smooth fallback trend used"
 
-    table.append({
-        "category": "Ionization Energy",
-        "model_spin_only": f"{implied_ie:.2f} eV",
-        "model_soc": "—",
-        "experimental": exp_ie,
-        "delta": delta_ie,
-        "source": source_ie,
-        "quality": quality_ie,
-        "note": note_ie,
-    })
+    table.append(_observable_table_row(
+        category="Ionization Energy",
+        model_spin_only=f"{implied_ie:.2f} eV",
+        model_soc="—",
+        experimental=exp_ie,
+        delta=delta_ie,
+        source=source_ie,
+        quality=quality_ie,
+        note=note_ie,
+    ))
 
-    return table
+    implied_ea = float(extended.get("ea_model_implied_eV", 0.0))
+    real_ea = float(extended.get("real_electron_affinity_eV", 0.0))
+    ea_cmp = compare_to_experiment(z, implied_ea, "electron_affinity")
+
+    if ea_cmp["available"]:
+        exp_ea = f"{ea_cmp['experimental_value']:.2f} eV"
+        delta_ea = f"{ea_cmp['delta']:+.2f} eV"
+        source_ea = ea_cmp["source"] or "—"
+        quality_ea = ea_cmp["quality"]
+        note_ea = ea_cmp["note"]
+    else:
+        exp_ea = f"{real_ea:.2f} eV"
+        delta_ea = f"{implied_ea - real_ea:+.2f} eV"
+        source_ea = "Lookup + fallback"
+        quality_ea = "Estimated"
+        note_ea = "No NIST anchor — heuristic fallback used"
+
+    table.append(_observable_table_row(
+        category="Electron Affinity",
+        model_spin_only=f"{implied_ea:.2f} eV",
+        model_soc="—",
+        experimental=exp_ea,
+        delta=delta_ea,
+        source=source_ea,
+        quality=quality_ea,
+        note=note_ea,
+    ))
+
+    comparisons = {
+        "magnetic_moment": mu_cmp,
+        "ionization_energy": ie_cmp,
+        "electron_affinity": ea_cmp,
+    }
+    fidelity = calculate_comparison_fidelity(comparisons)
+
+    return {
+        "fidelity_score": fidelity["score"],
+        "fidelity_details": fidelity["details"],
+        "fidelity_note": fidelity["note"],
+        "rows": table,
+        "comparisons": comparisons,
+    }
+
+
+def build_observables_table(z: int, extended: dict) -> list[dict]:
+    """Table rows only (backward-compatible helper)."""
+    return build_observables_validation(z, extended)["rows"]
 
 
 def flux_observables_table(extended: dict, z: int | None = None) -> list[list[str]]:
@@ -150,6 +219,13 @@ def flux_observables_table(extended: dict, z: int | None = None) -> list[list[st
             rows.append(["μ fidelity (/10)", str(fidelity)])
         if quality:
             rows.append(["μ data quality", quality])
+
+    fidelity_score = extended.get("comparison_fidelity_score")
+    if fidelity_score is not None:
+        rows.append(["Comparison fidelity (/10)", str(fidelity_score)])
+        details = extended.get("comparison_fidelity_details") or {}
+        for key, score in details.items():
+            rows.append([f"  Fidelity · {key}", str(score)])
 
     for entry in build_observables_table(z_val, extended):
         rows.append([f"— {entry['category']}", entry["experimental"]])
@@ -233,11 +309,17 @@ def explore_flux_element_extended(z: int) -> dict:
     """Flux Flywheel payload with laboratory observables and validation metrics."""
     payload = explore_flux_element(z)
     extended = map_z_to_flywheel_extended(z)
-    observables_rows = build_observables_table(z, extended)
+    validation = build_observables_validation(z, extended)
+    extended = {
+        **extended,
+        "comparison_fidelity_score": validation["fidelity_score"],
+        "comparison_fidelity_details": validation["fidelity_details"],
+        "comparison_fidelity_note": validation["fidelity_note"],
+    }
     return {
         **payload,
         "flywheel": extended,
         "metrics_table": flux_metrics_table(extended),
         "observables_table": flux_observables_table(extended, z=z),
-        "observables_validation": observables_rows,
+        "observables_validation": validation,
     }

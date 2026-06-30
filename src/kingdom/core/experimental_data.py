@@ -6,6 +6,12 @@ from typing import Any, Literal
 
 ObservableName = Literal["magnetic_moment", "ionization_energy", "electron_affinity"]
 
+FIDELITY_WEIGHTS: dict[str, float] = {
+    "magnetic_moment": 0.50,
+    "ionization_energy": 0.30,
+    "electron_affinity": 0.20,
+}
+
 # z → observable → {value, low?, high?, source, quality, note}
 _EXPERIMENTAL_DATA: dict[int, dict[str, dict[str, Any]]] = {
     1: {
@@ -47,6 +53,12 @@ _EXPERIMENTAL_DATA: dict[int, dict[str, dict[str, Any]]] = {
             "quality": "Direct measurement",
             "note": "³P₀ (J=0)",
         },
+        "electron_affinity": {
+            "value": 1.26,
+            "source": "NIST",
+            "quality": "Excellent",
+            "note": "Ground-state electron affinity",
+        },
     },
     7: {
         "magnetic_moment": {
@@ -54,6 +66,12 @@ _EXPERIMENTAL_DATA: dict[int, dict[str, dict[str, Any]]] = {
             "source": "NIST ASD",
             "quality": "Direct measurement",
             "note": "⁴S₃/₂",
+        },
+        "electron_affinity": {
+            "value": -0.07,
+            "source": "NIST",
+            "quality": "Excellent",
+            "note": "Slightly negative — rare anion instability",
         },
     },
     8: {
@@ -63,6 +81,12 @@ _EXPERIMENTAL_DATA: dict[int, dict[str, dict[str, Any]]] = {
             "quality": "Direct measurement",
             "note": "³P₂",
         },
+        "electron_affinity": {
+            "value": 1.46,
+            "source": "NIST",
+            "quality": "Excellent",
+            "note": "Ground-state electron affinity",
+        },
     },
     9: {
         "magnetic_moment": {
@@ -70,6 +94,12 @@ _EXPERIMENTAL_DATA: dict[int, dict[str, dict[str, Any]]] = {
             "source": "NIST ASD",
             "quality": "Direct measurement",
             "note": "²P₃/₂",
+        },
+        "electron_affinity": {
+            "value": 3.40,
+            "source": "NIST",
+            "quality": "Excellent",
+            "note": "Ground-state electron affinity",
         },
     },
     10: {
@@ -117,6 +147,12 @@ _EXPERIMENTAL_DATA: dict[int, dict[str, dict[str, Any]]] = {
             "quality": "Direct measurement",
             "note": "³P₂",
         },
+        "electron_affinity": {
+            "value": 2.08,
+            "source": "NIST",
+            "quality": "Excellent",
+            "note": "Ground-state electron affinity",
+        },
     },
     17: {
         "magnetic_moment": {
@@ -124,6 +160,12 @@ _EXPERIMENTAL_DATA: dict[int, dict[str, dict[str, Any]]] = {
             "source": "NIST ASD",
             "quality": "Direct measurement",
             "note": "²P₃/₂",
+        },
+        "electron_affinity": {
+            "value": 3.61,
+            "source": "NIST",
+            "quality": "Excellent",
+            "note": "Ground-state electron affinity",
         },
     },
     18: {
@@ -154,6 +196,14 @@ _EXPERIMENTAL_DATA: dict[int, dict[str, dict[str, Any]]] = {
             "source": "NIST ASD",
             "quality": "Direct measurement",
             "note": "¹S₀",
+        },
+    },
+    21: {
+        "magnetic_moment": {
+            "value": 2.82,
+            "source": "NIST ASD",
+            "quality": "Good",
+            "note": "²D₃/₂",
         },
     },
     22: {
@@ -211,6 +261,12 @@ _EXPERIMENTAL_DATA: dict[int, dict[str, dict[str, Any]]] = {
             "quality": "Excellent",
             "note": "First ionization, ground state",
         },
+        "electron_affinity": {
+            "value": 0.16,
+            "source": "NIST",
+            "quality": "Good",
+            "note": "Ground-state electron affinity",
+        },
     },
     27: {
         "magnetic_moment": {
@@ -245,6 +301,12 @@ _EXPERIMENTAL_DATA: dict[int, dict[str, dict[str, Any]]] = {
             "quality": "Excellent",
             "note": "First ionization, ground state",
         },
+        "electron_affinity": {
+            "value": 1.24,
+            "source": "NIST",
+            "quality": "Good",
+            "note": "Ground-state electron affinity",
+        },
     },
     30: {
         "magnetic_moment": {
@@ -252,6 +314,56 @@ _EXPERIMENTAL_DATA: dict[int, dict[str, dict[str, Any]]] = {
             "source": "NIST ASD",
             "quality": "Direct measurement",
             "note": "¹S₀",
+        },
+        "electron_affinity": {
+            "value": -0.58,
+            "source": "NIST",
+            "quality": "Good",
+            "note": "Ground-state electron affinity",
+        },
+    },
+    43: {
+        "magnetic_moment": {
+            "value": 5.29,
+            "low": 4.8,
+            "high": 5.8,
+            "source": "NIST ASD",
+            "quality": "Estimated",
+            "note": "⁶D₅/₂ — limited beam data",
+        },
+    },
+    44: {
+        "magnetic_moment": {
+            "value": 2.82,
+            "source": "NIST ASD",
+            "quality": "Good",
+            "note": "⁵F₅",
+        },
+    },
+    45: {
+        "magnetic_moment": {
+            "value": 2.82,
+            "low": 2.4,
+            "high": 3.2,
+            "source": "NIST ASD",
+            "quality": "Good",
+            "note": "⁴F₉/₂",
+        },
+    },
+    47: {
+        "magnetic_moment": {
+            "value": 1.95,
+            "source": "NIST ASD",
+            "quality": "Direct measurement",
+            "note": "²S₁/₂ (5s¹)",
+        },
+    },
+    48: {
+        "magnetic_moment": {
+            "value": 0.0,
+            "source": "NIST ASD",
+            "quality": "Direct measurement",
+            "note": "¹S₀ (4d¹⁰5s²)",
         },
     },
     36: {
@@ -429,6 +541,94 @@ def experimental_entry(z: int, observable: ObservableName) -> dict[str, Any] | N
 def experimental_magnetic_moment(z: int) -> dict[str, Any] | None:
     """Experimental ground-state atomic μ entry, or None."""
     return experimental_entry(z, "magnetic_moment")
+
+
+def first_electron_affinity_ev(z: int) -> float:
+    """Electron affinity (eV) — NIST anchors with smooth fallback."""
+    entry = experimental_entry(z, "electron_affinity")
+    if entry is not None:
+        return float(entry["value"])
+    # Non-metals tend to bind electrons more strongly than metals.
+    if z in {2, 10, 18, 36, 54, 86, 118}:
+        return -0.5
+    if z >= 17:
+        return 2.5
+    if z >= 11:
+        return 0.8
+    return 0.4
+
+
+def ea_model_implied_ev(stability_score: float, ea_scale_ev: float = 3.5) -> float:
+    """EA (eV) implied if less-stable flywheel states accept electrons more readily."""
+    return round((8.0 - stability_score) / 8.0 * ea_scale_ev, 2)
+
+
+def calculate_comparison_fidelity(
+    comparisons: dict[str, dict[str, Any]],
+    *,
+    weights: dict[str, float] | None = None,
+) -> dict[str, Any]:
+    """
+    Composite 0–10 fidelity from compare_to_experiment() results.
+
+    Weights default to FIDELITY_WEIGHTS (MM 50%, IE 30%, EA 20%).
+    Renormalizes over observables that have experimental anchors.
+    """
+    w = FIDELITY_WEIGHTS if weights is None else weights
+    total_weight = 0.0
+    weighted_score = 0.0
+    details: dict[str, float] = {}
+
+    for key, comp in comparisons.items():
+        if not comp.get("available") or comp.get("experimental_value") is None:
+            continue
+
+        weight = w.get(key, 0.0)
+        if weight <= 0:
+            continue
+
+        delta = abs(comp.get("delta") or 0.0)
+        exp_val = float(comp["experimental_value"])
+        ref = abs(exp_val) if exp_val != 0 else 1.0
+
+        if exp_val == 0.0:
+            score = 10.0 if delta < 0.05 else max(0.0, 10.0 * (1.0 - min(delta / ref, 1.0)))
+        else:
+            relative_error = min(delta / ref, 1.0)
+            score = max(0.0, 10.0 * (1.0 - relative_error))
+
+        if comp.get("within_range"):
+            score = min(10.0, score + 1.5)
+
+        weighted_score += score * weight
+        total_weight += weight
+        details[key] = round(score, 1)
+
+    if total_weight == 0:
+        return {
+            "score": None,
+            "details": {},
+            "note": "Insufficient experimental data",
+            "weights_label": "MM 50%, IE 30%, EA 20%",
+        }
+
+    active = [k for k in w if k in details]
+    parts = []
+    labels = {
+        "magnetic_moment": "MM",
+        "ionization_energy": "IE",
+        "electron_affinity": "EA",
+    }
+    for k in active:
+        pct = int(w[k] * 100)
+        parts.append(f"{labels.get(k, k)} {pct}%")
+
+    return {
+        "score": round(weighted_score / total_weight, 1),
+        "details": details,
+        "note": f"Weighted: {', '.join(parts)} (renormalized over available data)",
+        "weights_label": "MM 50%, IE 30%, EA 20%",
+    }
 
 
 def observable_match_score(

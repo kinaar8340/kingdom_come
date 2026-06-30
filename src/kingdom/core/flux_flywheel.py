@@ -8,7 +8,11 @@ from typing import Any
 import numpy as np
 
 from kingdom.core.elements import get_element
-from kingdom.core.experimental_data import magnetic_moment_validation
+from kingdom.core.experimental_data import (
+    ea_model_implied_ev,
+    first_electron_affinity_ev,
+    magnetic_moment_validation,
+)
 
 # First ionization energy (eV) — experimental anchors; fallback trend for other Z.
 _IONIZATION_ENERGY_EV: dict[int, float] = {
@@ -78,6 +82,12 @@ _EXTENDED_ONLY_KEYS = frozenset({
     "alignment_component_gap",
     "validation_notes",
     "heavy_element_caveat",
+    "real_electron_affinity_eV",
+    "ea_model_implied_eV",
+    "ea_delta_eV",
+    "comparison_fidelity_score",
+    "comparison_fidelity_details",
+    "comparison_fidelity_note",
 })
 
 _ORBITAL_CAPACITY = {"s": 2, "p": 6, "d": 10, "f": 14}
@@ -415,6 +425,7 @@ def map_z_to_flywheel_extended(
     """
     base = map_z_to_flywheel(z, n_sites=n_sites, frames=frames)
     real_ie = first_ionization_energy_ev(z)
+    real_ea = first_electron_affinity_ev(z)
     n_unpaired = unpaired_electrons(z)
     moment = magnetic_moment_observables(z, n_unpaired, use_spin_orbit=use_spin_orbit)
     mu_validation = magnetic_moment_validation(
@@ -431,7 +442,9 @@ def map_z_to_flywheel_extended(
         ie_scale_ev=ie_scale_ev,
     )
     implied_ie = ie_model_implied_ev(base["stability_score"], ie_scale_ev)
+    implied_ea = ea_model_implied_ev(base["stability_score"])
     delta_ie, delta_pct = ie_reality_delta(base["stability_score"], real_ie, ie_scale_ev)
+    ea_delta = round(implied_ea - real_ea, 2)
     stab_pts, ie_pts, align_gap = alignment_components(
         base["stability_score"],
         real_ie,
@@ -467,6 +480,9 @@ def map_z_to_flywheel_extended(
         "ie_model_implied_eV": implied_ie,
         "ie_delta_eV": delta_ie,
         "ie_delta_pct": delta_pct,
+        "real_electron_affinity_eV": round(real_ea, 2),
+        "ea_model_implied_eV": implied_ea,
+        "ea_delta_eV": ea_delta,
         "unpaired_electrons": n_unpaired,
         **moment,
         **mu_validation,

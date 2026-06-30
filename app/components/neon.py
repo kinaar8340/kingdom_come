@@ -5,7 +5,7 @@ from __future__ import annotations
 import base64
 from pathlib import Path
 
-from kingdom.core.flux_explorer import build_observables_table
+from kingdom.core.flux_explorer import build_observables_validation
 
 NEON_CSS = """
 /* Kingdom Come neon plugin — noble gas / magic island badges */
@@ -246,6 +246,31 @@ NEON_CSS = """
   cursor: help;
   border-bottom: 1px dotted rgba(142, 202, 230, 0.45);
 }
+.kc-obs-fidelity {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 0.6rem;
+}
+.kc-obs-fidelity strong {
+  font-size: 1.15rem;
+}
+.kc-obs-fidelity small {
+  color: #6a9bb8;
+  font-size: 0.78rem;
+}
+.kc-obs-fidelity .kc-obs-caption {
+  flex: 1 1 100%;
+  margin-top: 0;
+}
+.kc-obs-fidelity.kc-fidelity-high strong { color: #00c9b7; }
+.kc-obs-fidelity.kc-fidelity-mid strong { color: #ffd45a; }
+.kc-obs-fidelity.kc-fidelity-low strong { color: #ffb4a2; }
+.kc-obs-fidelity-breakdown {
+  font-size: 0.65rem;
+  color: #8ecae6;
+}
 .kc-toe-strip {
   background: rgba(18, 36, 61, 0.40);
   border: 1px solid rgba(201, 162, 39, 0.22);
@@ -379,6 +404,45 @@ def _delta_cell_class(delta_str: str) -> str:
     if delta_str.startswith("-"):
         return "kc-obs-val-delta-neg"
     return ""
+
+
+def flux_observables_fidelity_html(extended: dict) -> str:
+    """Composite comparison fidelity header card."""
+    score = extended.get("comparison_fidelity_score")
+    if score is None:
+        return ""
+
+    details = extended.get("comparison_fidelity_details") or {}
+    note = extended.get("comparison_fidelity_note", "")
+    if score >= 8.5:
+        fidelity_class = "kc-fidelity-high"
+    elif score >= 7.0:
+        fidelity_class = "kc-fidelity-mid"
+    else:
+        fidelity_class = "kc-fidelity-low"
+
+    labels = {
+        "magnetic_moment": "μ",
+        "ionization_energy": "IE",
+        "electron_affinity": "EA",
+    }
+    breakdown = " · ".join(
+        f"{labels.get(k, k)} {v}/10" for k, v in details.items()
+    )
+    tip = note
+    if breakdown:
+        tip += f" Breakdown: {breakdown}."
+
+    breakdown_html = ""
+    if breakdown:
+        breakdown_html = f'<span class="kc-obs-fidelity-breakdown">{breakdown}</span>'
+
+    return f"""
+  <div class="kc-metric-card kc-obs-fidelity {fidelity_class}">
+    <span class="kc-obs-tip" title="{tip}">Comparison fidelity</span>
+    <strong>{score}</strong><small>/ 10</small>{breakdown_html}
+    <span class="kc-obs-caption">{note}</span>
+  </div>"""
 
 
 def flux_observables_validation_table_html(rows: list[dict]) -> str:
@@ -535,12 +599,17 @@ def flux_observables_cards_html(extended: dict) -> str:
     )
 
     z = int(extended.get("Z", 1))
-    validation_table = flux_observables_validation_table_html(
-        build_observables_table(z, extended)
-    )
+    validation = build_observables_validation(z, extended)
+    fidelity_card = flux_observables_fidelity_html({
+        **extended,
+        "comparison_fidelity_score": validation["fidelity_score"],
+        "comparison_fidelity_details": validation["fidelity_details"],
+        "comparison_fidelity_note": validation["fidelity_note"],
+    })
+    validation_table = flux_observables_validation_table_html(validation["rows"])
 
     return f"""
-<div class="{grid_class}">
+<div class="{grid_class}">{fidelity_card}
   <div class="kc-metric-card">
     <span class="kc-obs-tip" title="Flux flywheel stability score (magic-island calibrated)">Model score</span>
     <strong>{extended["stability_score"]}</strong>
