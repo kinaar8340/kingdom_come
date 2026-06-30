@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-# Gradio Tab labels are plain text (no LaTeX). Avoid underscores — they collapse to "WgConstant".
-WG_TAB_LABEL = "Wg Constant"
+# Gradio Tab labels are plain text (no LaTeX). Short label — full $W_{g}$ math is in tab body.
+WG_TAB_LABEL = "Constant"
 
 # Patches tab buttons / accordion summaries that cannot use kc_markdown LaTeX.
 UI_MATH_LABEL_JS = r"""

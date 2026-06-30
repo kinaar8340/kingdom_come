@@ -11,7 +11,7 @@ Use the **main tab bar** at the top of this page to switch between interactive m
 | Tab | What it does | Start here if… |
 |-----|--------------|----------------|
 | **Home → The Model** | Vision, math backbone, flux flywheels, observer sync | You want the big picture first |
-| **Home → W<sub>g</sub> Constant** | $W_{g} = 350/\\pi$ threshold and gauged weight invariant | You want the universal alarm constant |
+| **Home → Constant** | $W_{g} = 350/\\pi$ threshold and gauged weight invariant | You want the universal alarm constant |
 | **Help** | This page — navigation, controls, acronyms | You need orientation or a term defined |
 | **Hopf Visualizer** | Linked $S^3 \\to S^2$ fiber plots (2D on HF, 3D WebGL locally) | You want geometric intuition |
 
