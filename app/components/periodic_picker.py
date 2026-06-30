@@ -34,10 +34,12 @@ PERIODIC_CSS = """
   display: block;
   font-size: 0.78rem;
   font-weight: 800;
-  color: #ffffff;
+  color: #ffffff !important;
   letter-spacing: 0.02em;
-  text-shadow: 0 0 8px rgba(255, 255, 255, 0.45);
   line-height: 1.15;
+}
+button.kc-pt-cell .kc-pt-symbol {
+  color: #ffffff !important;
 }
 button.kc-pt-cell:hover {
   border-color: #5eb8ff;
@@ -57,20 +59,18 @@ button.kc-pt-cell:focus-visible {
 .kc-pt-cell.kc-pt-active {
   border-color: #ffd45a;
   box-shadow: 0 0 12px rgba(255, 210, 80, 0.65);
-  color: #fff8dc;
+  color: #ffffff;
   background: rgba(220, 170, 40, 0.82) !important;
 }
 .kc-pt-cell.kc-pt-active .kc-pt-symbol {
-  color: #fffbe8;
-  text-shadow: 0 0 10px rgba(255, 230, 140, 0.75);
+  color: #ffffff !important;
 }
 .kc-pt-cell.kc-pt-noble {
-  color: #d8ffff;
+  color: #ffffff;
   border-color: rgba(0, 245, 255, 0.72);
 }
 .kc-pt-cell.kc-pt-noble .kc-pt-symbol {
-  color: #e8ffff;
-  text-shadow: 0 0 10px rgba(0, 245, 255, 0.7);
+  color: #ffffff !important;
 }
 .kc-pt-cell.kc-pt-magic::after {
   content: "✦";
@@ -114,10 +114,11 @@ FLUX_PERIODIC_CSS = """
   color: #ffffff !important;
   filter: saturate(1.12);
 }
-.kc-flux-page .kc-pt-symbol {
+.kc-flux-page .kc-pt-symbol,
+.kc-flux-page .kc-pt-cell.kc-pt-active .kc-pt-symbol,
+.kc-flux-page .kc-pt-cell.kc-pt-noble .kc-pt-symbol {
   color: #ffffff !important;
   font-weight: 800 !important;
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.55) !important;
 }
 .kc-flux-page .kc-pt-cell sub {
   color: #b8ddf5 !important;
