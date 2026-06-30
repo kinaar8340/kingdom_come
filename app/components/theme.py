@@ -3,6 +3,54 @@
 from __future__ import annotations
 
 KC_PAGE_BG = "#000000"
+KC_FG_ALPHA = 0.30
+KC_FG_NESTED_ALPHA = 0.40
+KC_FG_RGBA = f"rgba(18, 36, 61, {KC_FG_ALPHA})"
+KC_FG_NESTED_RGBA = f"rgba(18, 36, 61, {KC_FG_NESTED_ALPHA})"
+
+
+def _foreground_layer_css() -> str:
+    """30% base foreground; nested/top layers +10% (40%)."""
+    fg = KC_FG_RGBA
+    nested = KC_FG_NESTED_RGBA
+    return f"""
+:root,
+.gradio-container,
+.dark {{
+  --block-background-fill: {fg} !important;
+  --panel-background-fill: {fg} !important;
+  --kc-fg-fill: {fg};
+  --kc-fg-nested-fill: {nested};
+}}
+.gradio-container .block.border,
+.gradio-container .image-container,
+.gradio-container .gallery,
+.gradio-container .plot {{
+  background: {fg} !important;
+}}
+.gradio-container .block .block.border,
+.gradio-container .block .image-container,
+.gradio-container .block .gallery,
+.gradio-container .block .plot,
+.gradio-container .accordion,
+.gradio-container .tabitem .block.border,
+.gradio-container .tabitem .image-container,
+.gradio-container .tabitem .gallery,
+.gradio-container .tabitem .plot,
+.gradio-container .column .block.border,
+.gradio-container .row .block.border {{
+  background: {nested} !important;
+}}
+.kc-hero {{
+  background: {fg} !important;
+}}
+.kc-card,
+.kc-showcase-card,
+.kc-paper-card,
+.kc-paper-toolbar {{
+  background: {nested} !important;
+}}
+"""
 
 
 _KINGDOM_CSS_SHELL = """
@@ -339,7 +387,7 @@ html, body {{
   color: var(--kc-text) !important;
 }}
 """
-    return shell + _KINGDOM_CSS_SHELL
+    return shell + _KINGDOM_CSS_SHELL + _foreground_layer_css()
 
 
 KINGDOM_CSS = build_kingdom_css()

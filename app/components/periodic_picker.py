@@ -22,7 +22,7 @@ PERIODIC_CSS = """
   padding: 0.22rem 0.1rem;
   border-radius: 5px;
   border: 1px solid rgba(26, 143, 227, 0.18);
-  background: rgba(18, 36, 61, 0.75);
+  background: rgba(18, 36, 61, 0.30);
   color: #8ecae6;
   line-height: 1.1;
   cursor: pointer;
@@ -158,7 +158,7 @@ def _periodic_cell_html(z: int, current_z: int) -> str:
         classes.append("kc-pt-noble")
     if z in MAGIC_NUMBER_Z:
         classes.append("kc-pt-magic")
-    bg = _CATEGORY_COLORS.get(el.category, "rgba(18,36,61,0.75)")
+    bg = _CATEGORY_COLORS.get(el.category, "rgba(18,36,61,0.30)")
     synth = " — predicted" if el.is_synthetic else ""
     return (
         f'<button type="button" class="{" ".join(classes)}" style="background:{bg}" '

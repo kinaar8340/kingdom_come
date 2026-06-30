@@ -35,7 +35,7 @@ NEON_CSS = """
   text-shadow: 0 0 6px rgba(201, 162, 39, 0.8);
 }
 .kc-element-card {
-  background: rgba(18, 36, 61, 0.92);
+  background: rgba(18, 36, 61, 0.40);
   border: 1px solid rgba(26, 143, 227, 0.3);
   border-radius: 14px;
   padding: 0.75rem 0.9rem;
@@ -84,7 +84,7 @@ NEON_CSS = """
   gap: 0.35rem;
 }
 .kc-metric-card {
-  background: rgba(18, 36, 61, 0.88);
+  background: rgba(18, 36, 61, 0.40);
   border: 1px solid rgba(26, 143, 227, 0.22);
   border-radius: 8px;
   padding: 0.4rem 0.5rem;
@@ -103,7 +103,7 @@ NEON_CSS = """
 }
 .kc-metric-wide { grid-column: 1 / -1; }
 .kc-toe-strip {
-  background: rgba(18, 36, 61, 0.78);
+  background: rgba(18, 36, 61, 0.40);
   border: 1px solid rgba(201, 162, 39, 0.22);
   border-radius: 10px;
   padding: 0.55rem 0.8rem;
