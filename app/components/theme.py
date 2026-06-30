@@ -14,53 +14,54 @@ def _background_image_url() -> str:
     return f"https://huggingface.co/spaces/{space_id}/resolve/main/{KC_BG_IMAGE_FILE}"
 
 
-_KC_BG_LAYER_STYLE = """
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  width: 100vw !important;
-  height: 100vh !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  z-index: 0 !important;
-  pointer-events: none !important;
-  background-position: center center !important;
-  background-size: cover !important;
-  background-repeat: no-repeat !important;
-  background-attachment: fixed !important;
+KC_BG_OVERLAY_RGBA = "rgba(8, 10, 30, 0.52)"
+
+
+def build_background_css() -> str:
+    """Wallpaper CSS — image and overlay live only on #kc-page-bg (not .gradio-container)."""
+    url = _background_image_url()
+    return f"""
+#kc-page-bg {{
+  background-image: url('{url}');
+  background-size: cover;
+  background-position: center center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  z-index: -1;
+  pointer-events: none;
+}}
+#kc-page-bg::after {{
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: {KC_BG_OVERLAY_RGBA};
+  pointer-events: none;
+}}
 """
 
 
 def background_head_html() -> str:
-    """Fixed viewport background — never scrolls with Gradio content."""
-    url = _background_image_url()
-    return f"""<style id="kc-page-bg-head">
-html, body {{
-  background: transparent !important;
-  background-color: transparent !important;
-}}
-body::before {{
-  content: "";
-  {_KC_BG_LAYER_STYLE.strip()}
-  z-index: -9999 !important;
-  background-image: url('{url}') !important;
-}}
-#kc-page-bg {{
-  {_KC_BG_LAYER_STYLE.strip()}
-  background-image: url('{url}') !important;
-}}
-</style>"""
-
-
-def background_layer_html() -> str:
-    """Fixed full-viewport background layer (scroll-independent anchor)."""
-    url = _background_image_url()
-    return f"""
-<div id="kc-page-bg" aria-hidden="true" style="
-  {_KC_BG_LAYER_STYLE.strip()}
-  background-image: url('{url}');
-"></div>
-"""
+    """Mount #kc-page-bg on document.body so it is outside Gradio's scroll root."""
+    return """<script id="kc-page-bg-mount">
+(function () {
+  function mountBg() {
+    if (document.getElementById("kc-page-bg")) return;
+    var el = document.createElement("div");
+    el.id = "kc-page-bg";
+    el.setAttribute("aria-hidden", "true");
+    document.body.insertBefore(el, document.body.firstChild);
+  }
+  if (document.body) mountBg();
+  else document.addEventListener("DOMContentLoaded", mountBg);
+})();
+</script>"""
 
 
 _KINGDOM_CSS_SHELL = """
@@ -385,62 +386,8 @@ embed.kc-paper-frame {
 """
 
 
-_KC_TROUBLESHOOT_TRANSPARENCY = """
-/* Troubleshoot: strip every overlay so kingdom_bg2.png is visible behind the UI */
-#root,
-#app,
-.app,
-.main,
-.wrap,
-.contain,
-.gradio-container,
-.gradio-container .block,
-.gradio-container .panel,
-.gradio-container .form,
-.gradio-container .tabs,
-.gradio-container .tabitem,
-.gradio-container .tab-nav,
-.gradio-container .accordion,
-.gradio-container .image-container,
-.gradio-container .gallery,
-.gradio-container .plot,
-.gradio-container .prose,
-.gradio-container footer,
-.gradio-container .html-container,
-.gradio-container input,
-.gradio-container textarea,
-.gradio-container select,
-.gradio-container .input-container,
-.gradio-container .checkbox-group,
-.gradio-container .slider,
-.gradio-container .dropdown,
-.gradio-container .button-group,
-.gradio-container label,
-.gradio-container .label-wrap,
-.kc-hero,
-.kc-card,
-.kc-showcase-card,
-.kc-showcase-thumb,
-.kc-paper-card,
-.kc-paper-toolbar,
-.kc-paper-brave-hint,
-.kc-paper-missing,
-.kc-paper-gallery img,
-.kc-obs-image-row img,
-.kc-element-card,
-.kc-metric-card,
-.kc-toe-strip,
-.kc-pt-cell,
-.kc-pt-wrap {
-  background: transparent !important;
-  background-color: transparent !important;
-  backdrop-filter: none !important;
-}
-"""
-
-
 def build_kingdom_css() -> str:
-    """Troubleshoot mode: fixed #kc-page-bg only; foreground scrolls freely."""
+    """Foreground scrolls; wallpaper is fixed on #kc-page-bg only."""
     shell = """
 html, body {
   min-height: 100%;
@@ -451,7 +398,7 @@ html, body {
   color: var(--kc-text) !important;
 }
 """
-    return shell + _KINGDOM_CSS_SHELL + _KC_TROUBLESHOOT_TRANSPARENCY
+    return shell + build_background_css() + _KINGDOM_CSS_SHELL
 
 
 KINGDOM_CSS = build_kingdom_css()

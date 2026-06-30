@@ -38,7 +38,6 @@ from app.components.ui_math import UI_MATH_LABEL_JS, WG_TAB_LABEL
 from app.components.theme import (
     HERO_HTML,
     background_head_html,
-    background_layer_html,
     build_kingdom_css,
     footer_html,
 )
@@ -268,7 +267,6 @@ _KINGDOM_THEME = gr.themes.Base(
 
 def build_app() -> gr.Blocks:
     with gr.Blocks(title="Kingdom Come", head=background_head_html()) as demo:
-        gr.HTML(background_layer_html())
         gr.HTML(HERO_HTML)
 
         with gr.Tabs():
