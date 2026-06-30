@@ -33,16 +33,29 @@ def test_paper_entries_match_discovered_pdfs():
 def test_paper_viewer_html_and_file_path():
     key = default_paper_key()
     path, html, description = load_paper(key)
-    assert path.endswith("Aaron's_TOE_Complete.pdf")
+    assert path.endswith("Aarons_TOE_Complete.pdf")
     assert "kc-paper-frame" in html
-    assert "data:application/pdf;base64," in html
+    assert "/gradio_api/file=" in html
+    assert "data:application/pdf;base64," not in html
     assert "Theory of Everything" in description
 
 
-def test_paper_file_url_encodes_apostrophe():
+def test_paper_file_url_uses_gradio_path():
     entry = PAPER_ENTRIES[0]
     url = paper_file_url(entry.path)
-    assert "%27" in url or "Aaron" in url
+    assert url.startswith("/gradio_api/file=")
+    assert "Aarons_TOE_Complete.pdf" in url
+
+
+def test_missing_paper_returns_error_html(tmp_path, monkeypatch):
+    from app.pages import papers as papers_mod
+
+    missing = tmp_path / "papers"
+    missing.mkdir()
+    monkeypatch.setattr(papers_mod, "PAPERS_DIR", missing)
+    path, html, _ = load_paper(default_paper_key())
+    assert path is None
+    assert "kc-paper-missing" in html
 
 
 def test_papers_index_lists_all_entries():

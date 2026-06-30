@@ -2,9 +2,7 @@
 
 from __future__ import annotations
 
-import base64
 from dataclasses import dataclass
-from functools import lru_cache
 from pathlib import Path
 from urllib.parse import quote
 
@@ -38,7 +36,7 @@ PAPER_ENTRIES: tuple[PaperEntry, ...] = (
         key="toe_complete",
         title="Aaron's TOE — Complete",
         description="Full Theory of Everything manuscript — Hopf fibration backbone, flux flywheels, and emergent physics.",
-        filename="Aaron's_TOE_Complete.pdf",
+        filename="Aarons_TOE_Complete.pdf",
     ),
     PaperEntry(
         key="lagrangian",
@@ -100,36 +98,38 @@ def paper_file_url(path: Path) -> str:
     return f"/gradio_api/file={quote(str(path.resolve()), safe='/')}"
 
 
-@lru_cache(maxsize=16)
-def _pdf_data_uri(filename: str) -> str:
-    """Base64 data URI — reliable inline PDF rendering inside HF Space iframes."""
-    path = PAPERS_DIR / filename
-    encoded = base64.b64encode(path.read_bytes()).decode("ascii")
-    return f"data:application/pdf;base64,{encoded}"
+def _missing_paper_html(entry: PaperEntry) -> str:
+    """User-visible error when a catalogued PDF is absent from the Space."""
+    discovered = ", ".join(p.name for p in discover_paper_pdfs()) or "(none)"
+    return f"""
+<div class="kc-paper-viewer kc-paper-missing">
+  <p><strong>{entry.title}</strong> — PDF not found on this Space.</p>
+  <p>Expected: <code>{entry.path}</code></p>
+  <p>Found in <code>app/assets/papers/</code>: {discovered}</p>
+  <p>Upload the missing PDF to the Space repo or download from
+     <a href="{TOE_PAPERS_REPO}" target="_blank" rel="noopener">toe/papers</a>.</p>
+</div>
+"""
 
 
 def paper_viewer_html(entry: PaperEntry) -> str:
-    """Inline PDF viewer with fallback download link."""
-    data_uri = _pdf_data_uri(entry.filename)
-    url = paper_file_url(entry.path)
-    # srcdoc iframe isolates the PDF embed from HF Space's outer iframe sandbox.
-    srcdoc = (
-        "<!DOCTYPE html><html><head><meta charset='utf-8'>"
-        "<style>html,body{margin:0;height:100%;overflow:hidden;background:#0d1f35;}"
-        "embed{width:100%;height:100%;border:0;}</style></head><body>"
-        f"<embed src='{data_uri}' type='application/pdf' title='{entry.title}' />"
-        "</body></html>"
-    )
-    safe_srcdoc = srcdoc.replace("&", "&amp;").replace('"', "&quot;")
+    """Inline PDF viewer served via Gradio allowed_paths (HF-safe)."""
+    path = entry.path
+    if not path.is_file():
+        return _missing_paper_html(entry)
+
+    url = paper_file_url(path)
     return f"""
 <div class="kc-paper-viewer">
   <div class="kc-paper-toolbar">
     <strong>{entry.title}</strong>
-    <a href="{url}" target="_blank" rel="noopener">Download PDF ↗</a>
+    <a href="{url}" target="_blank" rel="noopener">Open PDF ↗</a>
   </div>
-  <iframe class="kc-paper-frame" srcdoc="{safe_srcdoc}" title="{entry.title}"></iframe>
+  <iframe class="kc-paper-frame" src="{url}" title="{entry.title}"></iframe>
   <p class="kc-paper-fallback">
-    PDF not rendering? Use <strong>Download PDF</strong> above or the file widget below.
+    PDF not rendering inline?
+    <a href="{url}" target="_blank" rel="noopener">Open in new tab</a>
+    or use <strong>Download PDF</strong> below.
   </p>
 </div>
 """
@@ -139,6 +139,8 @@ def papers_index_html() -> str:
     """Sidebar-style index of all papers."""
     cards = []
     for entry in PAPER_ENTRIES:
+        if not entry.path.is_file():
+            continue
         url = paper_file_url(entry.path)
         cards.append(
             f"""
@@ -152,14 +154,16 @@ def papers_index_html() -> str:
         )
     return f"""
 <div class="kc-paper-index">
-  <p class="kc-paper-index-lead">All manuscripts ({len(PAPER_ENTRIES)} PDFs) ·
+  <p class="kc-paper-index-lead">All manuscripts ({len(cards)} PDFs) ·
      <a href="{TOE_PAPERS_REPO}" target="_blank" rel="noopener">source repo</a></p>
   {''.join(cards)}
 </div>
 """
 
 
-def load_paper(paper_key: str) -> tuple[str, str, str]:
+def load_paper(paper_key: str) -> tuple[str | None, str, str]:
     """Return file path, viewer HTML, and description for a selected paper."""
     entry = PAPERS_BY_KEY.get(paper_key, PAPER_ENTRIES[0])
+    if not entry.path.is_file():
+        return None, _missing_paper_html(entry), entry.description
     return str(entry.path.resolve()), paper_viewer_html(entry), entry.description

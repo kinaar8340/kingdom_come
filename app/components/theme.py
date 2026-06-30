@@ -223,6 +223,20 @@ embed.kc-paper-frame {
 .kc-paper-fallback a {
   color: var(--kc-blue);
 }
+.kc-paper-missing {
+  padding: 1rem 1.25rem;
+  background: rgba(61, 24, 24, 0.55);
+  border: 1px solid rgba(227, 90, 90, 0.35);
+  border-radius: 8px;
+  color: #f0d4d4;
+  font-size: 0.9rem;
+}
+.kc-paper-missing code {
+  color: #ffb4b4;
+}
+.kc-paper-missing a {
+  color: var(--kc-blue);
+}
 .kc-footer {
   text-align: center;
   font-size: 0.85rem;
