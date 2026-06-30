@@ -4,12 +4,12 @@ from __future__ import annotations
 
 import os
 
-KC_BG_IMAGE_FILE = "kingdom_bg1.png"
+KC_BG_IMAGE_FILE = "kingdom_bg2.png"
 KC_SPACE_ID_FALLBACK = "kinaar111/kingdom"
 
 
 def _background_image_url() -> str:
-    """Absolute URL for kingdom_bg1.png (relative paths fail in injected Space CSS)."""
+    """Absolute URL for kingdom_bg2.png (relative paths fail in injected Space CSS)."""
     space_id = os.environ.get("SPACE_ID") or KC_SPACE_ID_FALLBACK
     return f"https://huggingface.co/spaces/{space_id}/resolve/main/{KC_BG_IMAGE_FILE}"
 
@@ -359,7 +359,7 @@ embed.kc-paper-frame {
 
 
 _KC_TROUBLESHOOT_TRANSPARENCY = """
-/* Troubleshoot: strip every overlay so kingdom_bg1.png is visible behind the UI */
+/* Troubleshoot: strip every overlay so kingdom_bg2.png is visible behind the UI */
 #root,
 #app,
 .app,
@@ -413,7 +413,7 @@ _KC_TROUBLESHOOT_TRANSPARENCY = """
 
 
 def build_kingdom_css() -> str:
-    """Troubleshoot mode: no gradient overlays — only the kingdom_bg1.png image layer."""
+    """Troubleshoot mode: no gradient overlays — only the kingdom_bg2.png image layer."""
     bg_url = _background_image_url()
     shell = f"""
 html, body, .app, .main, #root, #app {{
