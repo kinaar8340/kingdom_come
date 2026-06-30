@@ -524,6 +524,8 @@ def build_app() -> gr.Blocks:
                     toroidal_flux_rings = gr.Checkbox(value=True, label="Flux flywheel rings")
                     toroidal_noble_locks = gr.Checkbox(value=True, label="Noble gas locks")
                     toroidal_labels = gr.Checkbox(value=True, label="Element symbols")
+                    toroidal_period_bands = gr.Checkbox(value=True, label="Period banding on coil")
+                    toroidal_focus_mode = gr.Checkbox(value=False, label="Focus mode (highlight only)")
                 with gr.Row():
                     if _toroidal_on_hf:
                         toroidal_view_mode = gr.State("2D projection")
@@ -533,6 +535,11 @@ def build_app() -> gr.Blocks:
                             value="2D projection",
                             label="View mode",
                         )
+                    toroidal_projection = gr.Radio(
+                        ["XY orthographic", "XZ side view", "YZ side view"],
+                        value="XY orthographic",
+                        label="2D projection (when 2D / HF)",
+                    )
                 toroidal_plot = gr.Plot(label="Toroidal Periodic × Flux Flywheel")
                 with gr.Row():
                     toroidal_refresh = gr.Button("Update visualization", variant="primary")
@@ -546,6 +553,9 @@ def build_app() -> gr.Blocks:
                     toroidal_flux_rings,
                     toroidal_noble_locks,
                     toroidal_labels,
+                    toroidal_period_bands,
+                    toroidal_focus_mode,
+                    toroidal_projection,
                     toroidal_view_mode,
                 ]
                 toroidal_refresh.click(

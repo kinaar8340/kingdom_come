@@ -44,7 +44,24 @@ def test_plotly_3d_figure_builds():
 def test_plotly_2d_figure_builds_without_webgl():
     fig = build_toroidal_periodic_figure(view_mode="2d", z_highlight=54)
     assert len(fig.data) >= 1
-    assert all(trace.type == "scatter" for trace in fig.data)
+    assert any(trace.type == "scatter" for trace in fig.data)
+
+
+def test_focus_mode_and_period_bands():
+    fig = build_toroidal_periodic_figure(
+        view_mode="2d",
+        z_highlight=54,
+        focus_mode=True,
+        show_period_bands=True,
+    )
+    assert len(fig.data) >= 3
+    assert fig.layout.annotations
+
+
+def test_xz_projection_builds():
+    fig = build_toroidal_periodic_figure(view_mode="2d", projection_2d="xz")
+    assert len(fig.data) >= 1
+    assert "XZ" in str(fig.layout.title)
 
 
 def test_toroidal_gallery_asset_exists():

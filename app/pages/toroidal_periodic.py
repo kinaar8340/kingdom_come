@@ -31,6 +31,9 @@ stability scores and block color-coding.
 | **Marker size** | Flux flywheel stability score (larger = more stable) |
 | **Gold halos** | Noble-gas closed-shell locks |
 | **Dashed/solid rings** | Local flux flywheel metaphor at selected / high-stability sites |
+| **Period banding** | Faint color wash along the gold coil by IUPAC period |
+| **Focus mode** | Dims the manifold to spotlight one element + its flux ring |
+| **Hover** | Electron config, stability class, and chemistry ↔ flux note |
 
 Use **Highlight Z** to inspect one element, then **Open in Flux Flywheel** for full
 electron-shell + validation detail.
@@ -51,10 +54,20 @@ def render_toroidal_periodic(
     show_flux_rings: bool,
     show_noble_locks: bool,
     show_labels: bool,
+    show_period_bands: bool,
+    focus_mode: bool,
+    projection_2d: str,
     view_mode: str,
 ):
     mode = "2d" if is_hf_space() or str(view_mode).lower().startswith("2") else "3d"
     z_val = int(z_highlight)
+    proj = str(projection_2d).lower()
+    if proj.startswith("xz"):
+        projection: str = "xz"
+    elif proj.startswith("yz"):
+        projection = "yz"
+    else:
+        projection = "xy"
     return build_toroidal_periodic_figure(
         z_highlight=z_val if z_val >= 1 else None,
         major_r=float(major_r),
@@ -64,5 +77,8 @@ def render_toroidal_periodic(
         show_flux_rings=show_flux_rings,
         show_noble_locks=show_noble_locks,
         show_labels=show_labels,
+        show_period_bands=show_period_bands,
+        focus_mode=bool(focus_mode),
+        projection_2d=projection,  # type: ignore[arg-type]
         view_mode=mode,  # type: ignore[arg-type]
     )
