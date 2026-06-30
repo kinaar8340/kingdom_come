@@ -10,67 +10,46 @@ A topological foundation for emergent physics via the Hopf Fibration and gauged 
 """
 
 HOME_THE_MODEL_MD = r"""
-## Emergent Reality
+### Emergent Reality
 
-Aaron's Theory of Everything models fundamental reality as **stable topological configurations**
-of rotating, braided **flux flywheels** inside a **gauged Hopf lattice**, embedded in a porous
-vacuum *sponge*. Particles, forces, and physical phenomena emerge from the geometric and dynamic
-constraints of this system.
+Aaron's Theory of Everything models fundamental reality as **stable topological configurations** of rotating, braided **flux flywheels** inside a **gauged Hopf lattice**, embedded in a porous vacuum *sponge*. Particles, forces, and physical phenomena emerge from the geometric and dynamic constraints of this system.
 
-The framework is implemented in the [RubikConeConduit](https://github.com/kinaar8340/toe) simulation
-and explored across [seven Hugging Face Spaces](https://huggingface.co/kinaar111/spaces).
+The framework is implemented in the RubikConeConduit simulation and explored across seven Hugging Face Spaces.
 
 ### Core Substrate
 
 | Concept | Role |
-|---------|------|
-| **Hopf fibration** | \(S^3 \to S^2\) backbone — linked circular fibers supply the lattice geometry |
-| **Flux flywheels** | Stable rotating flux configurations — emergent particles and periodic-table proxy |
-| **Gauged Hopf lattice** | Porous vacuum sponge with twist, braiding, and gauge dynamics |
-| **Observer synchronization** | Embedded observers share the lattice — bursts may not appear as external signals |
+|--------------------------|------|
+| Hopf fibration | \( S^3 \to S^2 \) backbone — linked circular fibers supply the lattice geometry |
+| Flux flywheels | Stable rotating flux configurations — emergent particles and periodic-table proxy |
+| Gauged Hopf lattice | Porous vacuum sponge with twist, braiding, and gauge dynamics |
+| Observer synchronization | Embedded observers share the lattice — bursts may not appear as external signals |
 
----
+### Vision
 
-## Vision
+Physics emerges from **topologically protected flux structures** on a gauged Hopf lattice embedded in a porous vacuum. The Hopf fibration \( S^3 \to S^2 \) supplies the geometric backbone. Quaternions provide the algebra, while stable **flux flywheels** anchor emergent matter and the periodic table.
 
-Physics emerges from **topologically protected flux structures** on a gauged Hopf lattice embedded
-in a porous vacuum. The Hopf fibration \(S^3 \to S^2\) supplies the geometric backbone. Quaternions
-provide the algebra, while stable **flux flywheels** anchor emergent matter and the periodic table.
+### Mathematical Backbone
 
----
+The Hopf map sends a unit 4-vector \( (x_1, x_2, x_3, x_4) \in S^3 \) to a point on \( S^2 \):
 
-## Mathematical Backbone
+$$
+y_1 = x_1^2 - x_2^2, \quad
+y_2 = 2x_2x_3, \quad
+y_3 = 2(x_3x_4 + x_1x_2)
+$$
 
-The Hopf map sends a unit 4-vector \((x_1, x_2, x_3, x_4) \in S^3\) to a point on \(S^2\):
+Each point on \( S^2 \) has a **fiber** — a circle in \( S^3 \). Distinct fibers are **linked** with Hopf invariant \( Q_H = 1 \). Stereographic projection reveals these as linked Villarceau circles (nested tori) in \( \mathbb{R}^3 \).
 
-\[
-y_1 = x_1^2 - x_2^2, \quad y_2 = 2 x_1 x_2, \quad y_3 = 2(x_3 x_4 + x_1 x_2)
-\]
+### Flux Flywheels & Emergent Structure
 
-Each point on \(S^2\) has a **fiber** — a circle in \(S^3\). Distinct fibers are **linked** with
-Hopf invariant \(Q_H = 1\). Stereographic projection reveals these as linked Villarceau circles
-(nested tori) in \(\mathbb{R}^3\).
+Detuning parameters \( (\Delta\omega, \text{gauge strength}, \text{layers}) \) select **stability islands** on the lattice. The Magic Island Sweep identified a noble-gas-like ultra-stable lock — a template for emergent element mapping.
 
----
+The \( W_g \) constant \( (\approx 350 / \pi \approx 111.408) \) emerges as a universal invariant, acting as a critical threshold in the underlying clock-like accumulation mechanism (see **The Clock** tab).
 
-## Flux Flywheels & Emergent Structure
+### Observer Synchronization
 
-Detuning parameters \((\Delta\omega, \text{gauge strength}, \text{layers})\) select **stability islands**
-on the lattice. The *Magic Island Sweep* identified a noble-gas-like ultra-stable lock — a template
-for emergent element mapping.
-
-The **\(W_g\)** constant (\(\approx 350/\pi \approx 111.408\)) emerges as a universal invariant,
-acting as a critical threshold in the underlying clock-like accumulation mechanism (see **The Clock**
-sub-tab).
-
----
-
-## Observer Synchronization
-
-Phase holonomy between linked fibers damps as \(\Delta\theta(t) = \Delta\theta(0) \cdot e^{-\kappa t}\),
-providing a topological mechanism for observer-linked non-locality. This explains why certain burst
-events remain synchronized and difficult to detect externally.
-
+Phase holonomy between linked fibers damps as \( \Delta\theta(t) = \Delta\theta(0) \cdot e^{-\kappa t} \), providing a topological mechanism for observer-linked non-locality. This explains why certain burst events remain synchronized and difficult to detect externally.
 """
 
 HOME_CLOCK_MD = r"""

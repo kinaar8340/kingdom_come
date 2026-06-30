@@ -14,6 +14,7 @@ def test_home_covers_clock_mechanism():
     assert "Kingdom Come" in HOME_INTRO_MD
     assert "flux flywheels" in HOME_THE_MODEL_MD
     assert "RubikConeConduit" in HOME_THE_MODEL_MD
+    assert "2x_2x_3" in HOME_THE_MODEL_MD
     assert "Vision" in HOME_THE_MODEL_MD
     assert "Mathematical Backbone" in HOME_THE_MODEL_MD
     assert "Observer Synchronization" in HOME_THE_MODEL_MD
