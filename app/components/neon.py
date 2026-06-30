@@ -602,7 +602,6 @@ NEON_CSS = """
   display: flex;
   flex-direction: column;
   gap: 0.45rem;
-  flex: 1 1 auto;
   width: 100%;
   margin-top: 0.15rem;
   padding-top: 0.55rem;
@@ -655,7 +654,6 @@ NEON_CSS = """
 }
 .kc-key-takeaways {
   width: 100%;
-  flex: 1 1 auto;
   padding: 0.4rem 0.5rem;
   background: rgba(10, 22, 40, 0.45);
   border: 1px solid rgba(26, 143, 227, 0.16);
@@ -706,6 +704,7 @@ NEON_CSS = """
   display: flex;
   flex-direction: column;
   gap: 0.45rem;
+  flex: 1 1 auto;
   width: 100%;
 }
 .kc-flux-validation-full {
@@ -1279,19 +1278,17 @@ def flux_observables_takeaways_html(extended: dict, bundle: dict[str, Any] | Non
 
 
 def flux_observables_analysis_html(extended: dict) -> str:
-    """Left column: proxy quality, fidelity interpretation, noble gas banner."""
+    """Left column: proxy quality and fidelity interpretation (under Chemistry vs TOE)."""
     bundle = _observables_ui_bundle(extended)
     proxy = flux_observables_proxy_section_html(
         bundle["fidelity_extended"].get("comparison_fidelity_proxy_quality", {})
     )
     interpretation = flux_observables_interpretation_html(bundle["interpretation"])
-    insights = flux_observables_insights_html(extended, bundle)
-    takeaways = flux_observables_takeaways_html(extended, bundle)
-    if not (proxy or interpretation or bundle["noble_banner"] or insights or takeaways):
+    if not (proxy or interpretation):
         return ""
     return (
         f'<div class="kc-flux-analysis-col kc-neon-plugin">'
-        f"{proxy}{interpretation}{bundle['noble_banner']}{insights}{takeaways}"
+        f"{proxy}{interpretation}"
         f"</div>"
     )
 
@@ -1415,10 +1412,16 @@ def flux_observables_right_html(extended: dict) -> str:
         bundle["fidelity_extended"],
         interpretation=bundle["interpretation"],
     )
+    insights = flux_observables_insights_html(extended, bundle)
+    takeaways = flux_observables_takeaways_html(extended, bundle)
+    noble_banner = bundle["noble_banner"]
 
     return f"""
 <div class="kc-flux-metrics-col kc-neon-plugin">
   {fidelity_card}
+  {insights}
+  {takeaways}
+  {noble_banner}
   <div class="{grid_class}">
   <div class="kc-metric-card">
     <span class="kc-obs-tip" title="Flux flywheel stability score (magic-island calibrated)">Model score</span>

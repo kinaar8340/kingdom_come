@@ -153,13 +153,16 @@ def test_flux_observables_split_layout_xenon():
     table = flux_observables_table_html(fly)
     assert "kc-flux-analysis-col" in analysis
     assert "Proxy Quality" in analysis
-    assert "Noble Gas" in analysis
-    assert "Model Strengths" in analysis
-    assert "kc-model-insights" in analysis
-    assert "Key Takeaways" in analysis
-    assert "kc-key-takeaways" in analysis
+    assert "Noble Gas" not in analysis
+    assert "Model Strengths" not in analysis
+    assert "Key Takeaways" not in analysis
     assert "kc-flux-metrics-col" in right
     assert "Overall Comparison Fidelity" in right
+    assert "Noble Gas" in right
+    assert "Model Strengths" in right
+    assert "kc-model-insights" in right
+    assert "Key Takeaways" in right
+    assert "kc-key-takeaways" in right
     assert "Proxy Quality" not in right
     assert "kc-flux-validation-full" in table
     assert "model-vs-experiment-table" in table
