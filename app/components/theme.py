@@ -162,6 +162,32 @@ KINGDOM_CSS = """
   color: var(--kc-teal);
   margin-bottom: 0.5rem;
 }
+.kc-home-hopf-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: stretch;
+  gap: 0.75rem;
+  margin: 1rem 0 1.25rem;
+  padding: 0 0.25rem;
+}
+.kc-home-hopf-row img {
+  flex: 1 1 28%;
+  min-width: 160px;
+  max-width: 100%;
+  height: auto;
+  max-height: 220px;
+  object-fit: contain;
+  background: #000;
+  border-radius: 8px;
+  border: 1px solid rgba(26, 143, 227, 0.25);
+}
+@media (max-width: 720px) {
+  .kc-home-hopf-row img {
+    flex: 1 1 100%;
+    max-height: 200px;
+  }
+}
 .kc-obs-image-row .image-container,
 .kc-obs-image-row .wrap {
   min-height: 0;

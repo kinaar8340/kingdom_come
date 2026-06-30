@@ -92,6 +92,7 @@ from app.pages.help import (
 from app.pages.home import (
     HOME_CLOCK_MD,
     HOME_EXPLORE_MD,
+    HOME_INTRO_GALLERY_HTML,
     HOME_INTRO_MD,
     HOME_THE_MODEL_MD,
     HOME_WG_MD,
@@ -120,6 +121,7 @@ from app.pages.theory import DERIVATION_HOPF_MD
 
 PAPERS_DIR = ROOT / "app" / "assets" / "papers"
 PAPERS_SOURCE_DIR = ROOT / "papers"
+HOME_ASSETS_DIR = ROOT / "app" / "assets" / "home"
 OBSERVATIONS_DIR = ROOT / "app" / "assets" / "observations"
 HIGGS_DIR = ROOT / "app" / "assets" / "higgs"
 SCHUMANN_DIR = ROOT / "app" / "assets" / "schumann"
@@ -256,6 +258,7 @@ def build_app() -> gr.Blocks:
         with gr.Tabs():
             with gr.Tab("Home"):
                 kc_markdown(HOME_INTRO_MD)
+                gr.HTML(HOME_INTRO_GALLERY_HTML)
                 with gr.Tabs():
                     with gr.Tab("The Model"):
                         kc_markdown(HOME_THE_MODEL_MD)
@@ -727,6 +730,7 @@ def main() -> None:
         allowed_paths=[
             str(PAPERS_DIR),
             str(PAPERS_SOURCE_DIR),
+            str(HOME_ASSETS_DIR),
             str(OBSERVATIONS_DIR),
             str(HIGGS_DIR),
             str(SCHUMANN_DIR),
