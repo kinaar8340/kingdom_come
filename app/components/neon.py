@@ -794,6 +794,28 @@ def _art_inset_html(art_path: str | None) -> str:
     )
 
 
+def _rep_complexity_line_html(flywheel: dict) -> str:
+    """Optional Monster irrep complexity summary with rich tooltip."""
+    score = flywheel.get("rep_complexity_score")
+    if score is None:
+        return ""
+    tip = flywheel.get("rep_complexity_tooltip", "")
+    irrep = flywheel.get("rep_irrep_index", "—")
+    delta = flywheel.get("rep_flux_delta")
+    delta_html = ""
+    if delta is not None:
+        delta_html = f" &nbsp;·&nbsp; Δ flux−rep {delta:+.1f}"
+    extrap = ""
+    if flywheel.get("rep_extrapolated"):
+        extrap = ' <span class="kc-neon-synthetic">(extrapolated map)</span>'
+    return (
+        f'<div class="kc-element-summary" title="{tip}">'
+        f"<strong>Rep complexity:</strong> {score}/10 "
+        f"(irrep {irrep}){delta_html}{extrap}"
+        f"</div>"
+    )
+
+
 def element_card_html(element, flywheel: dict, *, art_path: str | None = None) -> str:
     """Compact element card with optional noble-gas art inset."""
     badges = []
@@ -828,6 +850,7 @@ def element_card_html(element, flywheel: dict, *, art_path: str | None = None) -
         (score {flywheel["stability_score"]}) &nbsp;·&nbsp;
         δω = {flywheel["delta_omega"]}
       </div>
+      {_rep_complexity_line_html(flywheel)}
     </div>
     {art}
   </div>
@@ -840,11 +863,19 @@ def flux_metrics_cards_html(flywheel: dict) -> str:
     stability_class = flywheel["stability_class"]
     if len(stability_class) > 38:
         stability_class = stability_class[:36] + "…"
+    rep_card = ""
+    rep_score = flywheel.get("rep_complexity_score")
+    if rep_score is not None:
+        tip = flywheel.get("rep_complexity_tooltip", "")
+        rep_card = f"""
+  <div class="kc-metric-card" title="{tip}">
+    <span>Rep complexity</span><strong>{rep_score}</strong>
+  </div>"""
     return f"""
 <div class="kc-metrics-grid">
   <div class="kc-metric-card">
     <span>Stability</span><strong>{flywheel["stability_score"]}</strong>
-  </div>
+  </div>{rep_card}
   <div class="kc-metric-card">
     <span>δω</span><strong>{flywheel["delta_omega"]}</strong>
   </div>
@@ -1406,6 +1437,25 @@ def flux_observables_right_html(extended: dict) -> str:
         f"Fidelity uses period-relative z-score ranking (stability vs IE within period), "
         f"not the absolute stability-derived proxy ({implied_ie} eV)."
     )
+    rep_card = ""
+    rep_score = extended.get("rep_complexity_score")
+    if rep_score is not None:
+        rep_tip = extended.get("rep_complexity_tooltip", "")
+        rep_delta = extended.get("rep_flux_delta")
+        delta_html = ""
+        if rep_delta is not None:
+            delta_class = "kc-obs-delta-pos" if rep_delta >= 0 else "kc-obs-delta-neg"
+            delta_html = (
+                f'<span class="kc-obs-delta {delta_class}" '
+                f'title="Flux stability minus Monster representation complexity">'
+                f"Δ flux−rep {rep_delta:+.1f}</span>"
+            )
+        rep_card = f"""
+  <div class="kc-metric-card">
+    <span class="kc-obs-tip" title="{rep_tip}">Rep complexity</span>
+    <strong>{rep_score}</strong>
+    {delta_html}
+  </div>"""
 
     bundle = _observables_ui_bundle(extended)
     fidelity_card = flux_observables_fidelity_html(
@@ -1426,7 +1476,7 @@ def flux_observables_right_html(extended: dict) -> str:
   <div class="kc-metric-card">
     <span class="kc-obs-tip" title="Flux flywheel stability score (magic-island calibrated)">Model score</span>
     <strong>{extended["stability_score"]}</strong>
-  </div>
+  </div>{rep_card}
   <div class="kc-metric-card">
     <span class="kc-obs-tip" title="{ie_tip}">Real IE (eV)</span>
     <strong>{extended["real_ionization_energy_eV"]}</strong>
@@ -1516,6 +1566,7 @@ def synthetic_z_html(z: int, flywheel: dict) -> str:
     <strong>Flywheel:</strong> {flywheel["stability_class"]}
     (score {flywheel["stability_score"]})
   </div>
+  {_rep_complexity_line_html(flywheel)}
 </div>
 """
 

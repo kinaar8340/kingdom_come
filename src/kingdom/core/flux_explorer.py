@@ -48,19 +48,43 @@ def _placeholder_figure(message: str, height: int = 300) -> go.Figure:
 
 
 @lru_cache(maxsize=256)
-def _cached_electron_cloud(z: int, stability: float) -> go.Figure:
+def _cached_electron_cloud(
+    z: int,
+    stability: float,
+    rep_complexity: float | None,
+    rep_flux_delta: float | None,
+    rep_tooltip: str | None,
+) -> go.Figure:
     element = get_element(z)
     if element is None:
         return _placeholder_figure(f"No element data for Z = {z}")
-    return build_electron_cloud_figure(element, stability_score=stability)
+    return build_electron_cloud_figure(
+        element,
+        stability_score=stability,
+        rep_complexity_score=rep_complexity,
+        rep_flux_delta=rep_flux_delta,
+        rep_complexity_tooltip=rep_tooltip,
+    )
 
 
 @lru_cache(maxsize=256)
-def _cached_compare_figure(z: int, stability: float) -> go.Figure:
+def _cached_compare_figure(
+    z: int,
+    stability: float,
+    rep_complexity: float | None,
+    rep_flux_delta: float | None,
+    rep_tooltip: str | None,
+) -> go.Figure:
     element = get_element(z)
     if element is None:
         return _placeholder_figure("No chemistry comparison available", height=165)
-    return build_chemistry_vs_toe_figure(element, stability)
+    return build_chemistry_vs_toe_figure(
+        element,
+        stability,
+        rep_complexity_score=rep_complexity,
+        rep_flux_delta=rep_flux_delta,
+        rep_complexity_tooltip=rep_tooltip,
+    )
 
 
 @lru_cache(maxsize=256)
@@ -307,7 +331,7 @@ def flux_observables_table(extended: dict, z: int | None = None) -> list[list[st
 
 def flux_metrics_table(flywheel: dict) -> list[list[str]]:
     """Key-value rows for the flux metrics Dataframe panel."""
-    return [
+    rows = [
         ["Stability score", str(flywheel["stability_score"])],
         ["Class", flywheel["stability_class"]],
         ["δω", str(flywheel["delta_omega"])],
@@ -320,6 +344,18 @@ def flux_metrics_table(flywheel: dict) -> list[list[str]]:
         ["Notes", flywheel["notes"]],
         ["Reference", flywheel["sweep_reference"]],
     ]
+    if "rep_complexity_score" in flywheel:
+        rows.extend([
+            ["Rep complexity (/10)", str(flywheel["rep_complexity_score"])],
+            ["Monster irrep index", str(flywheel["rep_irrep_index"])],
+            ["Irrep exponent sum", str(flywheel["rep_exponent_sum"])],
+            ["Z↔irrep map", flywheel.get("rep_mapping_label", "—")],
+        ])
+        if flywheel.get("rep_flux_delta") is not None:
+            rows.append(
+                ["Δ flux − rep complexity", f"{flywheel['rep_flux_delta']:+.1f}"]
+            )
+    return rows
 
 
 def element_art_path(z: int) -> str | None:
@@ -344,20 +380,34 @@ def noble_gas_art_path(z: int) -> str | None:
     return element_art_path(z)
 
 
+def _rep_figure_kwargs(flywheel: dict) -> dict:
+    """Extract representation-complexity fields for cached figure builders."""
+    return {
+        "rep_c": flywheel.get("rep_complexity_score"),
+        "rep_d": flywheel.get("rep_flux_delta"),
+        "rep_tip": flywheel.get("rep_complexity_tooltip"),
+    }
+
+
 def explore_flux_element(z: int) -> dict:
     """Full Flux Flywheel tab payload for atomic number Z."""
     z = max(1, min(EXPLORER_Z_MAX, int(z)))
     flywheel = map_z_to_flywheel(z)
     element = get_element(z) if is_explorable_element(z) else None
     stability = flywheel["stability_score"]
+    rep = _rep_figure_kwargs(flywheel)
 
     return {
         "z": z,
         "flywheel": flywheel,
         "element": element,
         "metrics_table": flux_metrics_table(flywheel),
-        "cloud_fig": _cached_electron_cloud(z, stability),
-        "compare_fig": _cached_compare_figure(z, stability),
+        "cloud_fig": _cached_electron_cloud(
+            z, stability, rep["rep_c"], rep["rep_d"], rep["rep_tip"]
+        ),
+        "compare_fig": _cached_compare_figure(
+            z, stability, rep["rep_c"], rep["rep_d"], rep["rep_tip"]
+        ),
         "magic_island": _cached_magic_island(z),
         "element_art": element_art_path(z),
         "noble_gas_art": element_art_path(z),
@@ -383,10 +433,18 @@ def explore_flux_element_extended(z: int) -> dict:
         "comparison_fidelity_details": validation["fidelity_details"],
         "comparison_fidelity_note": validation["fidelity_note"],
     }
+    stability = extended["stability_score"]
+    rep = _rep_figure_kwargs(extended)
     return {
         **payload,
         "flywheel": extended,
         "metrics_table": flux_metrics_table(extended),
+        "cloud_fig": _cached_electron_cloud(
+            z, stability, rep["rep_c"], rep["rep_d"], rep["rep_tip"]
+        ),
+        "compare_fig": _cached_compare_figure(
+            z, stability, rep["rep_c"], rep["rep_d"], rep["rep_tip"]
+        ),
         "observables_table": flux_observables_table(extended, z=z),
         "observables_validation": validation,
     }

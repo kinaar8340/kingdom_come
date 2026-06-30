@@ -19,6 +19,7 @@ _NOBLE_GAS_STABILITY_BONUS: dict[int, float] = {
     86: 1.0,
     118: 1.0,
 }
+from kingdom.core.representation_complexity import attach_representation_complexity
 from kingdom.core.experimental_data import (
     compare_atomic_radius,
     ea_model_implied_ev,
@@ -182,25 +183,28 @@ def map_z_to_flywheel(z: int, n_sites: int = 96, frames: int = 300) -> dict:
             f"to align flux score with shell-closure chemistry."
         )
 
-    return {
-        "Z": z,
-        "pseudo_Z": magic_params["pseudo_Z"],
-        "delta_omega": round(delta_omega, 5),
-        "omega_L": omega_L,
-        "omega_R": round(omega_R, 5),
-        "gauge_strength": magic_params["gauge_strength"],
-        "num_layers": magic_params["num_layers"],
-        "num_polarities": magic_params["num_polarities"],
-        "max_facts": magic_params["max_facts"],
-        "mean_twist_rad": 0.822796,
-        "identity_preservation": 1.0,
-        "stability_score": stability_score,
-        "stability_class": stability_class,
-        "noble_gas_stability_bonus": noble_gas_bonus,
-        "is_noble_gas": z in NOBLE_GAS_Z,
-        "notes": notes,
-        "sweep_reference": "1000-trial Magic Island Sweep v1.7.1",
-    }
+    return attach_representation_complexity(
+        {
+            "Z": z,
+            "pseudo_Z": magic_params["pseudo_Z"],
+            "delta_omega": round(delta_omega, 5),
+            "omega_L": omega_L,
+            "omega_R": round(omega_R, 5),
+            "gauge_strength": magic_params["gauge_strength"],
+            "num_layers": magic_params["num_layers"],
+            "num_polarities": magic_params["num_polarities"],
+            "max_facts": magic_params["max_facts"],
+            "mean_twist_rad": 0.822796,
+            "identity_preservation": 1.0,
+            "stability_score": stability_score,
+            "stability_class": stability_class,
+            "noble_gas_stability_bonus": noble_gas_bonus,
+            "is_noble_gas": z in NOBLE_GAS_Z,
+            "notes": notes,
+            "sweep_reference": "1000-trial Magic Island Sweep v1.7.1",
+        },
+        z,
+    )
 
 
 def _hund_unpaired(electrons: int, capacity: int) -> int:
@@ -502,7 +506,7 @@ def map_z_to_flywheel_extended(
             f"(Δ {mu_delta:+.2f} BM, fidelity {mu_validation['mu_validation_score']}/10)"
         )
 
-    return {
+    merged = {
         **base,
         "real_ionization_energy_eV": round(real_ie, 2),
         "ie_model_implied_eV": implied_ie,
@@ -525,3 +529,4 @@ def map_z_to_flywheel_extended(
         "validation_notes": validation_notes,
         "heavy_element_caveat": heavy,
     }
+    return attach_representation_complexity(merged, z)

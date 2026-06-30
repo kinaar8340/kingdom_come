@@ -18,6 +18,9 @@ def build_electron_cloud_figure(
     *,
     n_cloud_points: int = 400,
     stability_score: float = 5.0,
+    rep_complexity_score: float | None = None,
+    rep_flux_delta: float | None = None,
+    rep_complexity_tooltip: str | None = None,
     height: int = 340,
 ) -> go.Figure:
     """2D stylized electron density cross-section with optional flux flywheel ring."""
@@ -87,6 +90,18 @@ def build_electron_cloud_figure(
                 hoverinfo="skip",
             )
         )
+    ring_hover = (
+        f"Flux stability: {stability_score:.1f}/10"
+        f"<br>{element.name} ({element.symbol})"
+    )
+    if rep_complexity_score is not None:
+        ring_hover += f"<br>Rep complexity: {rep_complexity_score:.1f}/10"
+        if rep_flux_delta is not None:
+            ring_hover += f"<br>Δ flux−rep: {rep_flux_delta:+.1f}"
+    if rep_complexity_tooltip:
+        ring_hover += f"<br><br>{rep_complexity_tooltip}"
+    ring_hover += "<extra></extra>"
+
     fig.add_trace(
         go.Scatter(
             x=flywheel_r * np.cos(ring_t),
@@ -98,6 +113,7 @@ def build_electron_cloud_figure(
                 width=ring_width,
                 dash="solid" if high_lock else "dash",
             ),
+            hovertemplate=ring_hover,
         )
     )
 
@@ -132,26 +148,48 @@ def build_electron_cloud_figure(
     return fig
 
 
-def build_chemistry_vs_toe_figure(element: Element, stability_score: float) -> go.Figure:
-    """Shell-closure chemistry expectation vs flux flywheel stability score."""
+def build_chemistry_vs_toe_figure(
+    element: Element,
+    stability_score: float,
+    *,
+    rep_complexity_score: float | None = None,
+    rep_flux_delta: float | None = None,
+    rep_complexity_tooltip: str | None = None,
+) -> go.Figure:
+    """Shell-closure chemistry vs flux stability vs Monster rep complexity."""
     labels = [
         "Shell closure\n(chemistry)",
         "Flux flywheel\n(model)",
     ]
     chem = 10.0 if element.is_noble_gas else (7.0 if element.is_magic_number else 5.0)
     toe = float(stability_score)
-    gap = toe - chem
+    values = [chem, toe]
     colors = [FIBER_COLORS[0], ACCENT_GOLD]
+    hover_texts = [
+        f"Shell closure expectation: {chem:.1f}/10",
+        f"Flux flywheel stability: {toe:.1f}/10",
+    ]
+    if rep_complexity_score is not None:
+        labels.append("Rep complexity\n(Monster)")
+        values.append(float(rep_complexity_score))
+        colors = list(colors) + ["#7b2cbf"]
+        rep_hover = f"Representation complexity: {rep_complexity_score:.1f}/10"
+        if rep_flux_delta is not None:
+            rep_hover += f"<br>Δ flux−rep: {rep_flux_delta:+.1f}"
+        if rep_complexity_tooltip:
+            rep_hover += f"<br><br>{rep_complexity_tooltip}"
+        hover_texts.append(rep_hover)
+
+    gap = toe - chem
     fig = go.Figure(
         go.Bar(
             x=labels,
-            y=[chem, toe],
+            y=values,
             marker_color=colors,
-            text=[f"{chem:.1f}", f"{toe:.1f}"],
+            text=[f"{v:.1f}" for v in values],
             textposition="outside",
-            hovertemplate=(
-                "%{x}<br>Score: %{y:.1f}/10<extra></extra>"
-            ),
+            hovertemplate="%{customdata}<extra></extra>",
+            customdata=hover_texts,
         )
     )
     if element.is_noble_gas:
@@ -161,6 +199,8 @@ def build_chemistry_vs_toe_figure(element: Element, stability_score: float) -> g
     else:
         subtitle = "Open / reactive shell: lower closure expectation"
     gap_note = f"Δ model − chemistry = {gap:+.1f}"
+    if rep_complexity_score is not None and rep_flux_delta is not None:
+        gap_note += f" · Δ flux−rep = {rep_flux_delta:+.1f}"
     if abs(gap) > 2.0:
         gap_note += " (large gap — check validation panel)"
     theme = {k: v for k, v in kingdom_dark_theme().items() if k != "margin"}
