@@ -72,7 +72,7 @@ def test_superheavy_zone_populates():
 
 def test_helium_magic_island():
     payload = explore_flux_element(2)
-    assert payload["flywheel"]["stability_score"] == 8.0
+    assert payload["flywheel"]["stability_score"] == 8.5
     assert payload["element"].symbol == "He"
     assert isinstance(payload["cloud_fig"], go.Figure)
     assert isinstance(payload["magic_island"], go.Figure)
@@ -93,7 +93,7 @@ def test_shell_occupancy_neon():
 def test_flux_metrics_table():
     payload = explore_flux_element(2)
     table = flux_metrics_table(payload["flywheel"])
-    assert table[0] == ["Stability score", "8.0"]
+    assert table[0] == ["Stability score", "8.5"]
 
 
 def test_flux_metrics_cards_html():

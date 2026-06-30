@@ -11,6 +11,7 @@ from kingdom.core.elements import EXPLORER_Z_MAX, NOBLE_GAS_Z, get_element, is_e
 from kingdom.core.experimental_data import (
     calculate_comparison_fidelity,
     compare_atomic_radius,
+    compare_electronegativity,
     compare_ionization_energy_relative,
     compare_to_experiment,
 )
@@ -206,11 +207,32 @@ def build_observables_validation(z: int, extended: dict) -> dict:
             note=radius_cmp["note"],
         ))
 
+    en_cmp = compare_electronegativity(z, stability)
+    if en_cmp["available"]:
+        model_z = en_cmp.get("model_z_score", 0.0)
+        en_z = en_cmp.get("en_z_score", 0.0)
+        model_en = en_cmp.get("model_value")
+        model_en_display = f"{model_en:.2f} (model z {model_z:+.2f})" if model_en is not None else "—"
+        exp_en = f"{en_cmp['experimental_value']:.3f} (EN z {en_z:+.2f})"
+        delta_en = f"Δz {en_cmp['delta']:+.2f}"
+        source_en = f"Period-relative · {en_cmp['source'] or 'Allen (1989)'}"
+        table.append(_observable_table_row(
+            category="Electronegativity (Allen)",
+            model_spin_only=model_en_display,
+            model_soc="—",
+            experimental=exp_en,
+            delta=delta_en,
+            source=source_en,
+            quality=en_cmp["quality"],
+            note=en_cmp["note"],
+        ))
+
     comparisons = {
         "magnetic_moment": mu_cmp,
         "ionization_energy": ie_cmp,
         "electron_affinity": ea_cmp,
         "atomic_radius": radius_cmp,
+        "electronegativity": en_cmp,
     }
     fidelity = calculate_comparison_fidelity(comparisons)
 

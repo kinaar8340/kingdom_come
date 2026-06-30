@@ -133,10 +133,14 @@ def build_electron_cloud_figure(
 
 
 def build_chemistry_vs_toe_figure(element: Element, stability_score: float) -> go.Figure:
-    """Mini comparison bar: standard closure vs TOE flux score."""
-    labels = ["Chemistry\n(shell closure)", "TOE flux\nflywheel"]
+    """Shell-closure chemistry expectation vs flux flywheel stability score."""
+    labels = [
+        "Shell closure\n(chemistry)",
+        "Flux flywheel\n(model)",
+    ]
     chem = 10.0 if element.is_noble_gas else (7.0 if element.is_magic_number else 5.0)
-    toe = stability_score
+    toe = float(stability_score)
+    gap = toe - chem
     colors = [FIBER_COLORS[0], ACCENT_GOLD]
     fig = go.Figure(
         go.Bar(
@@ -145,13 +149,59 @@ def build_chemistry_vs_toe_figure(element: Element, stability_score: float) -> g
             marker_color=colors,
             text=[f"{chem:.1f}", f"{toe:.1f}"],
             textposition="outside",
+            hovertemplate=(
+                "%{x}<br>Score: %{y:.1f}/10<extra></extra>"
+            ),
         )
     )
-    theme = kingdom_dark_theme()
+    if element.is_noble_gas:
+        subtitle = "Noble gas: chemistry expects maximal shell closure"
+    elif element.is_magic_number:
+        subtitle = "Magic number: enhanced closure vs open-shell baseline"
+    else:
+        subtitle = "Open / reactive shell: lower closure expectation"
+    gap_note = f"Δ model − chemistry = {gap:+.1f}"
+    if abs(gap) > 2.0:
+        gap_note += " (large gap — check validation panel)"
+    theme = {k: v for k, v in kingdom_dark_theme().items() if k != "margin"}
     fig.update_layout(
         **theme,
-        height=165,
-        title=dict(text="Standard chemistry vs Hopf flux stability", font=dict(size=12, color="#e8f4ff")),
-        yaxis=dict(range=[0, 10.5], gridcolor=GRID, tickfont=dict(color="#8ecae6")),
+        height=200,
+        title=dict(
+            text="Shell closure strength vs model stability",
+            font=dict(size=12, color="#e8f4ff"),
+        ),
+        annotations=[
+            dict(
+                text=subtitle,
+                xref="paper",
+                yref="paper",
+                x=0.5,
+                y=1.12,
+                showarrow=False,
+                font=dict(size=9, color="#8ecae6"),
+                xanchor="center",
+            ),
+            dict(
+                text=gap_note,
+                xref="paper",
+                yref="paper",
+                x=0.5,
+                y=-0.22,
+                showarrow=False,
+                font=dict(
+                    size=9,
+                    color="#00c9b7" if abs(gap) <= 1.5 else "#ffb4a2",
+                ),
+                xanchor="center",
+            ),
+        ],
+        margin=dict(t=55, b=45),
+        yaxis=dict(
+            range=[0, 10.5],
+            title=dict(text="Stability score (0–10)", font=dict(size=10, color="#8ecae6")),
+            gridcolor=GRID,
+            tickfont=dict(color="#8ecae6"),
+        ),
     )
     return fig

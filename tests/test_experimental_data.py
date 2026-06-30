@@ -1,9 +1,12 @@
 """Tests for experimental observable lookups and model validation."""
 
 from kingdom.core.experimental_data import (
+    allen_electronegativity,
     calculate_comparison_fidelity,
     compare_atomic_radius,
+    compare_electronegativity,
     estimate_model_covalent_radius_pm,
+    estimate_model_electronegativity_allen,
     compare_ionization_energy_relative,
     compare_to_experiment,
     covalent_radius_pm,
@@ -74,7 +77,7 @@ def test_build_observables_validation_iron():
     extended = map_z_to_flywheel_extended(26)
     validation = build_observables_validation(26, extended)
     rows = validation["rows"]
-    assert len(rows) == 4
+    assert len(rows) == 5
     mu_row = rows[0]
     assert mu_row["category"] == "Magnetic Moment"
     assert mu_row["model_spin_only"] == "4.90 BM"
@@ -85,13 +88,17 @@ def test_build_observables_validation_iron():
     assert "132 pm" in rows[3]["experimental"]
     assert "pm" in rows[3]["model_spin_only"]
     assert rows[3]["delta"].endswith("pm")
+    assert rows[4]["category"] == "Electronegativity (Allen)"
+    assert "Δz" in rows[4]["delta"]
+    assert "Period-relative" in rows[4]["source"]
     assert validation["fidelity_score"] is not None
     assert "magnetic_moment" in validation["fidelity_details"]
+    assert "electronegativity" in validation["fidelity_details"]
 
 
 def test_build_observables_table_backward_compat():
     extended = map_z_to_flywheel_extended(26)
-    assert len(build_observables_table(26, extended)) == 4
+    assert len(build_observables_table(26, extended)) == 5
 
 
 def test_compare_atomic_radius_iron():
@@ -155,3 +162,62 @@ def test_build_observables_ie_row_uses_period_relative():
     assert "stab z" in ie_row["model_spin_only"]
     assert "Δz" in ie_row["delta"]
     assert "Period-relative" in ie_row["source"]
+
+
+def test_allen_electronegativity_noble_gas_neon():
+    assert allen_electronegativity(10) == 4.787
+    assert allen_electronegativity(2) == 4.16
+
+
+def test_estimate_model_electronegativity_allen_bounds():
+    en = estimate_model_electronegativity_allen(5.5, 26)
+    assert 0.7 <= en <= 5.0
+
+
+def test_compare_electronegativity_iron():
+    result = compare_electronegativity(26, 5.5)
+    assert result["available"] is True
+    assert result["comparison_mode"] == "period_relative"
+    assert result["experimental_value"] == 1.628
+    assert result["model_value"] is not None
+    assert result["score"] is not None
+    assert result["delta"] is not None
+
+
+def test_fidelity_data_coverage():
+    from kingdom.core.experimental_data import fidelity_data_coverage
+
+    extended = map_z_to_flywheel_extended(54)
+    validation = build_observables_validation(54, extended)
+    cov = fidelity_data_coverage(validation["comparisons"])
+    assert cov["total"] == 5
+    assert cov["available"] >= 3
+    assert "Magnetic Moment" in cov["missing"]
+
+
+def test_interpret_comparison_fidelity_xenon():
+    from kingdom.core.experimental_data import interpret_comparison_fidelity
+
+    extended = map_z_to_flywheel_extended(54)
+    validation = build_observables_validation(54, extended)
+    interp = interpret_comparison_fidelity(
+        54,
+        fidelity_score=validation["fidelity_score"],
+        fidelity_details=validation["fidelity_details"],
+        comparisons=validation["comparisons"],
+        stability_score=extended["stability_score"],
+        is_noble_gas=True,
+    )
+    assert interp["coverage"]["label"].startswith("3/")
+    assert interp["model_limitation"] == "noble_gas"
+    assert interp["fidelity_tier"] == "solid"
+    assert "Solid agreement" in interp["summary"]
+    assert any("Electronegativity" in n for n in interp.get("notes", []))
+
+
+def test_compare_electronegativity_neon_high_allen():
+    extended = map_z_to_flywheel_extended(10)
+    result = compare_electronegativity(10, extended["stability_score"])
+    assert result["available"] is True
+    assert result["experimental_value"] == 4.787
+    assert result["score"] is not None

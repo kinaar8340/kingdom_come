@@ -7,7 +7,18 @@ from typing import Any
 
 import numpy as np
 
-from kingdom.core.elements import get_element
+from kingdom.core.elements import NOBLE_GAS_Z, get_element
+
+# Period-tuned closed-shell stability lift (heavier noble gases start too low in detuning map).
+_NOBLE_GAS_STABILITY_BONUS: dict[int, float] = {
+    2: 0.5,
+    10: 1.0,
+    18: 1.5,
+    36: 1.5,
+    54: 1.0,
+    86: 1.0,
+    118: 1.0,
+}
 from kingdom.core.experimental_data import (
     compare_atomic_radius,
     ea_model_implied_ev,
@@ -161,6 +172,16 @@ def map_z_to_flywheel(z: int, n_sites: int = 96, frames: int = 300) -> dict:
         stability_class = "Highly unstable"
         notes = "Outside current magic island range"
 
+    noble_gas_bonus = 0.0
+    if z in NOBLE_GAS_Z:
+        noble_gas_bonus = _NOBLE_GAS_STABILITY_BONUS.get(z, 1.0)
+        stability_score = min(8.5, stability_score + noble_gas_bonus)
+        stability_class = "Noble-gas closed-shell lock (shell closure bonus)"
+        notes = (
+            f"Closed-shell noble gas: +{noble_gas_bonus:.1f} stability lift applied "
+            f"to align flux score with shell-closure chemistry."
+        )
+
     return {
         "Z": z,
         "pseudo_Z": magic_params["pseudo_Z"],
@@ -175,6 +196,8 @@ def map_z_to_flywheel(z: int, n_sites: int = 96, frames: int = 300) -> dict:
         "identity_preservation": 1.0,
         "stability_score": stability_score,
         "stability_class": stability_class,
+        "noble_gas_stability_bonus": noble_gas_bonus,
+        "is_noble_gas": z in NOBLE_GAS_Z,
         "notes": notes,
         "sweep_reference": "1000-trial Magic Island Sweep v1.7.1",
     }

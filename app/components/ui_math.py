@@ -22,6 +22,18 @@ UI_MATH_LABEL_JS = r"""
       el.dataset.kcMathPatched = "1";
     });
   };
+  const patchNobleBanners = (root) => {
+    root.querySelectorAll("details.kc-obs-noble-banner[data-kc-noble-z]").forEach((el) => {
+      if (el.dataset.kcNobleInit === "1") return;
+      const z = el.dataset.kcNobleZ;
+      const key = "kc-noble-banner-" + z;
+      if (localStorage.getItem(key)) el.removeAttribute("open");
+      el.addEventListener("toggle", () => {
+        if (!el.open) localStorage.setItem(key, "1");
+      });
+      el.dataset.kcNobleInit = "1";
+    });
+  };
   const patchInvestigationLabels = (root) => {
     root.querySelectorAll("button, summary, .label-wrap").forEach((el) => {
       if (el.dataset.kcInvPatched === "1") return;
@@ -36,6 +48,7 @@ UI_MATH_LABEL_JS = r"""
   };
   const patch = (root) => {
     patchMath(root);
+    patchNobleBanners(root);
     patchInvestigationLabels(root);
   };
   patch(document);

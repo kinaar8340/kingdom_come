@@ -15,8 +15,10 @@ from kingdom.core.flux_flywheel import (
 def test_magic_island_peak():
     # detuning anchor: delta_omega = 0.0015 when Z = 2
     result = map_z_to_flywheel(2)
-    assert result["stability_score"] == 8.0
-    assert "magic island" in result["stability_class"].lower()
+    assert result["stability_score"] == 8.5
+    assert result["noble_gas_stability_bonus"] == 0.5
+    assert result["is_noble_gas"] is True
+    assert "noble" in result["stability_class"].lower()
     assert result["pseudo_Z"] == 129  # sweep discovery ID (separate from input Z)
 
 
@@ -42,7 +44,7 @@ def test_extended_preserves_entire_base_flywheel_output():
 
 def test_extended_helium_observables():
     result = map_z_to_flywheel_extended(2)
-    assert result["stability_score"] == 8.0
+    assert result["stability_score"] == 8.5
     assert result["real_ionization_energy_eV"] == 24.59
     assert result["unpaired_electrons"] == 0
     assert result["magnetic_moment_BM"] == 0.0
@@ -77,6 +79,24 @@ def test_unpaired_from_aufbau_neon():
     assert unpaired_electrons(10) == 0
 
 
+def test_noble_gas_stability_bonus_xenon():
+    result = map_z_to_flywheel(54)
+    assert result["is_noble_gas"] is True
+    assert result["noble_gas_stability_bonus"] == 1.0
+    assert result["stability_score"] == 6.0
+
+
+def test_xenon_fidelity_improved_after_noble_gas_adjustment():
+    from kingdom.core.flux_explorer import build_observables_validation
+
+    extended = map_z_to_flywheel_extended(54)
+    validation = build_observables_validation(54, extended)
+    assert validation["fidelity_score"] is not None
+    assert validation["fidelity_score"] >= 6.5
+    assert validation["fidelity_details"]["ionization_energy"] >= 7.0
+    assert validation["fidelity_details"]["atomic_radius"] >= 8.0
+
+
 def test_unpaired_transition_metal_overrides():
     assert unpaired_electrons(24) == 6  # Cr
     assert unpaired_electrons(29) == 1  # Cu
@@ -87,8 +107,8 @@ def test_unpaired_transition_metal_overrides():
 
 def test_extended_ie_delta_fields():
     result = map_z_to_flywheel_extended(2)
-    assert result["ie_model_implied_eV"] == 25.0
-    assert result["ie_delta_eV"] == round(24.59 - 25.0, 2)
+    assert result["ie_model_implied_eV"] == round(8.5 / 8.0 * 25.0, 2)
+    assert result["ie_delta_eV"] == round(24.59 - result["ie_model_implied_eV"], 2)
     assert "alignment_stability_pts" in result
     assert result["heavy_element_caveat"] is False
 

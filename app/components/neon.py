@@ -5,6 +5,7 @@ from __future__ import annotations
 import base64
 from pathlib import Path
 
+from kingdom.core.experimental_data import interpret_comparison_fidelity
 from kingdom.core.flux_explorer import build_observables_validation
 
 NEON_CSS = """
@@ -264,12 +265,118 @@ NEON_CSS = """
   flex: 1 1 100%;
   margin-top: 0;
 }
+.kc-obs-fidelity.kc-fidelity-high {
+  border-color: rgba(0, 201, 183, 0.45);
+}
+.kc-obs-fidelity.kc-fidelity-mid {
+  border-color: rgba(255, 212, 90, 0.5);
+  box-shadow: 0 0 10px rgba(255, 212, 90, 0.12);
+}
+.kc-obs-fidelity.kc-fidelity-low {
+  border-color: rgba(255, 180, 162, 0.4);
+}
 .kc-obs-fidelity.kc-fidelity-high strong { color: #00c9b7; }
 .kc-obs-fidelity.kc-fidelity-mid strong { color: #ffd45a; }
 .kc-obs-fidelity.kc-fidelity-low strong { color: #ffb4a2; }
+.kc-fidelity-tier {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.08rem 0.4rem;
+  border-radius: 4px;
+}
+.kc-tier-high {
+  color: #00c9b7;
+  background: rgba(0, 201, 183, 0.12);
+}
+.kc-tier-mid {
+  color: #ffd45a;
+  background: rgba(255, 212, 90, 0.14);
+}
+.kc-tier-low {
+  color: #ffb4a2;
+  background: rgba(255, 180, 162, 0.12);
+}
 .kc-obs-fidelity-breakdown {
   font-size: 0.65rem;
   color: #8ecae6;
+}
+.kc-obs-coverage-pill {
+  display: inline-block;
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  font-size: 0.62rem;
+  font-weight: 600;
+  color: #8ecae6;
+  background: rgba(26, 143, 227, 0.12);
+  border: 1px solid rgba(26, 143, 227, 0.28);
+}
+.kc-obs-interpret {
+  grid-column: 1 / -1;
+  background: rgba(18, 36, 61, 0.55);
+  border: 1px solid rgba(255, 180, 162, 0.25);
+  border-radius: 8px;
+  padding: 0.35rem 0.55rem;
+  font-size: 0.74rem;
+  color: #d4e4f7;
+  line-height: 1.45;
+}
+.kc-obs-interpret summary {
+  cursor: pointer;
+  color: #ffd45a;
+  font-weight: 600;
+  font-size: 0.76rem;
+}
+.kc-obs-interpret ul {
+  margin: 0.35rem 0 0 1rem;
+  padding: 0;
+  color: #8ecae6;
+}
+.kc-obs-interpret-note {
+  margin: 0.35rem 0 0;
+  color: #8ecae6;
+  font-style: italic;
+}
+.kc-obs-noble-banner {
+  grid-column: 1 / -1;
+  padding: 0.4rem 0.6rem;
+  border-radius: 8px;
+  font-size: 0.74rem;
+  color: #e0ffff;
+  background: rgba(0, 201, 183, 0.12);
+  border: 1px solid rgba(0, 201, 183, 0.55);
+  box-shadow: 0 0 14px rgba(0, 201, 183, 0.18);
+}
+.kc-obs-noble-banner summary {
+  cursor: pointer;
+  font-weight: 700;
+  color: #00c9b7;
+  list-style: none;
+}
+.kc-obs-noble-banner summary::-webkit-details-marker { display: none; }
+.kc-obs-noble-banner[open] summary { margin-bottom: 0.3rem; }
+.kc-obs-noble-banner-body {
+  color: #b8e8e3;
+  line-height: 1.45;
+  font-size: 0.72rem;
+}
+.kc-obs-interpret.kc-interpret-solid {
+  border-color: rgba(255, 212, 90, 0.35);
+}
+.kc-obs-val-wrap details summary {
+  cursor: pointer;
+  color: #1a8fe3;
+  font-size: 0.76rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+.kc-obs-val-delta-strong {
+  font-weight: 700;
+}
+.kc-obs-val-delta-icon {
+  opacity: 0.85;
+  margin-right: 0.15rem;
 }
 .kc-toe-strip {
   background: rgba(18, 36, 61, 0.40);
@@ -406,7 +513,36 @@ def _delta_cell_class(delta_str: str) -> str:
     return ""
 
 
-def flux_observables_fidelity_html(extended: dict) -> str:
+def _delta_display(delta_str: str) -> str:
+    """Add scan-friendly icon and emphasis for large mismatches."""
+    if delta_str == "—":
+        return delta_str
+    icon = "↔"
+    strong = False
+    if delta_str.startswith("+"):
+        icon = "↑"
+    elif delta_str.startswith("-"):
+        icon = "↓"
+    if "Δz" in delta_str:
+        try:
+            val = float(delta_str.replace("Δz", "").strip())
+            strong = abs(val) >= 1.5
+        except ValueError:
+            pass
+    elif "pm" in delta_str or "eV" in delta_str or "BM" in delta_str:
+        try:
+            num = delta_str.split()[0].replace("+", "")
+            strong = abs(float(num)) >= 15.0
+        except ValueError:
+            pass
+    cls = "kc-obs-val-delta-strong" if strong else ""
+    return (
+        f'<span class="{cls}">'
+        f'<span class="kc-obs-val-delta-icon">{icon}</span>{delta_str}</span>'
+    )
+
+
+def flux_observables_fidelity_html(extended: dict, *, interpretation: dict | None = None) -> str:
     """Composite comparison fidelity header card."""
     score = extended.get("comparison_fidelity_score")
     if score is None:
@@ -414,6 +550,15 @@ def flux_observables_fidelity_html(extended: dict) -> str:
 
     details = extended.get("comparison_fidelity_details") or {}
     note = extended.get("comparison_fidelity_note", "")
+    interp = interpretation or {}
+    coverage = interp.get("coverage", {})
+    coverage_html = ""
+    if coverage.get("label"):
+        missing_tip = ", ".join(coverage.get("missing", [])) or "all present"
+        coverage_html = (
+            f'<span class="kc-obs-coverage-pill" title="Missing: {missing_tip}">'
+            f'{coverage["label"]}</span>'
+        )
     if score >= 8.5:
         fidelity_class = "kc-fidelity-high"
     elif score >= 7.0:
@@ -425,6 +570,8 @@ def flux_observables_fidelity_html(extended: dict) -> str:
         "magnetic_moment": "μ",
         "ionization_energy": "IE",
         "electron_affinity": "EA",
+        "atomic_radius": "radius",
+        "electronegativity": "EN",
     }
     breakdown = " · ".join(
         f"{labels.get(k, k)} {v}/10" for k, v in details.items()
@@ -437,12 +584,45 @@ def flux_observables_fidelity_html(extended: dict) -> str:
     if breakdown:
         breakdown_html = f'<span class="kc-obs-fidelity-breakdown">{breakdown}</span>'
 
+    tier_html = ""
+    tier = (interpretation or {}).get("fidelity_tier")
+    if tier == "excellent":
+        tier_html = '<span class="kc-fidelity-tier kc-tier-high">Excellent</span>'
+    elif tier == "solid":
+        tier_html = '<span class="kc-fidelity-tier kc-tier-mid">Solid</span>'
+    elif tier == "low":
+        tier_html = '<span class="kc-fidelity-tier kc-tier-low">Low</span>'
+
     return f"""
   <div class="kc-metric-card kc-obs-fidelity {fidelity_class}">
     <span class="kc-obs-tip" title="{tip}">Comparison fidelity</span>
-    <strong>{score}</strong><small>/ 10</small>{breakdown_html}
+    <strong>{score}</strong><small>/ 10</small>{tier_html}{coverage_html}{breakdown_html}
     <span class="kc-obs-caption">{note}</span>
   </div>"""
+
+
+def flux_observables_interpretation_html(interpretation: dict) -> str:
+    """Collapsible fidelity interpretation panel."""
+    if not interpretation.get("show_interpretation"):
+        return ""
+    score = interpretation.get("fidelity_score", "—")
+    tier = interpretation.get("fidelity_tier")
+    if tier in ("solid", "excellent"):
+        heading = f"Fidelity interpretation ({score}/10 — {tier})"
+        panel_class = "kc-obs-interpret kc-interpret-solid"
+    else:
+        heading = f"Why is fidelity {score}/10?"
+        panel_class = "kc-obs-interpret"
+    drivers = interpretation.get("drivers") or []
+    driver_items = "".join(f"<li>{d}</li>" for d in drivers[:4])
+    drivers_block = f"<ul>{driver_items}</ul>" if driver_items else ""
+    notes = interpretation.get("notes") or []
+    notes_block = "".join(f'<p class="kc-obs-interpret-note">{n}</p>' for n in notes)
+    return f"""
+<details class="{panel_class}" open>
+  <summary>{heading}</summary>
+  <p>{interpretation.get('summary', '')}</p>{notes_block}{drivers_block}
+</details>"""
 
 
 def flux_observables_validation_table_html(rows: list[dict]) -> str:
@@ -461,7 +641,7 @@ def flux_observables_validation_table_html(rows: list[dict]) -> str:
   <td>{row["model_spin_only"]}</td>
   <td>{row["model_soc"]}</td>
   <td>{row["experimental"]}</td>
-  <td class="{delta_class}">{row["delta"]}</td>
+  <td class="{delta_class}">{_delta_display(row["delta"])}</td>
   <td><span class="kc-obs-val-info" title="{source_tip}">{row["source"]}</span></td>
   <td class="kc-obs-val-quality"><span class="kc-obs-val-info" title="{quality_tip}">{row["quality"]}</span></td>
 </tr>"""
@@ -469,7 +649,8 @@ def flux_observables_validation_table_html(rows: list[dict]) -> str:
 
     return f"""
 <div class="kc-obs-val-wrap">
-  <span class="kc-obs-val-title">Model vs experiment</span>
+  <details open>
+  <summary>Model vs experiment ({len(rows)} observables)</summary>
   <table class="kc-obs-val-table">
     <thead><tr>
       <th>Category</th>
@@ -482,6 +663,7 @@ def flux_observables_validation_table_html(rows: list[dict]) -> str:
     </tr></thead>
     <tbody>{"".join(body_rows)}</tbody>
   </table>
+  </details>
 </div>"""
 
 
@@ -601,16 +783,45 @@ def flux_observables_cards_html(extended: dict) -> str:
 
     z = int(extended.get("Z", 1))
     validation = build_observables_validation(z, extended)
+    interpretation = interpret_comparison_fidelity(
+        z,
+        fidelity_score=validation["fidelity_score"],
+        fidelity_details=validation["fidelity_details"],
+        comparisons=validation["comparisons"],
+        stability_score=float(extended["stability_score"]),
+        is_noble_gas=bool(extended.get("is_noble_gas")),
+    )
+    interpretation["fidelity_score"] = validation["fidelity_score"]
     fidelity_card = flux_observables_fidelity_html({
         **extended,
         "comparison_fidelity_score": validation["fidelity_score"],
         "comparison_fidelity_details": validation["fidelity_details"],
         "comparison_fidelity_note": validation["fidelity_note"],
-    })
+    }, interpretation=interpretation)
+    interpretation_card = flux_observables_interpretation_html(interpretation)
     validation_table = flux_observables_validation_table_html(validation["rows"])
+    noble_banner = ""
+    if extended.get("is_noble_gas"):
+        bonus = extended.get("noble_gas_stability_bonus", 0)
+        _bonus_hint = (
+            f" (+{bonus:.1f} stability bonus applied)"
+            if bonus
+            else ""
+        )
+        noble_banner = f"""
+  <details class="kc-obs-noble-banner" data-kc-noble-z="{z}" open
+    title="Closed-shell noble gas — stability bonus{_bonus_hint}">
+    <summary>Noble Gas — Closed Shell Detected</summary>
+    <div class="kc-obs-noble-banner-body">
+      This element has a closed electron shell, which the model recognizes through a
+      stability bonus{_bonus_hint}. However, alignment on Electronegativity and some
+      other properties can still be modest for heavier noble gases (period 5+). This
+      reflects a known limitation of stability-based proxies in this region.
+    </div>
+  </details>"""
 
     return f"""
-<div class="{grid_class}">{fidelity_card}
+<div class="{grid_class}">{fidelity_card}{interpretation_card}{noble_banner}
   <div class="kc-metric-card">
     <span class="kc-obs-tip" title="Flux flywheel stability score (magic-island calibrated)">Model score</span>
     <strong>{extended["stability_score"]}</strong>
