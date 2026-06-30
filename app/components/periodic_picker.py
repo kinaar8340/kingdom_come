@@ -21,9 +21,9 @@ PERIODIC_CSS = """
   font-weight: 600;
   padding: 0.22rem 0.1rem;
   border-radius: 5px;
-  border: 1px solid rgba(26, 143, 227, 0.18);
-  background: rgba(18, 36, 61, 0.30);
-  color: #8ecae6;
+  border: 1px solid rgba(26, 143, 227, 0.35);
+  background: rgba(26, 50, 85, 0.72);
+  color: #d4e4f7;
   line-height: 1.1;
   cursor: pointer;
   font-family: inherit;
@@ -42,13 +42,13 @@ button.kc-pt-cell:focus-visible {
   display: block;
   font-size: 0.52rem;
   font-weight: 400;
-  color: #6a9bb8;
+  color: #8ecae6;
 }
 .kc-pt-cell.kc-pt-active {
   border-color: #c9a227;
   box-shadow: 0 0 10px rgba(201, 162, 39, 0.55);
   color: #ffe8a3;
-  background: rgba(201, 162, 39, 0.18);
+  background: rgba(201, 162, 39, 0.48) !important;
 }
 .kc-pt-cell.kc-pt-noble {
   color: #00f5ff;
@@ -63,7 +63,7 @@ button.kc-pt-cell:focus-visible {
 .kc-pt-gap { visibility: hidden; pointer-events: none; }
 .kc-pt-legend {
   font-size: 0.72rem;
-  color: #6a9bb8;
+  color: #8ecae6;
   margin-top: 0.35rem;
 }
 .kc-pt-superheavy {
@@ -73,6 +73,33 @@ button.kc-pt-cell:focus-visible {
   border: 1px dashed rgba(239, 85, 59, 0.35);
   color: #ffb4a2;
   font-size: 0.78rem;
+}
+"""
+
+# Flux Flywheel tab only — periodic tables need higher contrast on black.
+FLUX_PERIODIC_CSS = """
+.kc-flux-page .accordion {
+  background: rgba(18, 36, 61, 0.58) !important;
+}
+.kc-flux-page .kc-pt-wrap {
+  padding: 0.55rem 0.65rem;
+  background: rgba(18, 36, 61, 0.72);
+  border: 1px solid rgba(26, 143, 227, 0.35);
+  border-radius: 10px;
+}
+.kc-flux-page .html-container,
+.kc-flux-page .html-container .prose {
+  background: transparent !important;
+}
+.kc-flux-page .kc-pt-cell {
+  border-color: rgba(26, 143, 227, 0.42) !important;
+  color: #e8f4ff !important;
+}
+.kc-flux-page .kc-pt-cell sub {
+  color: #9ec8e8 !important;
+}
+.kc-flux-page .kc-pt-legend {
+  color: #a8cce8 !important;
 }
 """
 
@@ -93,16 +120,16 @@ watch('value', wirePtClicks);
 """
 
 _CATEGORY_COLORS = {
-    "noble gas": "rgba(0,201,183,0.22)",
-    "alkali metal": "rgba(239,85,59,0.15)",
-    "alkaline earth metal": "rgba(255,180,100,0.12)",
-    "transition metal": "rgba(26,143,227,0.15)",
-    "post-transition metal": "rgba(100,160,220,0.12)",
-    "metalloid": "rgba(150,120,200,0.12)",
-    "nonmetal": "rgba(80,200,160,0.1)",
-    "halogen": "rgba(0,200,180,0.14)",
-    "lanthanide": "rgba(180,140,255,0.12)",
-    "actinide": "rgba(200,100,180,0.12)",
+    "noble gas": "rgba(0,201,183,0.58)",
+    "alkali metal": "rgba(239,85,59,0.52)",
+    "alkaline earth metal": "rgba(255,180,100,0.50)",
+    "transition metal": "rgba(26,143,227,0.52)",
+    "post-transition metal": "rgba(100,160,220,0.50)",
+    "metalloid": "rgba(150,120,200,0.48)",
+    "nonmetal": "rgba(80,200,160,0.45)",
+    "halogen": "rgba(0,200,180,0.50)",
+    "lanthanide": "rgba(180,140,255,0.48)",
+    "actinide": "rgba(200,100,180,0.48)",
 }
 
 
@@ -158,7 +185,7 @@ def _periodic_cell_html(z: int, current_z: int) -> str:
         classes.append("kc-pt-noble")
     if z in MAGIC_NUMBER_Z:
         classes.append("kc-pt-magic")
-    bg = _CATEGORY_COLORS.get(el.category, "rgba(18,36,61,0.30)")
+    bg = _CATEGORY_COLORS.get(el.category, "rgba(26,50,85,0.72)")
     synth = " — predicted" if el.is_synthetic else ""
     return (
         f'<button type="button" class="{" ".join(classes)}" style="background:{bg}" '
@@ -194,7 +221,7 @@ def _periodic_grid_html(
             cells.append(_periodic_cell_html(z, current_z))
 
     return f"""
-<div class="kc-pt-wrap">
+<div class="kc-pt-wrap kc-flux-pt">
   <div class="kc-pt-grid">{"".join(cells)}</div>
   <div class="kc-pt-legend">{legend}</div>
 </div>

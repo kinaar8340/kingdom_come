@@ -26,6 +26,7 @@ from app.components.neon import (
     toe_strip_html,
 )
 from app.components.periodic_picker import (
+    FLUX_PERIODIC_CSS,
     PERIODIC_CSS,
     PERIODIC_TABLE_JS,
     element_picker_choices,
@@ -440,68 +441,69 @@ def build_app() -> gr.Blocks:
                 )
 
             with gr.Tab("Flux Flywheel") as flux_tab:
-                kc_markdown(
-                    "**Element explorer + flux flywheel** — pick any Z from the table or dropdown. "
-                    "Z = 1–118 known · Z = 119–180 superheavy (predicted) · Z = 129 Magic Island ID."
-                )
-                with gr.Row():
-                    z_dropdown = gr.Dropdown(
-                        choices=[label for label, _ in element_picker_choices()],
-                        value=picker_label_for_z(2),
-                        label="Jump to element",
-                        filterable=True,
-                        scale=2,
+                with gr.Column(elem_classes=["kc-flux-page"]):
+                    kc_markdown(
+                        "**Element explorer + flux flywheel** — pick any Z from the table or dropdown. "
+                        "Z = 1–118 known · Z = 119–180 superheavy (predicted) · Z = 129 Magic Island ID."
                     )
-                    z_slider = gr.Slider(1, 180, value=2, step=1, label="Atomic number Z", scale=2)
-                with gr.Accordion(
-                    "Periodic table of known elements (Z=1-118)",
-                    open=False,
-                ):
-                    known_periodic_table = gr.HTML(js_on_load=PERIODIC_TABLE_JS)
-                    noble_jump_row = gr.Row()
-                with gr.Accordion(
-                    "Periodic table of unknown elements (Z=119-180) superheavy (predicted)",
-                    open=False,
-                ):
-                    superheavy_periodic_table = gr.HTML(js_on_load=PERIODIC_TABLE_JS)
-                # Hero: element card (left) · electron cloud plot (right, 2× width)
-                with gr.Row():
-                    with gr.Column(scale=1, min_width=240):
-                        element_card = gr.HTML(label="Element")
-                    with gr.Column(scale=2):
-                        electron_plot = gr.Plot(label="Electron cloud + flux ring")
-                with gr.Row():
-                    with gr.Column(scale=1):
-                        compare_plot = gr.Plot(label="Chemistry vs TOE flux")
-                    with gr.Column(scale=1):
-                        flux_metrics_panel = gr.HTML(label="Flux metrics")
-                toe_panel = gr.HTML(label="TOE interpretation")
-                with gr.Accordion("Magic Island heatmap", open=False):
-                    magic_island_plot = gr.Plot()
-                flux_panel_outputs = [
-                    z_dropdown,
-                    known_periodic_table,
-                    superheavy_periodic_table,
-                    element_card,
-                    electron_plot,
-                    compare_plot,
-                    flux_metrics_panel,
-                    toe_panel,
-                    magic_island_plot,
-                ]
-                flux_jump_outputs = [z_slider, *flux_panel_outputs]
-                with noble_jump_row:
-                    kc_markdown("**Noble gas quick-jump:**")
-                    for z_val, sym in NOBLE_GAS_JUMP:
-                        btn = gr.Button(sym, size="sm", min_width=48)
-                        btn.click(
-                            fn=lambda z=z_val: select_flux_z(z),
-                            outputs=flux_jump_outputs,
+                    with gr.Row():
+                        z_dropdown = gr.Dropdown(
+                            choices=[label for label, _ in element_picker_choices()],
+                            value=picker_label_for_z(2),
+                            label="Jump to element",
+                            filterable=True,
+                            scale=2,
                         )
-                z_slider.change(on_flux_slider, inputs=z_slider, outputs=flux_panel_outputs)
-                z_dropdown.change(on_flux_dropdown, inputs=z_dropdown, outputs=flux_jump_outputs)
-                known_periodic_table.pick(on_periodic_pick, outputs=flux_jump_outputs)
-                superheavy_periodic_table.pick(on_periodic_pick, outputs=flux_jump_outputs)
+                        z_slider = gr.Slider(1, 180, value=2, step=1, label="Atomic number Z", scale=2)
+                    with gr.Accordion(
+                        "Periodic table of known elements (Z=1-118)",
+                        open=False,
+                    ):
+                        known_periodic_table = gr.HTML(js_on_load=PERIODIC_TABLE_JS)
+                        noble_jump_row = gr.Row()
+                    with gr.Accordion(
+                        "Periodic table of unknown elements (Z=119-180) superheavy (predicted)",
+                        open=False,
+                    ):
+                        superheavy_periodic_table = gr.HTML(js_on_load=PERIODIC_TABLE_JS)
+                    # Hero: element card (left) · electron cloud plot (right, 2× width)
+                    with gr.Row():
+                        with gr.Column(scale=1, min_width=240):
+                            element_card = gr.HTML(label="Element")
+                        with gr.Column(scale=2):
+                            electron_plot = gr.Plot(label="Electron cloud + flux ring")
+                    with gr.Row():
+                        with gr.Column(scale=1):
+                            compare_plot = gr.Plot(label="Chemistry vs TOE flux")
+                        with gr.Column(scale=1):
+                            flux_metrics_panel = gr.HTML(label="Flux metrics")
+                    toe_panel = gr.HTML(label="TOE interpretation")
+                    with gr.Accordion("Magic Island heatmap", open=False):
+                        magic_island_plot = gr.Plot()
+                    flux_panel_outputs = [
+                        z_dropdown,
+                        known_periodic_table,
+                        superheavy_periodic_table,
+                        element_card,
+                        electron_plot,
+                        compare_plot,
+                        flux_metrics_panel,
+                        toe_panel,
+                        magic_island_plot,
+                    ]
+                    flux_jump_outputs = [z_slider, *flux_panel_outputs]
+                    with noble_jump_row:
+                        kc_markdown("**Noble gas quick-jump:**")
+                        for z_val, sym in NOBLE_GAS_JUMP:
+                            btn = gr.Button(sym, size="sm", min_width=48)
+                            btn.click(
+                                fn=lambda z=z_val: select_flux_z(z),
+                                outputs=flux_jump_outputs,
+                            )
+                    z_slider.change(on_flux_slider, inputs=z_slider, outputs=flux_panel_outputs)
+                    z_dropdown.change(on_flux_dropdown, inputs=z_dropdown, outputs=flux_jump_outputs)
+                    known_periodic_table.pick(on_periodic_pick, outputs=flux_jump_outputs)
+                    superheavy_periodic_table.pick(on_periodic_pick, outputs=flux_jump_outputs)
                 flux_tab.select(
                     on_flux_slider,
                     inputs=z_slider,
@@ -752,7 +754,7 @@ def main() -> None:
     demo.launch(
         server_name="0.0.0.0",
         server_port=port,
-        css=build_kingdom_css() + NEON_CSS + PERIODIC_CSS,
+        css=build_kingdom_css() + NEON_CSS + PERIODIC_CSS + FLUX_PERIODIC_CSS,
         theme=_KINGDOM_THEME,
         allowed_paths=[
             str(PAPERS_DIR),
