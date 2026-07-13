@@ -15,8 +15,8 @@ sys.path.insert(0, str(ROOT / "src"))
 from kingdom.core.flux_explorer import explore_flux_element_extended
 from kingdom.simulations.lattice import build_lattice_figure, run_lattice_comparison
 from kingdom.viz.hopf_plotly import (
+    build_hopf_animation_frame,
     build_hopf_fibration_figure_auto,
-    build_hopf_fiber_animation,
     build_hopf_s2_explorer,
     default_view_mode,
     fiber_family_choices,
@@ -196,22 +196,23 @@ def render_hopf_visualizer(
     animate_mode: bool = False,
     anim_mode: str = "xi1_orbit",
     n_frames: int = 36,
+    frame_idx: int = 0,
 ):
     vm = view_mode if isinstance(view_mode, str) else str(view_mode)
     # Detect explorer / animate before HF WebGL clamp (both are HF-safe 2D).
     explorer = explorer_mode or ("explorer" in vm.lower())
     animate = animate_mode or ("animate" in vm.lower())
     if animate:
-        # as_html=True: gr.Plot breaks Plotly.animate (Play is a no-op in HF iframes)
-        return build_hopf_fiber_animation(
+        # Gradio-native single frame (Plotly Play/HTML embeds fail on HF).
+        return build_hopf_animation_frame(
             n_fibers=int(n_fibers),
-            n_points=min(int(n_points), 120),  # keep frame payloads light
+            n_points=min(int(n_points), 120),
+            frame_idx=int(frame_idx),
             n_frames=int(n_frames),
             mode=str(anim_mode),
             eta=float(eta),
             xi1=float(xi1),
             projection_scale=float(scale),
-            as_html=True,
         )
     if explorer:
         return build_hopf_s2_explorer(
@@ -500,9 +501,21 @@ def build_app() -> gr.Blocks:
                         label="Animation mode (Animate view)",
                     )
                     n_frames = gr.Slider(12, 72, value=36, step=4, label="Animation frames")
+                with gr.Row(visible=True) as anim_controls:
+                    anim_frame = gr.Slider(
+                        0,
+                        35,
+                        value=0,
+                        step=1,
+                        label="Frame (Animate view — drag or use ▶ Play)",
+                    )
+                    anim_play = gr.Button("▶ Play", size="sm")
+                    anim_pause = gr.Button("⏸ Pause", size="sm")
+                anim_timer = gr.Timer(0.09, active=False)
                 kc_markdown(
-                    "**Try a preset** or **S² fiber pick** — loads η/ξ₁ from the fiber family. "
-                    "In **Animate** mode use **Play** on the chart (HF-safe 2D frames; no WebGL)."
+                    "**Try a preset** or **S² fiber pick**. In **Animate** mode, scrub the "
+                    "**Frame** slider or use **▶ Play** / **⏸ Pause** (server-side frames — "
+                    "works on HF; no WebGL)."
                 )
                 with gr.Row():
                     preset_btns = [
@@ -511,13 +524,7 @@ def build_app() -> gr.Blocks:
                     reset_btn = gr.Button("Reset defaults", size="sm")
                 with gr.Accordion("What you're looking at — panels ①–④", open=True):
                     kc_markdown(HOPF_PANEL_GUIDE_MD)
-                # gr.Plot for static / explorer; gr.HTML for Animate (Plotly Play needs full JS embed)
-                hopf_plot = gr.Plot(label="Hopf Fibration", visible=True)
-                hopf_anim_html = gr.HTML(
-                    value="",
-                    visible=False,
-                    label="Hopf fiber animation",
-                )
+                hopf_plot = gr.Plot(label="Hopf Fibration")
                 with gr.Row():
                     refresh = gr.Button("Update visualization", variant="primary")
 
@@ -532,11 +539,12 @@ def build_app() -> gr.Blocks:
                     view_mode_v,
                     anim_mode_v,
                     n_frames_v,
+                    frame_v,
                 ):
                     vm = view_mode_v if isinstance(view_mode_v, str) else str(view_mode_v)
                     explorer = "explorer" in vm.lower()
                     animate = "animate" in vm.lower()
-                    result = render_hopf_visualizer(
+                    return render_hopf_visualizer(
                         n_fibers_v,
                         n_points_v,
                         eta_v,
@@ -549,15 +557,7 @@ def build_app() -> gr.Blocks:
                         animate_mode=animate,
                         anim_mode=anim_mode_v,
                         n_frames=n_frames_v,
-                    )
-                    if animate and isinstance(result, str):
-                        return (
-                            gr.update(visible=False),
-                            gr.update(value=result, visible=True),
-                        )
-                    return (
-                        gr.update(value=result, visible=True),
-                        gr.update(value="", visible=False),
+                        frame_idx=frame_v,
                     )
 
                 hopf_inputs = [
@@ -571,13 +571,13 @@ def build_app() -> gr.Blocks:
                     view_mode,
                     anim_mode,
                     n_frames,
+                    anim_frame,
                 ]
-                hopf_outputs = [hopf_plot, hopf_anim_html]
-                refresh.click(_render, inputs=hopf_inputs, outputs=hopf_outputs)
+                refresh.click(_render, inputs=hopf_inputs, outputs=hopf_plot)
                 hopf_tab.select(
                     _render,
                     inputs=hopf_inputs,
-                    outputs=hopf_outputs,
+                    outputs=hopf_plot,
                     trigger_mode="once",
                     show_progress="minimal",
                 )
@@ -597,7 +597,37 @@ def build_app() -> gr.Blocks:
                     _apply_fiber_pick,
                     inputs=[n_fibers, fiber_pick],
                     outputs=[eta, xi1],
-                ).then(_render, inputs=hopf_inputs, outputs=hopf_outputs)
+                ).then(_render, inputs=hopf_inputs, outputs=hopf_plot)
+
+                # Animate: keep frame slider max in sync; scrub / timer redraw on gr.Plot
+                def _sync_frame_slider(n_f):
+                    n = max(1, int(n_f))
+                    return gr.update(maximum=n - 1, value=0)
+
+                n_frames.change(_sync_frame_slider, inputs=[n_frames], outputs=[anim_frame]).then(
+                    _render, inputs=hopf_inputs, outputs=hopf_plot
+                )
+                anim_frame.release(_render, inputs=hopf_inputs, outputs=hopf_plot)
+                anim_frame.change(_render, inputs=hopf_inputs, outputs=hopf_plot)
+                anim_mode.change(_render, inputs=hopf_inputs, outputs=hopf_plot)
+
+                anim_play.click(lambda: gr.update(active=True), outputs=[anim_timer])
+                anim_pause.click(lambda: gr.update(active=False), outputs=[anim_timer])
+
+                def _tick_frame(frame_v, n_frames_v, view_mode_v):
+                    vm = view_mode_v if isinstance(view_mode_v, str) else str(view_mode_v)
+                    if "animate" not in vm.lower():
+                        return gr.update()
+                    n = max(1, int(n_frames_v))
+                    nxt = (int(frame_v) + 1) % n
+                    return nxt
+
+                # Advance frame, then redraw plot (don't rely solely on change events)
+                anim_timer.tick(
+                    _tick_frame,
+                    inputs=[anim_frame, n_frames, view_mode],
+                    outputs=[anim_frame],
+                ).then(_render, inputs=hopf_inputs, outputs=hopf_plot)
 
                 def apply_preset(name: str):
                     n_f, n_p, e, x, s = HOPF_PRESETS[name]
@@ -616,18 +646,19 @@ def build_app() -> gr.Blocks:
                         "2D projections (recommended)",
                         "xi1_orbit",
                         36,
+                        0,
                     )
 
                 for preset_name, btn in zip(HOPF_PRESETS, preset_btns):
                     btn.click(
                         fn=lambda name=preset_name: apply_preset(name),
                         outputs=[n_fibers, n_points, eta, xi1, scale],
-                    ).then(_render, inputs=hopf_inputs, outputs=hopf_outputs)
+                    ).then(_render, inputs=hopf_inputs, outputs=hopf_plot)
 
                 reset_btn.click(
                     fn=reset_hopf_defaults,
                     outputs=hopf_inputs,
-                ).then(_render, inputs=hopf_inputs, outputs=hopf_outputs)
+                ).then(_render, inputs=hopf_inputs, outputs=hopf_plot)
 
             with gr.Tab("Toroidal Periodic") as toroidal_tab:
                 kc_markdown(TOROIDAL_INTRO_MD)

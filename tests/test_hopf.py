@@ -13,6 +13,7 @@ from kingdom.core.hopf import (
 )
 from kingdom.core.quaternion import Quaternion
 from kingdom.viz.hopf_plotly import (
+    build_hopf_animation_frame,
     build_hopf_fibration_figure,
     build_hopf_fibration_figure_2d,
     build_hopf_fibration_figure_auto,
@@ -98,26 +99,23 @@ def test_fiber_family_choices_for_dropdown():
 
 def test_plotly_fiber_animation_builds():
     fig = build_hopf_fiber_animation(
-        n_fibers=3, n_points=40, n_frames=6, mode="xi1_orbit", height=300
+        n_fibers=3, n_points=40, n_frames=6, mode="xi1_orbit", height=300, frame_idx=2
     )
     assert len(fig.data) >= 3
-    assert fig.frames is not None and len(fig.frames) == 6
     assert all(trace.type == "scatter" for trace in fig.data)
 
 
-def test_plotly_fiber_animation_html_embed():
-    """Gradio/HF path: HTML embed keeps Plotly.animate working."""
-    html = build_hopf_fiber_animation(
-        n_fibers=3,
-        n_points=30,
-        n_frames=4,
-        mode="xi1_orbit",
-        height=300,
-        as_html=True,
+def test_hopf_animation_frame_changes_with_index():
+    a = build_hopf_animation_frame(
+        n_fibers=3, n_points=40, frame_idx=0, n_frames=12, mode="xi1_orbit"
     )
-    assert isinstance(html, str)
-    assert "plotly" in html.lower()
-    assert "Play" in html or "animate" in html.lower()
+    b = build_hopf_animation_frame(
+        n_fibers=3, n_points=40, frame_idx=6, n_frames=12, mode="xi1_orbit"
+    )
+    # Highlight traces should differ across orbit frames
+    ha = next(t for t in a.data if t.name == "highlight")
+    hb = next(t for t in b.data if t.name == "highlight")
+    assert list(ha.x[:5]) != list(hb.x[:5]) or list(ha.y[:5]) != list(hb.y[:5])
 
 
 def test_resolve_view_mode_defaults_2d():
