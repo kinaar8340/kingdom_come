@@ -109,25 +109,29 @@ def test_plotly_fiber_animation_builds():
 
 
 def test_hopf_animation_frame_changes_with_index():
-    from kingdom.viz.hopf_plotly import bake_hopf_animation_frames, clear_animation_frame_cache
+    from kingdom.viz.hopf_plotly import (
+        bake_hopf_animation_frames,
+        clear_animation_frame_cache,
+        figure_from_state_payload,
+        frames_to_state_payload,
+    )
 
     clear_animation_frame_cache()
     frames = bake_hopf_animation_frames(
-        n_fibers=3, n_points=40, n_frames=12, mode="xi1_orbit", force=True
+        n_fibers=3, n_points=40, n_frames=12, mode="twist", force=True
     )
     assert len(frames) == 12
-    a = frames[0]
-    b = frames[6]
-    ha = next(t for t in a.data if t.name == "highlight")
-    hb = next(t for t in b.data if t.name == "highlight")
-    assert list(ha.x[:5]) != list(hb.x[:5]) or list(ha.y[:5]) != list(hb.y[:5])
-    # Fixed axis range across bake
+    a, b = frames[0], frames[6]
+    assert list(a.data[0].x[:5]) != list(b.data[0].x[:5])
     assert list(a.layout.xaxis.range) == list(b.layout.xaxis.range)
-    # Cache hit returns same list
     again = bake_hopf_animation_frames(
-        n_fibers=3, n_points=40, n_frames=12, mode="xi1_orbit", force=False
+        n_fibers=3, n_points=40, n_frames=12, mode="twist", force=False
     )
     assert again is frames
+    # State round-trip (Gradio pattern)
+    payload = frames_to_state_payload(frames)
+    restored = figure_from_state_payload(payload[3])
+    assert len(restored.data) == len(frames[3].data)
 
 
 def test_resolve_view_mode_defaults_2d():

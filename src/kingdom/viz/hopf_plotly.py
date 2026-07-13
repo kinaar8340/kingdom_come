@@ -270,19 +270,22 @@ def clear_animation_frame_cache() -> None:
 def bake_hopf_animation_frames(
     n_fibers: int = 12,
     n_points: int = 100,
-    n_frames: int = 48,
+    n_frames: int = 60,
     *,
-    mode: str = "xi1_orbit",
+    mode: str = "twist",
     eta: float = 0.6,
     xi1: float = 1.2,
     projection_scale: float = 1.0,
-    height: int = 560,
+    height: int = 600,
+    opacity: float = 0.85,
+    line_width: float = 2.5,
     force: bool = False,
 ) -> list[go.Figure]:
     """
-    Precompute high-quality Plotly frames (cached).
+    Precompute high-quality Plotly frames (process-cached).
 
-    Scrubbing then becomes ``frames[i]`` — no re-sampling per slider tick.
+    Scrubbing is ``frames[i]`` — no geometry re-sample per slider tick.
+    Modes: ``twist``, ``gauge_evolution``, ``xi1_orbit``, ``eta_breath``, ``gauge_twist``.
     """
     key = _anim_cache_key(
         n_fibers, n_points, n_frames, mode, eta, xi1, projection_scale, height
@@ -302,10 +305,11 @@ def bake_hopf_animation_frames(
         height=int(height),
         theme=theme,
         color_by="index",
+        opacity=float(opacity),
+        line_width=float(line_width),
         fixed_axis_range=True,
-        title=f"Hopf fiber animation — {mode}",
+        title=f"Hopf Fibers — {str(mode).replace('_', ' ').title()}",
     )
-    # Kingdom axis colors
     for fig in frames:
         fig.update_xaxes(gridcolor=GRID, zerolinecolor=GRID, tickfont=dict(color="#8ecae6"))
         fig.update_yaxes(gridcolor=GRID, zerolinecolor=GRID, tickfont=dict(color="#8ecae6"))
@@ -316,67 +320,60 @@ def bake_hopf_animation_frames(
     return frames
 
 
+def frames_to_state_payload(frames: list[go.Figure]) -> list[dict[str, Any]]:
+    """Serialize figures for ``gr.State`` (JSON-safe Plotly dicts)."""
+    return [f.to_plotly_json() for f in frames]
+
+
+def figure_from_state_payload(payload: dict[str, Any] | go.Figure) -> go.Figure:
+    """Restore a Plotly figure from state or pass-through."""
+    if isinstance(payload, go.Figure):
+        return payload
+    return go.Figure(payload)
+
+
 def build_hopf_animation_frame(
-    n_fibers: int = 8,
-    n_points: int = 80,
+    n_fibers: int = 12,
+    n_points: int = 100,
     *,
     frame_idx: int = 0,
-    n_frames: int = 36,
-    mode: str = "xi1_orbit",
+    n_frames: int = 60,
+    mode: str = "twist",
     eta: float = 0.6,
     xi1: float = 1.2,
     projection_scale: float = 1.0,
-    height: int = 560,
+    height: int = 600,
     bake: bool = True,
 ) -> go.Figure:
-    """
-    One animation frame for ``gr.Plot``.
-
-    With ``bake=True`` (default), uses precomputed frame list for smooth scrubbing.
-    """
-    if bake:
-        frames = bake_hopf_animation_frames(
-            n_fibers=n_fibers,
-            n_points=n_points,
-            n_frames=n_frames,
-            mode=mode,
-            eta=eta,
-            xi1=xi1,
-            projection_scale=projection_scale,
-            height=height,
-        )
-        return frames[int(frame_idx) % len(frames)]
-
-    # Unbaked single-frame fallback
-    frames = create_hopf_fiber_animation_frames(
+    """One animation frame for ``gr.Plot`` (uses bake cache by default)."""
+    frames = bake_hopf_animation_frames(
         n_fibers=n_fibers,
         n_points=n_points,
-        n_frames=max(1, int(n_frames)),
+        n_frames=n_frames,
         mode=mode,
         eta=eta,
         xi1=xi1,
         projection_scale=projection_scale,
         height=height,
-        theme=kingdom_dark_theme(),
-        fixed_axis_range=True,
+        force=not bake,
     )
     return frames[int(frame_idx) % len(frames)]
 
 
 def build_hopf_fiber_animation(
-    n_fibers: int = 8,
-    n_points: int = 80,
-    n_frames: int = 36,
+    n_fibers: int = 12,
+    n_points: int = 100,
+    n_frames: int = 60,
     *,
-    mode: str = "xi1_orbit",
+    mode: str = "twist",
     eta: float = 0.6,
     xi1: float = 1.2,
     projection_scale: float = 1.0,
-    height: int = 560,
+    height: int = 600,
     frame_idx: int = 0,
     **_kwargs: Any,
 ) -> go.Figure:
-    """Alias for :func:`build_hopf_animation_frame` (precomputed bake)."""
+    """Alias for :func:`build_hopf_animation_frame`."""
     return build_hopf_animation_frame(
         n_fibers=n_fibers,
         n_points=n_points,
@@ -449,6 +446,8 @@ __all__ = [
     "build_hopf_animation_frame",
     "bake_hopf_animation_frames",
     "clear_animation_frame_cache",
+    "frames_to_state_payload",
+    "figure_from_state_payload",
     "export_kingdom_hopf_animation_mp4",
     "fiber_family_choices",
     "s2_to_hopf_angles",

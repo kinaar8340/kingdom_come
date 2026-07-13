@@ -24,12 +24,12 @@ Interactive 3D rotation needs WebGL, which HF Space iframes block in most browse
 Dashboard, S² explorer, and Animate modes use standard 2D Plotly — no WebGL required.
 For local 3D WebGL, clone the [GitHub repo](https://github.com/kinaar8340/kingdom_come).
 
-**Animate modes:** `xi1_orbit` (base walks around $S^2$), `eta_breath` (latitude oscillates),
-`gauge_twist` (phase marker along the fiber).
+**Animate types:** `twist` (family rotation), `gauge_evolution` (κ breathing),
+`xi1_orbit` / `eta_breath` / `gauge_twist` (highlight evolution).
 
-**Quality path:** **Update visualization** precomputes Plotly frames once (fixed camera,
-smooth curves). Scrub **Frame** or **▶ Play** for instant frame swaps. **Export MP4**
-renders a high-quality video when kaleido + imageio are available.
+**Quality path (Gradio production pattern):** **Generate Animation** bakes Plotly
+figures into session state once → scrub **Frame** or **▶ Play** for instant swaps
+(no re-sampling). **Export MP4** optional for offline video.
 
 Premium real-time 3D lives outside the core library — see the companion
 [flux-hopf-explorer](https://github.com/kinaar8340/flux_hopf_explorer) (Three.js / WebGPU).
