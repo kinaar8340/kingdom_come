@@ -1,5 +1,17 @@
 """Core mathematical and physical models."""
 
+from .constants import (
+    DEFAULT_KAPPA,
+    E,
+    E_INV2,
+    GOLDEN_ANGLE_DEG,
+    KAPPA_DOC,
+    PHI,
+    PI,
+    R_RESIDUAL,
+    WG_FROM_350_OVER_PI,
+    W_G_LOCK,
+)
 from .experimental_data import (
     allen_electronegativity,
     calculate_comparison_fidelity,
@@ -30,6 +42,16 @@ from .hopf import (
 from .quaternion import Quaternion, rodrigues_rotation
 
 __all__ = [
+    "PHI",
+    "E",
+    "PI",
+    "R_RESIDUAL",
+    "E_INV2",
+    "GOLDEN_ANGLE_DEG",
+    "DEFAULT_KAPPA",
+    "KAPPA_DOC",
+    "W_G_LOCK",
+    "WG_FROM_350_OVER_PI",
     "Quaternion",
     "hopf_coordinates",
     "hopf_map",

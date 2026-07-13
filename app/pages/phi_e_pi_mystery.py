@@ -2,17 +2,28 @@
 
 from pathlib import Path
 
+from kingdom.core.constants import DEFAULT_KAPPA, E, E_INV2, PHI, PI, R_RESIDUAL
+
 MYSTERY_DIR = Path(__file__).resolve().parents[1] / "assets" / "mystery"
 MYSTERY_REPO = "https://github.com/kinaar8340/mystery"
+CORE_REPO = "https://github.com/kinaar8340/flux_hopf_lib"
 
 PHI_TRIANGLE_IMAGE = MYSTERY_DIR / "phi_triangle.jpg"
 PHI_VORTEX_IMAGE = MYSTERY_DIR / "phi_vortex_369.jpg"
 PHI_BANNER_IMAGE = MYSTERY_DIR / "phi_overview_banner.jpg"
 
+_R_FMT = f"{R_RESIDUAL:+.6f}"
+_PHI_FMT = f"{PHI:.10f}"
+_E_FMT = f"{E:.11f}"
+_PI_FMT = f"{PI:.11f}"
+_KAPPA_FMT = f"{DEFAULT_KAPPA:.2f}"
+_E_OVER_PI = f"{(E / PI):.3f}"
+_E_INV2_FMT = f"{E_INV2:.6f}"
+
 PHI_E_PI_GALLERY: tuple[tuple[Path, str], ...] = (
     (
         PHI_TRIANGLE_IMAGE,
-        "Approximate φ-e-π right triangle — residual R ≈ +0.1375",
+        f"Approximate φ-e-π right triangle — residual R ≈ {_R_FMT}",
     ),
     (
         PHI_VORTEX_IMAGE,
@@ -28,10 +39,11 @@ INVESTIGATION_6_ACCORDION_TITLE = (
     "Investigation 6: The φ-e-π Emergent Signature Mystery"
 )
 
-INVESTIGATION_6_MD = r"""
+INVESTIGATION_6_MD = rf"""
 ### Investigation 6: The φ-e-π Emergent Signature Mystery
 
 **Source:** [github.com/kinaar8340/mystery](https://github.com/kinaar8340/mystery) ·
+**Core constants:** [flux_hopf_lib]({CORE_REPO}) ·
 **Status:** Active computational exploration (no claim of exact identity)
 
 Three fundamental constants from different mathematical families exhibit a striking
@@ -39,10 +51,10 @@ near-alignment:
 
 **$\phi^2 + e^2 \approx \pi^2$**
 
-where $\phi$ (golden ratio) $\approx$ 1.6180339887, $e$ (Euler's number) $\approx$ 2.71828182846, and
-$\pi \approx$ 3.14159265359.
+where $\phi$ (golden ratio) $\approx$ {_PHI_FMT}, $e$ (Euler's number) $\approx$ {_E_FMT}, and
+$\pi \approx$ {_PI_FMT}.
 
-High-precision computation yields a small residual **$R = \phi^2 + e^2 - \pi^2 \approx +0.137486$**
+High-precision computation yields a small residual **$R = \phi^2 + e^2 - \pi^2 \approx {_R_FMT}$**
 (relative error ≈ 1.39%). This is **not** a forced mathematical identity, yet close
 enough to be considered a *compatible emergent signature*.
 
@@ -71,7 +83,8 @@ The signature is explored within the **gauged Hopf lattice** model (broader TOE 
 
 | Observation | Detail |
 |-------------|--------|
-| Coupling κ | $\approx$ 0.85 (very close to $e/\pi \approx$ 0.865) |
+| Coupling κ | $\approx$ {_KAPPA_FMT} (very close to $e/\pi \approx$ {_E_OVER_PI}) |
+| Survival analog | $e^{{-2}} \approx$ {_E_INV2_FMT} at $\lambda t = 2$ |
 | PDE simulations | Relaxation preserves topology; non-random FFT content |
 | Optimization sweeps | Residual proximity stable but not exact |
 | Rodin mod-9 mapping | Doubling cycles on Hopf fiber phase advances — topological cipher candidate |

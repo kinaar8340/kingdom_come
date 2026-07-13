@@ -1,4 +1,10 @@
-"""Quaternion algebra and rotation utilities."""
+"""Quaternion algebra and rotation utilities.
+
+Base type and Rodrigues helpers re-export from flux_hopf_lib; portal helpers
+(``hopf_image``, ``from_hopf_coords``) stay on a thin subclass. Methods that
+construct new quaternions return ``type(self)`` so portal methods survive
+``normalize()`` / ``multiply()``.
+"""
 
 from __future__ import annotations
 
@@ -6,38 +12,36 @@ from dataclasses import dataclass
 
 import numpy as np
 
+from flux_hopf_lib.quaternion.core import Quaternion as _CoreQuaternion
+from flux_hopf_lib.quaternion.core import rodrigues_rotation
+
 
 @dataclass
-class Quaternion:
-    w: float = 1.0
-    x: float = 0.0
-    y: float = 0.0
-    z: float = 0.0
-
-    def norm(self) -> float:
-        return float(np.sqrt(self.w**2 + self.x**2 + self.y**2 + self.z**2))
+class Quaternion(_CoreQuaternion):
+    """Unit quaternion with Hopf-fibration helpers for the portal demos."""
 
     def normalize(self) -> Quaternion:
-        n = self.norm() + 1e-12
-        return Quaternion(self.w / n, self.x / n, self.y / n, self.z / n)
+        n = self.norm()
+        if n < 1e-12:
+            return type(self)(1.0, 0.0, 0.0, 0.0)
+        return type(self)(self.w / n, self.x / n, self.y / n, self.z / n)
 
     def conjugate(self) -> Quaternion:
-        return Quaternion(self.w, -self.x, -self.y, -self.z)
+        return type(self)(self.w, -self.x, -self.y, -self.z)
 
     def inverse(self) -> Quaternion:
-        n = self.norm() ** 2
-        return Quaternion(self.w / n, -self.x / n, -self.y / n, -self.z / n)
+        n2 = self.norm() ** 2
+        if n2 < 1e-16:
+            raise ZeroDivisionError("cannot invert near-zero quaternion")
+        return type(self)(self.w / n2, -self.x / n2, -self.y / n2, -self.z / n2)
 
-    def multiply(self, other: Quaternion) -> Quaternion:
-        return Quaternion(
+    def multiply(self, other: _CoreQuaternion) -> Quaternion:
+        return type(self)(
             self.w * other.w - self.x * other.x - self.y * other.y - self.z * other.z,
             self.w * other.x + self.x * other.w + self.y * other.z - self.z * other.y,
             self.w * other.y - self.x * other.z + self.y * other.w + self.z * other.x,
             self.w * other.z + self.x * other.y - self.y * other.x + self.z * other.w,
         )
-
-    def as_array(self) -> np.ndarray:
-        return np.array([self.w, self.x, self.y, self.z], dtype=float)
 
     def hopf_image(self) -> tuple[float, float, float]:
         from .hopf import hopf_map_quaternion
@@ -46,13 +50,18 @@ class Quaternion:
 
     @classmethod
     def from_axis_angle(cls, axis: np.ndarray, theta: float) -> Quaternion:
-        axis = axis / (np.linalg.norm(axis) + 1e-12)
+        axis = np.asarray(axis, dtype=float)
+        n = np.linalg.norm(axis)
+        if n < 1e-12:
+            return cls(1.0, 0.0, 0.0, 0.0)
+        axis = axis / n
         half = theta / 2.0
+        s = np.sin(half)
         return cls(
-            np.cos(half),
-            axis[0] * np.sin(half),
-            axis[1] * np.sin(half),
-            axis[2] * np.sin(half),
+            float(np.cos(half)),
+            float(axis[0] * s),
+            float(axis[1] * s),
+            float(axis[2] * s),
         )
 
     @classmethod
@@ -65,6 +74,7 @@ class Quaternion:
         return cls(float(x1[0]), float(x2[0]), float(x3[0]), float(x4[0]))
 
 
-def rodrigues_rotation(v: np.ndarray, k: np.ndarray, theta: float) -> np.ndarray:
-    k = k / (np.linalg.norm(k) + 1e-12)
-    return v * np.cos(theta) + np.cross(k, v) * np.sin(theta) + k * np.dot(k, v) * (1 - np.cos(theta))
+__all__ = [
+    "Quaternion",
+    "rodrigues_rotation",
+]

@@ -166,9 +166,16 @@ via Magic Island stability sweeps).
 git clone https://github.com/kinaar8340/kingdom_come.git
 cd kingdom_come
 python -m venv .venv && source .venv/bin/activate
+# Shared core (Hopf / quaternion / φ-e-π constants) — install first:
+pip install -e ../flux_hopf_lib
+# or: pip install "flux-hopf-lib @ git+https://github.com/kinaar8340/flux_hopf_lib.git@main"
 pip install -e ".[dev]"
 python app/app.py
 ```
+
+Portal demos pull φ, e, π, R residual, κ, and Hopf maps from
+**[flux_hopf_lib](https://github.com/kinaar8340/flux_hopf_lib)** via `kingdom.core.constants`
+and re-exports in `kingdom.core.hopf` / `quaternion`.
 
 ---
 
