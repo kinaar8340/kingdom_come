@@ -29,7 +29,7 @@ $$
 
 Each point on $S^2$ has a **fiber** — a circle in $S^3$ — and distinct fibers are **linked**
 with Hopf invariant $Q_H = 1$. Stereographic projection reveals these as linked
-Villarceau circles (nested tori) in $\\mathbb{R}^3$.
+Villarceau circles (nested tori) in $\\mathbb{{R}}^3$.
 
 ### Flux Flywheels & the Periodic Table
 
