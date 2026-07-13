@@ -498,11 +498,11 @@ def build_app() -> gr.Blocks:
                     show_highlight = gr.Checkbox(value=True, label="Highlight single fiber")
                     anim_mode = gr.Dropdown(
                         choices=[
-                            "twist",
-                            "gauge_evolution",
-                            "xi1_orbit",
-                            "eta_breath",
-                            "gauge_twist",
+                            ("twist — family spin (clearest motion)", "twist"),
+                            ("gauge_evolution — breathing scale", "gauge_evolution"),
+                            ("xi1_orbit — gold fiber walks S²", "xi1_orbit"),
+                            ("eta_breath — gold fiber latitude", "eta_breath"),
+                            ("gauge_twist — phase head along fiber", "gauge_twist"),
                         ],
                         value="twist",
                         label="Animation type (Animate view)",
@@ -531,11 +531,12 @@ def build_app() -> gr.Blocks:
                         interactive=False,
                         precision=0,
                     )
-                anim_timer = gr.Timer(0.06, active=False)
+                # ~12 fps; tick updates plot directly (don't rely on slider.change)
+                anim_timer = gr.Timer(1.0 / 12.0, active=False)
                 frames_state = gr.State([])  # list[plotly JSON] after Generate
                 anim_status = gr.Markdown(
-                    "In **Animate** mode: set fibers/frames/type → **Generate Animation**, "
-                    "then scrub **Frame** or **▶ Play** (instant Plotly figure swaps)."
+                    "In **Animate** mode: pick type (try **twist** first) → **Generate Animation**, "
+                    "then scrub **Frame** or **▶ Play**. Motion should be obvious."
                 )
                 kc_markdown(
                     "**Static / S² explorer:** use **Update visualization**. "
@@ -680,6 +681,11 @@ def build_app() -> gr.Blocks:
                     fig = figure_from_state_payload(frames_payload[idx])
                     return fig, idx
 
+                anim_frame.release(
+                    _update_frame,
+                    inputs=[anim_frame, frames_state],
+                    outputs=[hopf_plot, anim_frame_num],
+                )
                 anim_frame.change(
                     _update_frame,
                     inputs=[anim_frame, frames_state],
@@ -690,16 +696,20 @@ def build_app() -> gr.Blocks:
                 anim_pause.click(lambda: gr.update(active=False), outputs=[anim_timer])
 
                 def _tick_frame(frame_v, frames_payload, view_mode_v):
+                    """Advance index AND return the figure (Gradio often skips slider.change)."""
                     vm = view_mode_v if isinstance(view_mode_v, str) else str(view_mode_v)
-                    if "animate" not in vm.lower() or not frames_payload:
-                        return gr.update()
+                    if not frames_payload:
+                        return gr.update(), gr.update(), gr.update()
+                    # Allow play even if user is still on Animate tab after generate
                     n = len(frames_payload)
-                    return (int(frame_v) + 1) % n
+                    nxt = (int(frame_v) + 1) % n
+                    fig = figure_from_state_payload(frames_payload[nxt])
+                    return nxt, fig, nxt
 
                 anim_timer.tick(
                     _tick_frame,
                     inputs=[anim_frame, frames_state, view_mode],
-                    outputs=[anim_frame],
+                    outputs=[anim_frame, hopf_plot, anim_frame_num],
                 )
 
                 def _export_mp4(
