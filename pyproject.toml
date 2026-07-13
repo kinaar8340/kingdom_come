@@ -28,8 +28,8 @@ dependencies = [
     "pymupdf>=1.24",
     # Shared core (Hopf / quaternion / φ-e-π / κ constants).
     # Install first: pip install -e ../flux_hopf_lib
-    # or: pip install "flux-hopf-lib==0.1.0"
-    "flux-hopf-lib>=0.1.0",
+    # or: pip install "flux-hopf-lib==0.2.1"
+    "flux-hopf-lib>=0.2.1",
 ]
 
 [project.optional-dependencies]

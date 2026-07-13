@@ -14,7 +14,13 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from kingdom.core.flux_explorer import explore_flux_element_extended
 from kingdom.simulations.lattice import build_lattice_figure, run_lattice_comparison
-from kingdom.viz.hopf_plotly import build_hopf_fibration_figure_auto, default_view_mode, is_hf_space
+from kingdom.viz.hopf_plotly import (
+    build_hopf_fibration_figure_auto,
+    build_hopf_s2_explorer,
+    default_view_mode,
+    fiber_family_choices,
+    is_hf_space,
+)
 
 from app.build_info import get_build_label
 from app.components.neon import (
@@ -185,7 +191,20 @@ def render_hopf_visualizer(
     show_highlight: bool,
     scale: float,
     view_mode: str,
+    explorer_mode: bool = False,
 ):
+    # Detect explorer before HF WebGL clamp (explorer is HF-safe 2D).
+    explorer = explorer_mode or (
+        isinstance(view_mode, str) and "explorer" in view_mode.lower()
+    )
+    if explorer:
+        return build_hopf_s2_explorer(
+            n_fibers=int(n_fibers),
+            n_points=int(n_points),
+            eta=float(eta),
+            xi1=float(xi1),
+            projection_scale=float(scale),
+        )
     # Belt-and-suspenders: never attempt WebGL on Hugging Face.
     if is_hf_space():
         view_mode = "2D projections (recommended)"
@@ -199,6 +218,18 @@ def render_hopf_visualizer(
         show_single_fiber_highlight=show_highlight,
         projection_scale=float(scale),
     )
+
+
+def hopf_fiber_dropdown_choices(n_fibers: int = 12) -> list[str]:
+    return [label for label, _e, _x in fiber_family_choices(n_fibers=int(n_fibers))]
+
+
+def hopf_select_fiber(n_fibers: int, choice: str) -> tuple[float, float]:
+    """Map dropdown label → (η, ξ₁)."""
+    for label, eta, xi1 in fiber_family_choices(n_fibers=int(n_fibers)):
+        if label == choice:
+            return float(eta), float(xi1)
+    return 0.6, 1.2
 
 
 def render_lattice_sim(frames: int, n_sites: int, gauge: float):
@@ -411,15 +442,27 @@ def build_app() -> gr.Blocks:
                     kc_markdown(HF_VIEW_MODE_MD)
                 else:
                     kc_markdown(
-                        "Choose **2D** for maximum compatibility or **3D** for interactive WebGL rotation (local)."
+                        "Choose **2D dashboard** for maximum compatibility, **S² explorer** to pick fibers "
+                        "from the base chart, or **3D** for WebGL rotation (local only)."
                     )
                 _on_hf = is_hf_space()
                 with gr.Row():
                     if _on_hf:
-                        view_mode = gr.State("2D projections (recommended)")
+                        view_mode = gr.Radio(
+                            [
+                                "2D projections (recommended)",
+                                "S² explorer (pick fiber)",
+                            ],
+                            value="2D projections (recommended)",
+                            label="View mode",
+                        )
                     else:
                         view_mode = gr.Radio(
-                            ["2D projections (recommended)", "3D interactive (WebGL)"],
+                            [
+                                "2D projections (recommended)",
+                                "S² explorer (pick fiber)",
+                                "3D interactive (WebGL)",
+                            ],
                             value="2D projections (recommended)",
                             label="View mode",
                         )
@@ -429,10 +472,19 @@ def build_app() -> gr.Blocks:
                 with gr.Row():
                     eta = gr.Slider(0.1, 1.4, value=0.6, step=0.05, label="Highlight η")
                     xi1 = gr.Slider(0.0, 6.28, value=1.2, step=0.1, label="Highlight ξ₁")
+                    fiber_pick = gr.Dropdown(
+                        choices=hopf_fiber_dropdown_choices(8),
+                        value=None,
+                        label="S² fiber pick (sets η, ξ₁)",
+                        allow_custom_value=False,
+                    )
                 with gr.Row():
                     show_base = gr.Checkbox(value=True, label="Show S² base sphere")
                     show_highlight = gr.Checkbox(value=True, label="Highlight single fiber")
-                kc_markdown("**Try a preset** — loads parameters and updates the plot automatically.")
+                kc_markdown(
+                    "**Try a preset** or **S² fiber pick** — loads η/ξ₁ from the fiber family "
+                    "(hover base markers in explorer mode for exact angles)."
+                )
                 with gr.Row():
                     preset_btns = [
                         gr.Button(name, size="sm") for name in HOPF_PRESETS
@@ -443,6 +495,30 @@ def build_app() -> gr.Blocks:
                 hopf_plot = gr.Plot(label="Hopf Fibration")
                 with gr.Row():
                     refresh = gr.Button("Update visualization", variant="primary")
+
+                def _render(
+                    n_fibers_v,
+                    n_points_v,
+                    eta_v,
+                    xi1_v,
+                    show_base_v,
+                    show_highlight_v,
+                    scale_v,
+                    view_mode_v,
+                ):
+                    explorer = isinstance(view_mode_v, str) and "explorer" in view_mode_v.lower()
+                    return render_hopf_visualizer(
+                        n_fibers_v,
+                        n_points_v,
+                        eta_v,
+                        xi1_v,
+                        show_base_v,
+                        show_highlight_v,
+                        scale_v,
+                        view_mode_v,
+                        explorer_mode=explorer,
+                    )
+
                 hopf_inputs = [
                     n_fibers,
                     n_points,
@@ -453,14 +529,31 @@ def build_app() -> gr.Blocks:
                     scale,
                     view_mode,
                 ]
-                refresh.click(render_hopf_visualizer, inputs=hopf_inputs, outputs=hopf_plot)
+                refresh.click(_render, inputs=hopf_inputs, outputs=hopf_plot)
                 hopf_tab.select(
-                    render_hopf_visualizer,
+                    _render,
                     inputs=hopf_inputs,
                     outputs=hopf_plot,
                     trigger_mode="once",
                     show_progress="minimal",
                 )
+
+                def _refresh_fiber_choices(n_f):
+                    return gr.update(choices=hopf_fiber_dropdown_choices(int(n_f)))
+
+                n_fibers.change(_refresh_fiber_choices, inputs=[n_fibers], outputs=[fiber_pick])
+
+                def _apply_fiber_pick(n_f, choice):
+                    if not choice:
+                        return gr.update(), gr.update()
+                    e, x = hopf_select_fiber(int(n_f), choice)
+                    return e, x
+
+                fiber_pick.change(
+                    _apply_fiber_pick,
+                    inputs=[n_fibers, fiber_pick],
+                    outputs=[eta, xi1],
+                ).then(_render, inputs=hopf_inputs, outputs=hopf_plot)
 
                 def apply_preset(name: str):
                     n_f, n_p, e, x, s = HOPF_PRESETS[name]

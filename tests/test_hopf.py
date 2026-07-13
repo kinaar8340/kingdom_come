@@ -16,6 +16,8 @@ from kingdom.viz.hopf_plotly import (
     build_hopf_fibration_figure,
     build_hopf_fibration_figure_2d,
     build_hopf_fibration_figure_auto,
+    build_hopf_s2_explorer,
+    fiber_family_choices,
 )
 
 
@@ -77,6 +79,20 @@ def test_plotly_auto_selects_2d_on_hf():
     fig = build_hopf_fibration_figure_auto(view_mode="3D interactive (WebGL)", n_fibers=3, n_points=60)
     assert all(trace.type == "scatter" for trace in fig.data)
     del os.environ["SPACE_ID"]
+
+
+def test_s2_explorer_builds_and_has_customdata():
+    fig = build_hopf_s2_explorer(n_fibers=5, n_points=40, height=300)
+    assert len(fig.data) >= 5
+    assert all(trace.type == "scatter" for trace in fig.data)
+    with_cd = [t for t in fig.data if getattr(t, "customdata", None) is not None]
+    assert len(with_cd) >= 1
+
+
+def test_fiber_family_choices_for_dropdown():
+    choices = fiber_family_choices(n_fibers=4)
+    assert len(choices) == 4
+    assert all(len(c) == 3 for c in choices)
 
 
 def test_resolve_view_mode_defaults_2d():
