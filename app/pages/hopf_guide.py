@@ -18,9 +18,15 @@ HOPF_PANEL_GUIDE_MD = """
 """
 
 HF_VIEW_MODE_MD = """
-**Rendering:** 2D projections only on Hugging Face.
+**Rendering:** 2D Plotly only on Hugging Face (including **Animate** frames).
 
 Interactive 3D rotation needs WebGL, which HF Space iframes block in most browsers.
-All four panels use standard 2D Plotly — no WebGL required. For 3D, clone the
-[GitHub repo](https://github.com/kinaar8340/kingdom_come) and run locally.
+Dashboard, S² explorer, and Animate modes use standard 2D Plotly — no WebGL required.
+For local 3D WebGL, clone the [GitHub repo](https://github.com/kinaar8340/kingdom_come).
+
+**Animate modes:** `xi1_orbit` (base walks around $S^2$), `eta_breath` (latitude oscillates),
+`gauge_twist` (phase marker along the fiber). Use **Play** on the chart.
+
+Premium real-time 3D lives outside the core library — see the companion
+[flux-hopf-explorer](https://github.com/kinaar8340/flux_hopf_explorer) (Three.js / WebGPU).
 """

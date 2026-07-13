@@ -16,6 +16,7 @@ import plotly.graph_objects as go
 from flux_hopf_lib.hopf import sample_fiber, sample_fiber_family
 from flux_hopf_lib.hopf.viz import (
     FIBER_COLORS,
+    create_plotly_fiber_animation,
     fiber_family_choices,
     plot_hopf_fibers_dashboard,
     plot_hopf_fibers_stereographic,
@@ -237,6 +238,56 @@ def build_hopf_s2_explorer(
     return fig
 
 
+def build_hopf_fiber_animation(
+    n_fibers: int = 8,
+    n_points: int = 80,
+    n_frames: int = 36,
+    *,
+    mode: str = "xi1_orbit",
+    eta: float = 0.6,
+    xi1: float = 1.2,
+    projection_scale: float = 1.0,
+    height: int = 560,
+) -> go.Figure:
+    """
+    HF-safe Plotly frame animation (2D stereographic xy).
+
+    Modes: ``xi1_orbit``, ``eta_breath``, ``gauge_twist``
+    (``hopfion_spin`` falls back inside core to a 2D-safe mode).
+    """
+    theme = kingdom_dark_theme()
+    # Map UI labels → core mode keys
+    mode_key = str(mode).strip().lower().replace(" ", "_").replace("–", "-")
+    aliases = {
+        "xi1_orbit": "xi1_orbit",
+        "ξ₁_orbit": "xi1_orbit",
+        "orbit": "xi1_orbit",
+        "eta_breath": "eta_breath",
+        "η_breath": "eta_breath",
+        "breath": "eta_breath",
+        "gauge_twist": "gauge_twist",
+        "twist": "gauge_twist",
+        "hopfion_spin": "hopfion_spin",
+        "hopfion": "hopfion_spin",
+    }
+    resolved = aliases.get(mode_key, mode_key if mode_key in aliases.values() else "xi1_orbit")
+    fig = create_plotly_fiber_animation(
+        n_fibers=n_fibers,
+        n_points=n_points,
+        n_frames=n_frames,
+        mode=resolved,  # type: ignore[arg-type]
+        eta=eta,
+        xi1=xi1,
+        projection_scale=projection_scale,
+        height=height,
+        theme=theme,
+        title=f"Hopf fiber animation — {resolved} (HF-safe 2D frames)",
+    )
+    fig.update_xaxes(gridcolor=GRID, zerolinecolor=GRID, tickfont=dict(color="#8ecae6"))
+    fig.update_yaxes(gridcolor=GRID, zerolinecolor=GRID, tickfont=dict(color="#8ecae6"))
+    return fig
+
+
 def build_hopf_fibration_figure_auto(
     view_mode: ViewMode | str = "auto",
     **kwargs: Any,
@@ -257,6 +308,7 @@ __all__ = [
     "build_hopf_fibration_figure_2d",
     "build_hopf_fibration_figure_auto",
     "build_hopf_s2_explorer",
+    "build_hopf_fiber_animation",
     "fiber_family_choices",
     "s2_to_hopf_angles",
     "plot_hopf_fibers_stereographic",

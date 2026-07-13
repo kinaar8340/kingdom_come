@@ -16,6 +16,7 @@ from kingdom.core.flux_explorer import explore_flux_element_extended
 from kingdom.simulations.lattice import build_lattice_figure, run_lattice_comparison
 from kingdom.viz.hopf_plotly import (
     build_hopf_fibration_figure_auto,
+    build_hopf_fiber_animation,
     build_hopf_s2_explorer,
     default_view_mode,
     fiber_family_choices,
@@ -192,11 +193,24 @@ def render_hopf_visualizer(
     scale: float,
     view_mode: str,
     explorer_mode: bool = False,
+    animate_mode: bool = False,
+    anim_mode: str = "xi1_orbit",
+    n_frames: int = 36,
 ):
-    # Detect explorer before HF WebGL clamp (explorer is HF-safe 2D).
-    explorer = explorer_mode or (
-        isinstance(view_mode, str) and "explorer" in view_mode.lower()
-    )
+    vm = view_mode if isinstance(view_mode, str) else str(view_mode)
+    # Detect explorer / animate before HF WebGL clamp (both are HF-safe 2D).
+    explorer = explorer_mode or ("explorer" in vm.lower())
+    animate = animate_mode or ("animate" in vm.lower())
+    if animate:
+        return build_hopf_fiber_animation(
+            n_fibers=int(n_fibers),
+            n_points=min(int(n_points), 120),  # keep frame payloads light
+            n_frames=int(n_frames),
+            mode=str(anim_mode),
+            eta=float(eta),
+            xi1=float(xi1),
+            projection_scale=float(scale),
+        )
     if explorer:
         return build_hopf_s2_explorer(
             n_fibers=int(n_fibers),
@@ -442,30 +456,23 @@ def build_app() -> gr.Blocks:
                     kc_markdown(HF_VIEW_MODE_MD)
                 else:
                     kc_markdown(
-                        "Choose **2D dashboard** for maximum compatibility, **S² explorer** to pick fibers "
-                        "from the base chart, or **3D** for WebGL rotation (local only)."
+                        "Choose **2D dashboard** for maximum compatibility, **S² explorer** to pick fibers, "
+                        "**Animate** for Play/Pause frame demos, or **3D** for WebGL rotation (local only)."
                     )
                 _on_hf = is_hf_space()
+                _view_choices = [
+                    "2D projections (recommended)",
+                    "S² explorer (pick fiber)",
+                    "Animate (2D frames)",
+                ]
+                if not _on_hf:
+                    _view_choices.append("3D interactive (WebGL)")
                 with gr.Row():
-                    if _on_hf:
-                        view_mode = gr.Radio(
-                            [
-                                "2D projections (recommended)",
-                                "S² explorer (pick fiber)",
-                            ],
-                            value="2D projections (recommended)",
-                            label="View mode",
-                        )
-                    else:
-                        view_mode = gr.Radio(
-                            [
-                                "2D projections (recommended)",
-                                "S² explorer (pick fiber)",
-                                "3D interactive (WebGL)",
-                            ],
-                            value="2D projections (recommended)",
-                            label="View mode",
-                        )
+                    view_mode = gr.Radio(
+                        _view_choices,
+                        value="2D projections (recommended)",
+                        label="View mode",
+                    )
                     n_fibers = gr.Slider(3, 16, value=8, step=1, label="Number of fibers")
                     n_points = gr.Slider(60, 300, value=160, step=20, label="Points per fiber")
                     scale = gr.Slider(0.5, 2.0, value=1.0, step=0.1, label="Projection scale")
@@ -481,9 +488,19 @@ def build_app() -> gr.Blocks:
                 with gr.Row():
                     show_base = gr.Checkbox(value=True, label="Show S² base sphere")
                     show_highlight = gr.Checkbox(value=True, label="Highlight single fiber")
+                    anim_mode = gr.Dropdown(
+                        choices=[
+                            "xi1_orbit",
+                            "eta_breath",
+                            "gauge_twist",
+                        ],
+                        value="xi1_orbit",
+                        label="Animation mode (Animate view)",
+                    )
+                    n_frames = gr.Slider(12, 72, value=36, step=4, label="Animation frames")
                 kc_markdown(
-                    "**Try a preset** or **S² fiber pick** — loads η/ξ₁ from the fiber family "
-                    "(hover base markers in explorer mode for exact angles)."
+                    "**Try a preset** or **S² fiber pick** — loads η/ξ₁ from the fiber family. "
+                    "In **Animate** mode use **Play** on the chart (HF-safe 2D frames; no WebGL)."
                 )
                 with gr.Row():
                     preset_btns = [
@@ -505,8 +522,12 @@ def build_app() -> gr.Blocks:
                     show_highlight_v,
                     scale_v,
                     view_mode_v,
+                    anim_mode_v,
+                    n_frames_v,
                 ):
-                    explorer = isinstance(view_mode_v, str) and "explorer" in view_mode_v.lower()
+                    vm = view_mode_v if isinstance(view_mode_v, str) else str(view_mode_v)
+                    explorer = "explorer" in vm.lower()
+                    animate = "animate" in vm.lower()
                     return render_hopf_visualizer(
                         n_fibers_v,
                         n_points_v,
@@ -517,6 +538,9 @@ def build_app() -> gr.Blocks:
                         scale_v,
                         view_mode_v,
                         explorer_mode=explorer,
+                        animate_mode=animate,
+                        anim_mode=anim_mode_v,
+                        n_frames=n_frames_v,
                     )
 
                 hopf_inputs = [
@@ -528,6 +552,8 @@ def build_app() -> gr.Blocks:
                     show_highlight,
                     scale,
                     view_mode,
+                    anim_mode,
+                    n_frames,
                 ]
                 refresh.click(_render, inputs=hopf_inputs, outputs=hopf_plot)
                 hopf_tab.select(
@@ -570,18 +596,20 @@ def build_app() -> gr.Blocks:
                         d["show_highlight"],
                         d["scale"],
                         "2D projections (recommended)",
+                        "xi1_orbit",
+                        36,
                     )
 
                 for preset_name, btn in zip(HOPF_PRESETS, preset_btns):
                     btn.click(
                         fn=lambda name=preset_name: apply_preset(name),
                         outputs=[n_fibers, n_points, eta, xi1, scale],
-                    ).then(render_hopf_visualizer, inputs=hopf_inputs, outputs=hopf_plot)
+                    ).then(_render, inputs=hopf_inputs, outputs=hopf_plot)
 
                 reset_btn.click(
                     fn=reset_hopf_defaults,
                     outputs=hopf_inputs,
-                ).then(render_hopf_visualizer, inputs=hopf_inputs, outputs=hopf_plot)
+                ).then(_render, inputs=hopf_inputs, outputs=hopf_plot)
 
             with gr.Tab("Toroidal Periodic") as toroidal_tab:
                 kc_markdown(TOROIDAL_INTRO_MD)
