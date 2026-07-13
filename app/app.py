@@ -503,14 +503,14 @@ def build_app() -> gr.Blocks:
                         value="xi1_orbit",
                         label="Animation mode (Animate view)",
                     )
-                    n_frames = gr.Slider(12, 72, value=36, step=4, label="Animation frames")
+                    n_frames = gr.Slider(12, 72, value=48, step=4, label="Animation frames")
                 with gr.Row():
                     anim_frame = gr.Slider(
                         0,
                         47,
                         value=0,
                         step=1,
-                        label="Frame (Animate — scrub after Bake / Update)",
+                        label="Frame (Animate — scrub after Update)",
                     )
                     anim_play = gr.Button("▶ Play", size="sm")
                     anim_pause = gr.Button("⏸ Pause", size="sm")
