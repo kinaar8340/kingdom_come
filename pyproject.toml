@@ -29,7 +29,7 @@ dependencies = [
     # Shared core (Hopf / quaternion / φ-e-π / κ constants).
     # Install first: pip install -e ../flux_hopf_lib
     # or: pip install "flux-hopf-lib==0.2.2"
-    "flux-hopf-lib>=0.2.2",
+    "flux-hopf-lib>=0.2.3",
 ]
 
 [project.optional-dependencies]

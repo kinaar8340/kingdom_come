@@ -25,7 +25,8 @@ Dashboard, S² explorer, and Animate modes use standard 2D Plotly — no WebGL r
 For local 3D WebGL, clone the [GitHub repo](https://github.com/kinaar8340/kingdom_come).
 
 **Animate modes:** `xi1_orbit` (base walks around $S^2$), `eta_breath` (latitude oscillates),
-`gauge_twist` (phase marker along the fiber). Use **Play** on the chart.
+`gauge_twist` (phase marker along the fiber). Use **▶ Play** on the chart
+(embedded Plotly HTML — native Gradio plots cannot run Plotly animations).
 
 Premium real-time 3D lives outside the core library — see the companion
 [flux-hopf-explorer](https://github.com/kinaar8340/flux_hopf_explorer) (Three.js / WebGPU).

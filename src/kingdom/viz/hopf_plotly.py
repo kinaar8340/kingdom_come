@@ -24,6 +24,12 @@ from flux_hopf_lib.hopf.viz import (
     s2_to_hopf_angles,
 )
 
+try:
+    # flux-hopf-lib >= 0.2.3
+    from flux_hopf_lib.hopf.viz import plotly_fig_to_html as _core_plotly_to_html
+except ImportError:  # pragma: no cover
+    _core_plotly_to_html = None  # type: ignore[assignment]
+
 ViewMode = Literal["2d", "3d"]
 
 ACCENT_GOLD = "#c9a227"
@@ -238,6 +244,23 @@ def build_hopf_s2_explorer(
     return fig
 
 
+def plotly_fig_to_html(fig: go.Figure, *, height: int | None = None) -> str:
+    """Embed Plotly figure as HTML so client-side animate (Play) works in Gradio/HF."""
+    if _core_plotly_to_html is not None:
+        return _core_plotly_to_html(fig, height=height)
+    if height is not None:
+        fig.update_layout(height=int(height))
+    inner = fig.to_html(
+        include_plotlyjs="cdn",
+        full_html=False,
+        config={"responsive": True, "displayModeBar": True, "displaylogo": False},
+    )
+    return (
+        '<div class="hopf-plotly-embed" style="width:100%;min-height:480px;">'
+        f"{inner}</div>"
+    )
+
+
 def build_hopf_fiber_animation(
     n_fibers: int = 8,
     n_points: int = 80,
@@ -248,12 +271,16 @@ def build_hopf_fiber_animation(
     xi1: float = 1.2,
     projection_scale: float = 1.0,
     height: int = 560,
-) -> go.Figure:
+    as_html: bool = False,
+) -> go.Figure | str:
     """
     HF-safe Plotly frame animation (2D stereographic xy).
 
     Modes: ``xi1_orbit``, ``eta_breath``, ``gauge_twist``
     (``hopfion_spin`` falls back inside core to a 2D-safe mode).
+
+    Set ``as_html=True`` for Gradio/HF — ``gr.Plot`` breaks Plotly Play;
+    embed the returned HTML string in ``gr.HTML`` instead.
     """
     theme = kingdom_dark_theme()
     # Map UI labels → core mode keys
@@ -285,6 +312,8 @@ def build_hopf_fiber_animation(
     )
     fig.update_xaxes(gridcolor=GRID, zerolinecolor=GRID, tickfont=dict(color="#8ecae6"))
     fig.update_yaxes(gridcolor=GRID, zerolinecolor=GRID, tickfont=dict(color="#8ecae6"))
+    if as_html:
+        return plotly_fig_to_html(fig, height=height)
     return fig
 
 
@@ -309,6 +338,7 @@ __all__ = [
     "build_hopf_fibration_figure_auto",
     "build_hopf_s2_explorer",
     "build_hopf_fiber_animation",
+    "plotly_fig_to_html",
     "fiber_family_choices",
     "s2_to_hopf_angles",
     "plot_hopf_fibers_stereographic",

@@ -202,6 +202,7 @@ def render_hopf_visualizer(
     explorer = explorer_mode or ("explorer" in vm.lower())
     animate = animate_mode or ("animate" in vm.lower())
     if animate:
+        # as_html=True: gr.Plot breaks Plotly.animate (Play is a no-op in HF iframes)
         return build_hopf_fiber_animation(
             n_fibers=int(n_fibers),
             n_points=min(int(n_points), 120),  # keep frame payloads light
@@ -210,6 +211,7 @@ def render_hopf_visualizer(
             eta=float(eta),
             xi1=float(xi1),
             projection_scale=float(scale),
+            as_html=True,
         )
     if explorer:
         return build_hopf_s2_explorer(
@@ -509,7 +511,13 @@ def build_app() -> gr.Blocks:
                     reset_btn = gr.Button("Reset defaults", size="sm")
                 with gr.Accordion("What you're looking at — panels ①–④", open=True):
                     kc_markdown(HOPF_PANEL_GUIDE_MD)
-                hopf_plot = gr.Plot(label="Hopf Fibration")
+                # gr.Plot for static / explorer; gr.HTML for Animate (Plotly Play needs full JS embed)
+                hopf_plot = gr.Plot(label="Hopf Fibration", visible=True)
+                hopf_anim_html = gr.HTML(
+                    value="",
+                    visible=False,
+                    label="Hopf fiber animation",
+                )
                 with gr.Row():
                     refresh = gr.Button("Update visualization", variant="primary")
 
@@ -528,7 +536,7 @@ def build_app() -> gr.Blocks:
                     vm = view_mode_v if isinstance(view_mode_v, str) else str(view_mode_v)
                     explorer = "explorer" in vm.lower()
                     animate = "animate" in vm.lower()
-                    return render_hopf_visualizer(
+                    result = render_hopf_visualizer(
                         n_fibers_v,
                         n_points_v,
                         eta_v,
@@ -541,6 +549,15 @@ def build_app() -> gr.Blocks:
                         animate_mode=animate,
                         anim_mode=anim_mode_v,
                         n_frames=n_frames_v,
+                    )
+                    if animate and isinstance(result, str):
+                        return (
+                            gr.update(visible=False),
+                            gr.update(value=result, visible=True),
+                        )
+                    return (
+                        gr.update(value=result, visible=True),
+                        gr.update(value="", visible=False),
                     )
 
                 hopf_inputs = [
@@ -555,11 +572,12 @@ def build_app() -> gr.Blocks:
                     anim_mode,
                     n_frames,
                 ]
-                refresh.click(_render, inputs=hopf_inputs, outputs=hopf_plot)
+                hopf_outputs = [hopf_plot, hopf_anim_html]
+                refresh.click(_render, inputs=hopf_inputs, outputs=hopf_outputs)
                 hopf_tab.select(
                     _render,
                     inputs=hopf_inputs,
-                    outputs=hopf_plot,
+                    outputs=hopf_outputs,
                     trigger_mode="once",
                     show_progress="minimal",
                 )
@@ -579,7 +597,7 @@ def build_app() -> gr.Blocks:
                     _apply_fiber_pick,
                     inputs=[n_fibers, fiber_pick],
                     outputs=[eta, xi1],
-                ).then(_render, inputs=hopf_inputs, outputs=hopf_plot)
+                ).then(_render, inputs=hopf_inputs, outputs=hopf_outputs)
 
                 def apply_preset(name: str):
                     n_f, n_p, e, x, s = HOPF_PRESETS[name]
@@ -604,12 +622,12 @@ def build_app() -> gr.Blocks:
                     btn.click(
                         fn=lambda name=preset_name: apply_preset(name),
                         outputs=[n_fibers, n_points, eta, xi1, scale],
-                    ).then(_render, inputs=hopf_inputs, outputs=hopf_plot)
+                    ).then(_render, inputs=hopf_inputs, outputs=hopf_outputs)
 
                 reset_btn.click(
                     fn=reset_hopf_defaults,
                     outputs=hopf_inputs,
-                ).then(_render, inputs=hopf_inputs, outputs=hopf_plot)
+                ).then(_render, inputs=hopf_inputs, outputs=hopf_outputs)
 
             with gr.Tab("Toroidal Periodic") as toroidal_tab:
                 kc_markdown(TOROIDAL_INTRO_MD)

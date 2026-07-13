@@ -105,6 +105,21 @@ def test_plotly_fiber_animation_builds():
     assert all(trace.type == "scatter" for trace in fig.data)
 
 
+def test_plotly_fiber_animation_html_embed():
+    """Gradio/HF path: HTML embed keeps Plotly.animate working."""
+    html = build_hopf_fiber_animation(
+        n_fibers=3,
+        n_points=30,
+        n_frames=4,
+        mode="xi1_orbit",
+        height=300,
+        as_html=True,
+    )
+    assert isinstance(html, str)
+    assert "plotly" in html.lower()
+    assert "Play" in html or "animate" in html.lower()
+
+
 def test_resolve_view_mode_defaults_2d():
     from kingdom.viz.hopf_plotly import resolve_view_mode
 
