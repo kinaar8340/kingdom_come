@@ -3,10 +3,16 @@
 Geometry and dashboard construction come from ``flux_hopf_lib.hopf`` /
 ``flux_hopf_lib.hopf.viz``. This module applies the Kingdom dark theme and
 HF-safe view-mode policy.
+
+Animation quality path
+----------------------
+Prefer **precomputed Plotly frames** + Gradio slider (instant scrub). Do **not**
+rely on Matplotlib FuncAnimation or Plotly client-side Play under ``gr.Plot``.
 """
 
 from __future__ import annotations
 
+import hashlib
 import os
 from typing import Any, Literal
 
@@ -16,6 +22,7 @@ import plotly.graph_objects as go
 from flux_hopf_lib.hopf import sample_fiber, sample_fiber_family
 from flux_hopf_lib.hopf.viz import (
     FIBER_COLORS,
+    create_hopf_fiber_animation_frames,
     fiber_family_choices,
     plot_hopf_fibers_dashboard,
     plot_hopf_fibers_stereographic,
@@ -24,16 +31,19 @@ from flux_hopf_lib.hopf.viz import (
 )
 
 try:
-    from flux_hopf_lib.hopf import lod_n_points, sample_fiber_family_cached
-except ImportError:  # pragma: no cover — older core
-    lod_n_points = None  # type: ignore[assignment]
-    sample_fiber_family_cached = None  # type: ignore[assignment]
+    from flux_hopf_lib.hopf.viz import export_hopf_fiber_animation_mp4
+except ImportError:  # pragma: no cover
+    export_hopf_fiber_animation_mp4 = None  # type: ignore[assignment]
 
 ViewMode = Literal["2d", "3d"]
 
 ACCENT_GOLD = "#c9a227"
 BG_DARK = "#0a1628"
 GRID = "#1e3a5f"
+
+# Process-local frame cache: bake once, scrub instantly (HF worker friendly).
+_FRAME_CACHE: dict[str, list[go.Figure]] = {}
+_FRAME_CACHE_MAX = 6
 
 
 def is_hf_space() -> bool:
@@ -95,7 +105,6 @@ def build_hopf_fibration_figure_2d(
         height=height,
         theme=theme,
     )
-    # Kingdom-specific axis colors
     for row in (1, 2):
         for col in (1, 2):
             fig.update_xaxes(
@@ -128,11 +137,7 @@ def build_hopf_fibration_figure(
     projection_scale: float = 1.0,
     height: int = 560,
 ) -> go.Figure:
-    """
-    Local 3D WebGL view (not used on HF).
-
-    Built from core stereographic sampling with kingdom theming.
-    """
+    """Local 3D WebGL view (not used on HF)."""
     fibers = sample_fiber_family(n_fibers=n_fibers, n_points=n_points, scale=2.0)
     theme = kingdom_dark_theme()
     fig = go.Figure()
@@ -243,41 +248,72 @@ def build_hopf_s2_explorer(
     return fig
 
 
-def _resolve_anim_mode(mode: str) -> str:
-    mode_key = str(mode).strip().lower().replace(" ", "_").replace("–", "-")
-    aliases = {
-        "xi1_orbit": "xi1_orbit",
-        "ξ₁_orbit": "xi1_orbit",
-        "orbit": "xi1_orbit",
-        "eta_breath": "eta_breath",
-        "η_breath": "eta_breath",
-        "breath": "eta_breath",
-        "gauge_twist": "gauge_twist",
-        "twist": "gauge_twist",
-        "hopfion_spin": "eta_breath",  # 2D-safe
-        "hopfion": "eta_breath",
-    }
-    return aliases.get(mode_key, "xi1_orbit")
-
-
-def _anim_eta_xi1(
-    mode: str,
-    frame_idx: int,
+def _anim_cache_key(
+    n_fibers: int,
+    n_points: int,
     n_frames: int,
+    mode: str,
+    eta: float,
+    xi1: float,
+    scale: float,
+    height: int,
+) -> str:
+    raw = f"{n_fibers}|{n_points}|{n_frames}|{mode}|{eta:.4f}|{xi1:.4f}|{scale:.3f}|{height}"
+    return hashlib.sha1(raw.encode()).hexdigest()[:16]
+
+
+def clear_animation_frame_cache() -> None:
+    """Drop precomputed animation frames (tests / memory pressure)."""
+    _FRAME_CACHE.clear()
+
+
+def bake_hopf_animation_frames(
+    n_fibers: int = 12,
+    n_points: int = 100,
+    n_frames: int = 48,
     *,
-    eta0: float,
-    xi1_0: float,
-) -> tuple[float, float]:
-    """Map frame index → (η, ξ₁) for the gold highlight fiber."""
-    t = float(frame_idx) / max(int(n_frames), 1)
-    mode = _resolve_anim_mode(mode)
-    if mode == "xi1_orbit":
-        return float(eta0), float((xi1_0 + 2.0 * np.pi * t) % (2.0 * np.pi))
-    if mode == "eta_breath":
-        eta = 0.25 + 0.95 * (0.5 + 0.5 * np.sin(2.0 * np.pi * t))
-        return float(eta), float(xi1_0)
-    # gauge_twist keeps base fixed
-    return float(eta0), float(xi1_0)
+    mode: str = "xi1_orbit",
+    eta: float = 0.6,
+    xi1: float = 1.2,
+    projection_scale: float = 1.0,
+    height: int = 560,
+    force: bool = False,
+) -> list[go.Figure]:
+    """
+    Precompute high-quality Plotly frames (cached).
+
+    Scrubbing then becomes ``frames[i]`` — no re-sampling per slider tick.
+    """
+    key = _anim_cache_key(
+        n_fibers, n_points, n_frames, mode, eta, xi1, projection_scale, height
+    )
+    if not force and key in _FRAME_CACHE:
+        return _FRAME_CACHE[key]
+
+    theme = kingdom_dark_theme()
+    frames = create_hopf_fiber_animation_frames(
+        n_fibers=int(n_fibers),
+        n_points=min(int(n_points), 140),
+        n_frames=max(1, int(n_frames)),
+        mode=str(mode),
+        eta=float(eta),
+        xi1=float(xi1),
+        projection_scale=float(projection_scale),
+        height=int(height),
+        theme=theme,
+        color_by="index",
+        fixed_axis_range=True,
+        title=f"Hopf fiber animation — {mode}",
+    )
+    # Kingdom axis colors
+    for fig in frames:
+        fig.update_xaxes(gridcolor=GRID, zerolinecolor=GRID, tickfont=dict(color="#8ecae6"))
+        fig.update_yaxes(gridcolor=GRID, zerolinecolor=GRID, tickfont=dict(color="#8ecae6"))
+
+    if len(_FRAME_CACHE) >= _FRAME_CACHE_MAX:
+        _FRAME_CACHE.pop(next(iter(_FRAME_CACHE)))
+    _FRAME_CACHE[key] = frames
+    return frames
 
 
 def build_hopf_animation_frame(
@@ -291,102 +327,40 @@ def build_hopf_animation_frame(
     xi1: float = 1.2,
     projection_scale: float = 1.0,
     height: int = 560,
+    bake: bool = True,
 ) -> go.Figure:
     """
-    Single-frame Hopf animation snapshot for Gradio ``gr.Plot``.
+    One animation frame for ``gr.Plot``.
 
-    Gradio cannot run Plotly's client-side Play (``gr.Plot``) and strips scripts
-    from ``gr.HTML``. Drive playback with a Gradio frame slider + Timer instead.
+    With ``bake=True`` (default), uses precomputed frame list for smooth scrubbing.
     """
-    resolved = _resolve_anim_mode(mode)
-    n_frames = max(1, int(n_frames))
-    frame_idx = int(frame_idx) % n_frames
-    pts = int(n_points)
-    if lod_n_points is not None:
-        pts = int(lod_n_points(n_fibers, base_points=n_points))
-
-    if sample_fiber_family_cached is not None:
-        fibers = sample_fiber_family_cached(n_fibers=n_fibers, n_points=pts, scale=2.0)
-    else:
-        fibers = sample_fiber_family(n_fibers=n_fibers, n_points=pts, scale=2.0)
-
-    e, x = _anim_eta_xi1(resolved, frame_idx, n_frames, eta0=eta, xi1_0=xi1)
-    highlight = sample_fiber(e, x, n_points=pts, scale=2.0)
-    hx = np.asarray(highlight["px"]) * projection_scale
-    hy = np.asarray(highlight["py"]) * projection_scale
-    k = (
-        int((frame_idx / max(n_frames, 1)) * (len(hx) - 1))
-        if resolved == "gauge_twist"
-        else 0
-    )
-
-    fig = go.Figure()
-    for i, fiber in enumerate(fibers):
-        color = FIBER_COLORS[i % len(FIBER_COLORS)]
-        fig.add_trace(
-            go.Scatter(
-                x=np.asarray(fiber["px"]) * projection_scale,
-                y=np.asarray(fiber["py"]) * projection_scale,
-                mode="lines",
-                line=dict(color=color, width=2.0),
-                opacity=0.4,
-                showlegend=False,
-                hoverinfo="skip",
-            )
+    if bake:
+        frames = bake_hopf_animation_frames(
+            n_fibers=n_fibers,
+            n_points=n_points,
+            n_frames=n_frames,
+            mode=mode,
+            eta=eta,
+            xi1=xi1,
+            projection_scale=projection_scale,
+            height=height,
         )
-    fig.add_trace(
-        go.Scatter(
-            x=hx,
-            y=hy,
-            mode="lines",
-            line=dict(color=ACCENT_GOLD, width=4.5),
-            name="highlight",
-        )
-    )
-    fig.add_trace(
-        go.Scatter(
-            x=[float(hx[k])],
-            y=[float(hy[k])],
-            mode="markers",
-            marker=dict(size=11, color=ACCENT_GOLD),
-            name="phase",
-            showlegend=False,
-        )
-    )
+        return frames[int(frame_idx) % len(frames)]
 
-    theme = kingdom_dark_theme()
-    layout = {
-        **theme,
-        "height": height,
-        "title": dict(
-            text=(
-                f"Hopf animation — {resolved}  · frame {frame_idx}/{n_frames - 1}  "
-                f"· η={e:.2f} ξ₁={x:.2f}"
-            ),
-            x=0.5,
-            xanchor="center",
-            font=dict(size=14, color="#e8f4ff"),
-        ),
-        "margin": dict(l=40, r=20, t=56, b=40),
-        "xaxis": dict(
-            scaleanchor="y",
-            scaleratio=1,
-            showgrid=True,
-            gridcolor=GRID,
-            zerolinecolor=GRID,
-            tickfont=dict(color="#8ecae6"),
-        ),
-        "yaxis": dict(
-            showgrid=True,
-            gridcolor=GRID,
-            zerolinecolor=GRID,
-            tickfont=dict(color="#8ecae6"),
-        ),
-        "showlegend": True,
-        "legend": dict(orientation="h", y=1.08, font=dict(color="#d4e4f7")),
-    }
-    fig.update_layout(**layout)
-    return fig
+    # Unbaked single-frame fallback
+    frames = create_hopf_fiber_animation_frames(
+        n_fibers=n_fibers,
+        n_points=n_points,
+        n_frames=max(1, int(n_frames)),
+        mode=mode,
+        eta=eta,
+        xi1=xi1,
+        projection_scale=projection_scale,
+        height=height,
+        theme=kingdom_dark_theme(),
+        fixed_axis_range=True,
+    )
+    return frames[int(frame_idx) % len(frames)]
 
 
 def build_hopf_fiber_animation(
@@ -400,15 +374,9 @@ def build_hopf_fiber_animation(
     projection_scale: float = 1.0,
     height: int = 560,
     frame_idx: int = 0,
-    as_html: bool = False,  # kept for API compat; ignored (use Gradio Timer instead)
+    **_kwargs: Any,
 ) -> go.Figure:
-    """
-    Animation snapshot for portals.
-
-    Prefer :func:`build_hopf_animation_frame` + Gradio frame slider / Timer.
-    Plotly client-side Play does not work under ``gr.Plot`` on HF Spaces.
-    """
-    _ = as_html  # deprecated path
+    """Alias for :func:`build_hopf_animation_frame` (precomputed bake)."""
     return build_hopf_animation_frame(
         n_fibers=n_fibers,
         n_points=n_points,
@@ -419,6 +387,42 @@ def build_hopf_fiber_animation(
         xi1=xi1,
         projection_scale=projection_scale,
         height=height,
+        bake=True,
+    )
+
+
+def export_kingdom_hopf_animation_mp4(
+    n_fibers: int = 10,
+    n_points: int = 90,
+    n_frames: int = 48,
+    *,
+    mode: str = "xi1_orbit",
+    eta: float = 0.6,
+    xi1: float = 1.2,
+    projection_scale: float = 1.0,
+    path: str = "/tmp/kingdom_hopf_animation.mp4",
+    fps: int = 18,
+) -> str:
+    """Bake frames and export MP4 for ``gr.Video`` (requires kaleido + imageio)."""
+    if export_hopf_fiber_animation_mp4 is None:
+        raise ImportError("export_hopf_fiber_animation_mp4 not available in flux-hopf-lib")
+    frames = bake_hopf_animation_frames(
+        n_fibers=n_fibers,
+        n_points=n_points,
+        n_frames=n_frames,
+        mode=mode,
+        eta=eta,
+        xi1=xi1,
+        projection_scale=projection_scale,
+        height=560,
+        force=False,
+    )
+    return export_hopf_fiber_animation_mp4(
+        frames,
+        path=path,
+        fps=fps,
+        width=960,
+        height=640,
     )
 
 
@@ -432,7 +436,6 @@ def build_hopf_fibration_figure_auto(
     return build_hopf_fibration_figure(**kwargs)
 
 
-# re-exports for portal UI
 __all__ = [
     "is_hf_space",
     "default_view_mode",
@@ -444,9 +447,11 @@ __all__ = [
     "build_hopf_s2_explorer",
     "build_hopf_fiber_animation",
     "build_hopf_animation_frame",
+    "bake_hopf_animation_frames",
+    "clear_animation_frame_cache",
+    "export_kingdom_hopf_animation_mp4",
     "fiber_family_choices",
     "s2_to_hopf_angles",
     "plot_hopf_fibers_stereographic",
     "FIBER_COLORS",
 ]
-

@@ -98,6 +98,9 @@ def test_fiber_family_choices_for_dropdown():
 
 
 def test_plotly_fiber_animation_builds():
+    from kingdom.viz.hopf_plotly import clear_animation_frame_cache
+
+    clear_animation_frame_cache()
     fig = build_hopf_fiber_animation(
         n_fibers=3, n_points=40, n_frames=6, mode="xi1_orbit", height=300, frame_idx=2
     )
@@ -106,16 +109,25 @@ def test_plotly_fiber_animation_builds():
 
 
 def test_hopf_animation_frame_changes_with_index():
-    a = build_hopf_animation_frame(
-        n_fibers=3, n_points=40, frame_idx=0, n_frames=12, mode="xi1_orbit"
+    from kingdom.viz.hopf_plotly import bake_hopf_animation_frames, clear_animation_frame_cache
+
+    clear_animation_frame_cache()
+    frames = bake_hopf_animation_frames(
+        n_fibers=3, n_points=40, n_frames=12, mode="xi1_orbit", force=True
     )
-    b = build_hopf_animation_frame(
-        n_fibers=3, n_points=40, frame_idx=6, n_frames=12, mode="xi1_orbit"
-    )
-    # Highlight traces should differ across orbit frames
+    assert len(frames) == 12
+    a = frames[0]
+    b = frames[6]
     ha = next(t for t in a.data if t.name == "highlight")
     hb = next(t for t in b.data if t.name == "highlight")
     assert list(ha.x[:5]) != list(hb.x[:5]) or list(ha.y[:5]) != list(hb.y[:5])
+    # Fixed axis range across bake
+    assert list(a.layout.xaxis.range) == list(b.layout.xaxis.range)
+    # Cache hit returns same list
+    again = bake_hopf_animation_frames(
+        n_fibers=3, n_points=40, n_frames=12, mode="xi1_orbit", force=False
+    )
+    assert again is frames
 
 
 def test_resolve_view_mode_defaults_2d():

@@ -1,6 +1,7 @@
 """Visualization utilities."""
 
 from .hopf_plotly import (
+    bake_hopf_animation_frames,
     build_hopf_animation_frame,
     build_hopf_fibration_figure,
     build_hopf_fibration_figure_2d,
@@ -13,6 +14,7 @@ from .hopf_plotly import (
 from .toroidal_periodic import build_toroidal_periodic_figure
 
 __all__ = [
+    "bake_hopf_animation_frames",
     "build_hopf_animation_frame",
     "build_hopf_fibration_figure",
     "build_hopf_fibration_figure_2d",

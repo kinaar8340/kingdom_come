@@ -25,8 +25,11 @@ Dashboard, S² explorer, and Animate modes use standard 2D Plotly — no WebGL r
 For local 3D WebGL, clone the [GitHub repo](https://github.com/kinaar8340/kingdom_come).
 
 **Animate modes:** `xi1_orbit` (base walks around $S^2$), `eta_breath` (latitude oscillates),
-`gauge_twist` (phase marker along the fiber). Scrub the **Frame** slider or use
-**▶ Play** / **⏸ Pause** (server-driven frames on `gr.Plot` — reliable on HF).
+`gauge_twist` (phase marker along the fiber).
+
+**Quality path:** **Update visualization** precomputes Plotly frames once (fixed camera,
+smooth curves). Scrub **Frame** or **▶ Play** for instant frame swaps. **Export MP4**
+renders a high-quality video when kaleido + imageio are available.
 
 Premium real-time 3D lives outside the core library — see the companion
 [flux-hopf-explorer](https://github.com/kinaar8340/flux_hopf_explorer) (Three.js / WebGPU).

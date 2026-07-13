@@ -15,10 +15,12 @@ sys.path.insert(0, str(ROOT / "src"))
 from kingdom.core.flux_explorer import explore_flux_element_extended
 from kingdom.simulations.lattice import build_lattice_figure, run_lattice_comparison
 from kingdom.viz.hopf_plotly import (
+    bake_hopf_animation_frames,
     build_hopf_animation_frame,
     build_hopf_fibration_figure_auto,
     build_hopf_s2_explorer,
     default_view_mode,
+    export_kingdom_hopf_animation_mp4,
     fiber_family_choices,
     is_hf_space,
 )
@@ -203,7 +205,7 @@ def render_hopf_visualizer(
     explorer = explorer_mode or ("explorer" in vm.lower())
     animate = animate_mode or ("animate" in vm.lower())
     if animate:
-        # Gradio-native single frame (Plotly Play/HTML embeds fail on HF).
+        # Precomputed Plotly frames + slider index (smooth HF-safe path).
         return build_hopf_animation_frame(
             n_fibers=int(n_fibers),
             n_points=min(int(n_points), 120),
@@ -213,6 +215,7 @@ def render_hopf_visualizer(
             eta=float(eta),
             xi1=float(xi1),
             projection_scale=float(scale),
+            bake=True,
         )
     if explorer:
         return build_hopf_s2_explorer(
@@ -501,21 +504,24 @@ def build_app() -> gr.Blocks:
                         label="Animation mode (Animate view)",
                     )
                     n_frames = gr.Slider(12, 72, value=36, step=4, label="Animation frames")
-                with gr.Row(visible=True) as anim_controls:
+                with gr.Row():
                     anim_frame = gr.Slider(
                         0,
-                        35,
+                        47,
                         value=0,
                         step=1,
-                        label="Frame (Animate view — drag or use ▶ Play)",
+                        label="Frame (Animate — scrub after Bake / Update)",
                     )
                     anim_play = gr.Button("▶ Play", size="sm")
                     anim_pause = gr.Button("⏸ Pause", size="sm")
-                anim_timer = gr.Timer(0.09, active=False)
+                    anim_export = gr.Button("Export MP4", size="sm")
+                anim_timer = gr.Timer(0.07, active=False)
+                anim_status = gr.Markdown("")
                 kc_markdown(
-                    "**Try a preset** or **S² fiber pick**. In **Animate** mode, scrub the "
-                    "**Frame** slider or use **▶ Play** / **⏸ Pause** (server-side frames — "
-                    "works on HF; no WebGL)."
+                    "**Try a preset** or **S² fiber pick**. In **Animate** mode: "
+                    "**Update visualization** precomputes smooth Plotly frames once, then "
+                    "scrub **Frame** or **▶ Play** (instant swap — no re-sampling). "
+                    "Optional **Export MP4** for high-quality video (`gr.Video`)."
                 )
                 with gr.Row():
                     preset_btns = [
@@ -525,6 +531,7 @@ def build_app() -> gr.Blocks:
                 with gr.Accordion("What you're looking at — panels ①–④", open=True):
                     kc_markdown(HOPF_PANEL_GUIDE_MD)
                 hopf_plot = gr.Plot(label="Hopf Fibration")
+                hopf_video = gr.Video(label="Exported animation (MP4)", visible=False)
                 with gr.Row():
                     refresh = gr.Button("Update visualization", variant="primary")
 
@@ -544,7 +551,7 @@ def build_app() -> gr.Blocks:
                     vm = view_mode_v if isinstance(view_mode_v, str) else str(view_mode_v)
                     explorer = "explorer" in vm.lower()
                     animate = "animate" in vm.lower()
-                    return render_hopf_visualizer(
+                    fig = render_hopf_visualizer(
                         n_fibers_v,
                         n_points_v,
                         eta_v,
@@ -559,6 +566,14 @@ def build_app() -> gr.Blocks:
                         n_frames=n_frames_v,
                         frame_idx=frame_v,
                     )
+                    if animate:
+                        status = (
+                            f"Precomputed **{int(n_frames_v)}** frames "
+                            f"(`{anim_mode_v}`) — scrub or Play for smooth playback."
+                        )
+                    else:
+                        status = ""
+                    return fig, status
 
                 hopf_inputs = [
                     n_fibers,
@@ -573,11 +588,12 @@ def build_app() -> gr.Blocks:
                     n_frames,
                     anim_frame,
                 ]
-                refresh.click(_render, inputs=hopf_inputs, outputs=hopf_plot)
+                hopf_outputs = [hopf_plot, anim_status]
+                refresh.click(_render, inputs=hopf_inputs, outputs=hopf_outputs)
                 hopf_tab.select(
                     _render,
                     inputs=hopf_inputs,
-                    outputs=hopf_plot,
+                    outputs=hopf_outputs,
                     trigger_mode="once",
                     show_progress="minimal",
                 )
@@ -597,19 +613,141 @@ def build_app() -> gr.Blocks:
                     _apply_fiber_pick,
                     inputs=[n_fibers, fiber_pick],
                     outputs=[eta, xi1],
-                ).then(_render, inputs=hopf_inputs, outputs=hopf_plot)
+                ).then(_render, inputs=hopf_inputs, outputs=hopf_outputs)
 
-                # Animate: keep frame slider max in sync; scrub / timer redraw on gr.Plot
                 def _sync_frame_slider(n_f):
                     n = max(1, int(n_f))
                     return gr.update(maximum=n - 1, value=0)
 
-                n_frames.change(_sync_frame_slider, inputs=[n_frames], outputs=[anim_frame]).then(
-                    _render, inputs=hopf_inputs, outputs=hopf_plot
+                def _bake_and_show(
+                    n_fibers_v,
+                    n_points_v,
+                    eta_v,
+                    xi1_v,
+                    scale_v,
+                    anim_mode_v,
+                    n_frames_v,
+                    frame_v,
+                ):
+                    """Force bake then return selected frame (params change)."""
+                    bake_hopf_animation_frames(
+                        n_fibers=int(n_fibers_v),
+                        n_points=min(int(n_points_v), 120),
+                        n_frames=int(n_frames_v),
+                        mode=str(anim_mode_v),
+                        eta=float(eta_v),
+                        xi1=float(xi1_v),
+                        projection_scale=float(scale_v),
+                        force=True,
+                    )
+                    fig = build_hopf_animation_frame(
+                        n_fibers=int(n_fibers_v),
+                        n_points=min(int(n_points_v), 120),
+                        frame_idx=int(frame_v),
+                        n_frames=int(n_frames_v),
+                        mode=str(anim_mode_v),
+                        eta=float(eta_v),
+                        xi1=float(xi1_v),
+                        projection_scale=float(scale_v),
+                        bake=True,
+                    )
+                    return fig, (
+                        f"Baked **{int(n_frames_v)}** frames "
+                        f"(`{anim_mode_v}`) — scrub is instant."
+                    )
+
+                def _show_cached_frame(
+                    n_fibers_v,
+                    n_points_v,
+                    eta_v,
+                    xi1_v,
+                    scale_v,
+                    anim_mode_v,
+                    n_frames_v,
+                    frame_v,
+                    view_mode_v,
+                ):
+                    vm = view_mode_v if isinstance(view_mode_v, str) else str(view_mode_v)
+                    if "animate" not in vm.lower():
+                        return gr.update(), gr.update()
+                    fig = build_hopf_animation_frame(
+                        n_fibers=int(n_fibers_v),
+                        n_points=min(int(n_points_v), 120),
+                        frame_idx=int(frame_v),
+                        n_frames=int(n_frames_v),
+                        mode=str(anim_mode_v),
+                        eta=float(eta_v),
+                        xi1=float(xi1_v),
+                        projection_scale=float(scale_v),
+                        bake=True,
+                    )
+                    return fig, gr.update()
+
+                n_frames.change(_sync_frame_slider, inputs=[n_frames], outputs=[anim_frame])
+
+                def _on_param_change(
+                    n_fibers_v,
+                    n_points_v,
+                    eta_v,
+                    xi1_v,
+                    show_base_v,
+                    show_highlight_v,
+                    scale_v,
+                    view_mode_v,
+                    anim_mode_v,
+                    n_frames_v,
+                    frame_v,
+                ):
+                    """Re-bake animation frames only in Animate mode; else normal render."""
+                    vm = view_mode_v if isinstance(view_mode_v, str) else str(view_mode_v)
+                    if "animate" in vm.lower():
+                        return _bake_and_show(
+                            n_fibers_v,
+                            n_points_v,
+                            eta_v,
+                            xi1_v,
+                            scale_v,
+                            anim_mode_v,
+                            n_frames_v,
+                            frame_v,
+                        )
+                    return _render(
+                        n_fibers_v,
+                        n_points_v,
+                        eta_v,
+                        xi1_v,
+                        show_base_v,
+                        show_highlight_v,
+                        scale_v,
+                        view_mode_v,
+                        anim_mode_v,
+                        n_frames_v,
+                        frame_v,
+                    )
+
+                # Param changes: re-bake if Animate, else static re-render
+                for comp in (n_fibers, n_points, eta, xi1, scale, anim_mode, n_frames, view_mode):
+                    comp.change(
+                        _on_param_change,
+                        inputs=hopf_inputs,
+                        outputs=hopf_outputs,
+                    )
+                # Scrub only indexes cache — fast path (Animate only)
+                anim_frame.change(
+                    _show_cached_frame,
+                    inputs=[
+                        n_fibers,
+                        n_points,
+                        eta,
+                        xi1,
+                        scale,
+                        anim_mode,
+                        n_frames,
+                        anim_frame,
+                        view_mode,
+                    ],
+                    outputs=hopf_outputs,
                 )
-                anim_frame.release(_render, inputs=hopf_inputs, outputs=hopf_plot)
-                anim_frame.change(_render, inputs=hopf_inputs, outputs=hopf_plot)
-                anim_mode.change(_render, inputs=hopf_inputs, outputs=hopf_plot)
 
                 anim_play.click(lambda: gr.update(active=True), outputs=[anim_timer])
                 anim_pause.click(lambda: gr.update(active=False), outputs=[anim_timer])
@@ -619,15 +757,49 @@ def build_app() -> gr.Blocks:
                     if "animate" not in vm.lower():
                         return gr.update()
                     n = max(1, int(n_frames_v))
-                    nxt = (int(frame_v) + 1) % n
-                    return nxt
+                    return (int(frame_v) + 1) % n
 
-                # Advance frame, then redraw plot (don't rely solely on change events)
                 anim_timer.tick(
                     _tick_frame,
                     inputs=[anim_frame, n_frames, view_mode],
                     outputs=[anim_frame],
-                ).then(_render, inputs=hopf_inputs, outputs=hopf_plot)
+                )
+
+                def _export_mp4(
+                    n_fibers_v,
+                    n_points_v,
+                    eta_v,
+                    xi1_v,
+                    scale_v,
+                    anim_mode_v,
+                    n_frames_v,
+                ):
+                    try:
+                        path = export_kingdom_hopf_animation_mp4(
+                            n_fibers=int(n_fibers_v),
+                            n_points=min(int(n_points_v), 100),
+                            n_frames=min(int(n_frames_v), 60),
+                            mode=str(anim_mode_v),
+                            eta=float(eta_v),
+                            xi1=float(xi1_v),
+                            projection_scale=float(scale_v),
+                            fps=18,
+                        )
+                        return (
+                            gr.update(value=path, visible=True),
+                            f"Exported MP4 → `{path}`",
+                        )
+                    except Exception as exc:
+                        return (
+                            gr.update(visible=False),
+                            f"MP4 export failed (need kaleido + imageio-ffmpeg): `{exc}`",
+                        )
+
+                anim_export.click(
+                    _export_mp4,
+                    inputs=[n_fibers, n_points, eta, xi1, scale, anim_mode, n_frames],
+                    outputs=[hopf_video, anim_status],
+                )
 
                 def apply_preset(name: str):
                     n_f, n_p, e, x, s = HOPF_PRESETS[name]
@@ -645,7 +817,7 @@ def build_app() -> gr.Blocks:
                         d["scale"],
                         "2D projections (recommended)",
                         "xi1_orbit",
-                        36,
+                        48,
                         0,
                     )
 
@@ -653,12 +825,12 @@ def build_app() -> gr.Blocks:
                     btn.click(
                         fn=lambda name=preset_name: apply_preset(name),
                         outputs=[n_fibers, n_points, eta, xi1, scale],
-                    ).then(_render, inputs=hopf_inputs, outputs=hopf_plot)
+                    ).then(_render, inputs=hopf_inputs, outputs=hopf_outputs)
 
                 reset_btn.click(
                     fn=reset_hopf_defaults,
                     outputs=hopf_inputs,
-                ).then(_render, inputs=hopf_inputs, outputs=hopf_plot)
+                ).then(_render, inputs=hopf_inputs, outputs=hopf_outputs)
 
             with gr.Tab("Toroidal Periodic") as toroidal_tab:
                 kc_markdown(TOROIDAL_INTRO_MD)
