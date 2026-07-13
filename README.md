@@ -168,7 +168,7 @@ cd kingdom_come
 python -m venv .venv && source .venv/bin/activate
 # Shared core (Hopf / quaternion / φ-e-π constants) — install first:
 pip install -e ../flux_hopf_lib
-# or: pip install "flux-hopf-lib @ git+https://github.com/kinaar8340/flux_hopf_lib.git@main"
+# or: pip install "flux-hopf-lib @ git+https://github.com/kinaar8340/flux_hopf_lib.git@v0.1.0"
 pip install -e ".[dev]"
 python app/app.py
 ```

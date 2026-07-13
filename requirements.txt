@@ -1,6 +1,6 @@
 # Shared core — constants, Hopf, quaternions (canonical)
 # Local editable: pip install -e ../flux_hopf_lib
-flux-hopf-lib @ git+https://github.com/kinaar8340/flux_hopf_lib.git@main
+flux-hopf-lib @ git+https://github.com/kinaar8340/flux_hopf_lib.git@v0.1.0
 
 gradio>=4.0
 plotly>=5.0
