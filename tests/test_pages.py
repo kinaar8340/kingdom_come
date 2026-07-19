@@ -40,11 +40,12 @@ def test_help_navigate_links_hf_and_github():
     assert "huggingface.co/spaces/kinaar111" in HELP_NAVIGATE_MD
     assert "github.com/kinaar8340" in HELP_NAVIGATE_MD
     assert "Hopf Visualizer" in HELP_NAVIGATE_MD
+    assert "Book Mode" in HELP_NAVIGATE_MD
     assert "acronyms" in HELP_NAVIGATE_MD
 
 
 def test_help_acronyms_table_has_core_terms():
-    for term in ("VQC", "OAM", "TOE", "QVPIC", "HFB", "BMGL"):
+    for term in ("VQC", "OAM", "TOE", "QVPIC", "HFB", "BMGL", "QGA"):
         assert term in HELP_ACRONYMS_MD
     assert "W_{g}" in HELP_ACRONYMS_MD
     assert "| Acronym | Stands For | Definition |" in HELP_ACRONYMS_MD
@@ -55,8 +56,11 @@ def test_help_acronyms_table_has_core_terms():
 def test_help_getting_started_references_home():
     assert "Home" in HELP_GETTING_STARTED_MD
     assert "Hopf Visualizer" in HELP_GETTING_STARTED_MD
+    assert "Book Mode" in HELP_GETTING_STARTED_MD
 
 
 def test_help_controls_and_tech_present():
     assert "WebGL" in HELP_CONTROLS_MD
+    assert "Book Mode" in HELP_CONTROLS_MD
     assert "Gradio" in HELP_TECH_MD
+    assert "Book Mode" in HELP_TECH_MD

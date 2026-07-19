@@ -155,6 +155,19 @@ from app.pages.papers import (
 )
 from app.pages.showcase import SHOWCASE_HTML
 from app.pages.theory import DERIVATION_HOPF_MD
+from app.pages.book_mode import (
+    BOOK_MODE_INTRO_MD,
+    BOOK_TOC_MD,
+    PART_I_MD,
+    PART_II_MD,
+    PART_III_MD,
+    PART_IV_MD,
+    PART_V_MD,
+    chapter_detail_md,
+    chapter_dropdown_choices,
+    main_tab_index_for_widget,
+    widget_key_for_chapter,
+)
 
 PAPERS_DIR = ROOT / "app" / "assets" / "papers"
 PAPERS_SOURCE_DIR = ROOT / "papers"
@@ -389,11 +402,53 @@ _KINGDOM_THEME = gr.themes.Base(
 )
 
 
+def book_mode_open_widget(chapter_key: str):
+    """Return Tabs update selecting the live companion for a book chapter."""
+    widget = widget_key_for_chapter(chapter_key or "ch0")
+    idx = main_tab_index_for_widget(widget)
+    detail = chapter_detail_md(chapter_key or "ch0")
+    return gr.Tabs(selected=idx), detail
+
+
+def book_mode_show_chapter(chapter_key: str):
+    return chapter_detail_md(chapter_key or "ch0")
+
+
+def book_mode_mini_hopf():
+    """Classic Hopf snapshot for Book Mode mini demo."""
+    return render_hopf_visualizer(
+        n_fibers=8,
+        n_points=120,
+        eta=0.6,
+        xi1=1.2,
+        show_base=True,
+        show_highlight=True,
+        scale=1.0,
+        view_mode=default_view_mode(),
+        explorer_mode=False,
+        animate_mode=False,
+    )
+
+
+def book_mode_mini_lattice():
+    """Short lattice comparison for Book Mode mini demo."""
+    return render_lattice_sim(frames=80, n_sites=48, gauge=0.85)
+
+
+def book_mode_mini_flux(z: int = 2):
+    """Flux flywheel panels for Book Mode mini demo (returns subset)."""
+    z = max(1, min(180, int(z)))
+    panels = _flux_panels(z)
+    # panels: dropdown, known_table, superheavy_table, element_card, electron, compare,
+    # analysis, metrics, observables, validation, toe, magic_island
+    return z, panels[3], panels[4], panels[7], panels[11]
+
+
 def build_app() -> gr.Blocks:
     with gr.Blocks(title="Kingdom Come") as demo:
         gr.HTML(HERO_HTML)
 
-        with gr.Tabs():
+        with gr.Tabs() as main_tabs:
             with gr.Tab("Home"):
                 kc_markdown(HOME_INTRO_MD)
                 with gr.Row(equal_height=True, elem_classes=["kc-obs-image-row"]):
@@ -457,6 +512,122 @@ def build_app() -> gr.Blocks:
                         kc_markdown(HELP_ACRONYMS_MD)
                     with gr.Tab("Tech Stack"):
                         kc_markdown(HELP_TECH_MD)
+
+            with gr.Tab("Book Mode") as book_tab:
+                kc_markdown(BOOK_MODE_INTRO_MD)
+                kc_markdown(BOOK_TOC_MD)
+                with gr.Row():
+                    book_chapter = gr.Dropdown(
+                        choices=chapter_dropdown_choices(),
+                        value="ch0",
+                        label="Manuscript chapter",
+                        scale=3,
+                    )
+                    book_open_btn = gr.Button(
+                        "Open linked live tab",
+                        variant="primary",
+                        scale=1,
+                    )
+                book_detail = kc_markdown(chapter_detail_md("ch0"))
+                book_chapter.change(
+                    book_mode_show_chapter,
+                    inputs=[book_chapter],
+                    outputs=[book_detail],
+                )
+                book_open_btn.click(
+                    book_mode_open_widget,
+                    inputs=[book_chapter],
+                    outputs=[main_tabs, book_detail],
+                )
+
+                with gr.Tabs():
+                    with gr.Tab("Part I · Foundations"):
+                        kc_markdown(PART_I_MD)
+                        with gr.Row():
+                            book_hopf_btn = gr.Button("Run mini Hopf demo", variant="secondary")
+                            book_to_hopf = gr.Button("Go to Hopf Visualizer tab")
+                        book_hopf_plot = gr.Plot(label="Mini Hopf (Classic preset)")
+                        book_hopf_btn.click(book_mode_mini_hopf, outputs=[book_hopf_plot])
+                        book_to_hopf.click(
+                            lambda: (
+                                gr.Tabs(selected=main_tab_index_for_widget("hopf")),
+                                chapter_detail_md("ch2"),
+                            ),
+                            outputs=[main_tabs, book_detail],
+                        )
+                    with gr.Tab("Part II · Lattice"):
+                        kc_markdown(PART_II_MD)
+                        with gr.Row():
+                            book_lat_btn = gr.Button("Run mini lattice demo", variant="secondary")
+                            book_to_lat = gr.Button("Go to Lattice Simulator tab")
+                        book_lat_plot = gr.Plot(label="Mini lattice (stable vs chaotic)")
+                        book_lat_md = kc_markdown()
+                        book_lat_btn.click(
+                            book_mode_mini_lattice,
+                            outputs=[book_lat_plot, book_lat_md],
+                        )
+                        book_to_lat.click(
+                            lambda: (
+                                gr.Tabs(selected=main_tab_index_for_widget("lattice")),
+                                chapter_detail_md("ch3"),
+                            ),
+                            outputs=[main_tabs, book_detail],
+                        )
+                    with gr.Tab("Part III · Forms / Z-map"):
+                        kc_markdown(PART_III_MD)
+                        with gr.Row():
+                            book_z = gr.Slider(1, 118, value=2, step=1, label="Mini demo Z")
+                            book_flux_btn = gr.Button("Run mini Flux Flywheel", variant="secondary")
+                            book_to_flux = gr.Button("Go to Flux Flywheel tab")
+                        book_flux_card = gr.HTML()
+                        book_flux_cloud = gr.Plot(label="Electron cloud + flux ring")
+                        book_flux_metrics = gr.HTML()
+                        book_flux_magic = gr.Plot(label="Magic Island heatmap")
+                        book_flux_btn.click(
+                            book_mode_mini_flux,
+                            inputs=[book_z],
+                            outputs=[
+                                book_z,
+                                book_flux_card,
+                                book_flux_cloud,
+                                book_flux_metrics,
+                                book_flux_magic,
+                            ],
+                        )
+                        book_to_flux.click(
+                            lambda: (
+                                gr.Tabs(selected=main_tab_index_for_widget("flux")),
+                                chapter_detail_md("ch7"),
+                            ),
+                            outputs=[main_tabs, book_detail],
+                        )
+                    with gr.Tab("Part IV · Arithmetic"):
+                        kc_markdown(PART_IV_MD)
+                        book_to_home = gr.Button("Go to Home · The Model")
+                        book_to_home.click(
+                            lambda: (
+                                gr.Tabs(selected=main_tab_index_for_widget("home")),
+                                chapter_detail_md("ch9"),
+                            ),
+                            outputs=[main_tabs, book_detail],
+                        )
+                    with gr.Tab("Part V · Observations"):
+                        kc_markdown(PART_V_MD)
+                        book_to_obs = gr.Button("Go to Observations tab", variant="primary")
+                        book_to_obs.click(
+                            lambda: (
+                                gr.Tabs(selected=main_tab_index_for_widget("observations")),
+                                chapter_detail_md("ch10"),
+                            ),
+                            outputs=[main_tabs, book_detail],
+                        )
+
+                book_tab.select(
+                    book_mode_mini_hopf,
+                    outputs=[book_hopf_plot],
+                    trigger_mode="once",
+                    show_progress="minimal",
+                )
 
             with gr.Tab("Hopf Visualizer") as hopf_tab:
                 kc_markdown(HOPF_INTRO_MD)

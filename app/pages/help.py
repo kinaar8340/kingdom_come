@@ -13,8 +13,8 @@ Use the **main tab bar** at the top of this page to switch between interactive m
 | **Home → The Model** | Vision, math backbone, flux flywheels, observer sync | You want the big picture first |
 | **Home → Constant** | $W_{g} = 350/\\pi$ threshold and gauged weight invariant | You want the universal alarm constant |
 | **Help** | This page — navigation, controls, acronyms | You need orientation or a term defined |
+| **Book Mode** | Manuscript map (QGA Ch. 0–10) → live widgets + mini demos | You are reading the book and want the matching tab |
 | **Hopf Visualizer** | Linked $S^3 \\to S^2$ fiber plots (2D on HF, 3D WebGL locally) | You want geometric intuition |
-
 | **Home → The Papers** | Accordion summaries + inline page previews + PDF download | You want primary sources |
 | **Lattice Simulator** | Two-gyro gauged quaternion lattice (stable vs chaotic) | You want to see burst dynamics |
 | **Flux Flywheel** | Periodic table explorer Z = 1–180 + Magic Island heatmap | You want matter as flux configurations |
@@ -63,6 +63,7 @@ linking topology, quaternions, flux lattices, and emergent matter models.
 3. Study the four panels: linked fibers (xy/xz), $S^2$ base chart, phase-colored highlight.
 4. Open **Lattice Simulator** → **Run lattice comparison** (stable vs chaotic).
 5. Try **Flux Flywheel** at Z = 2 (He — noble gas lock), Z = 10 (Ne), or Z = 129 (Magic Island ID).
+6. (Optional) Open **Book Mode** — pick a manuscript chapter, run a mini demo, or **Open linked live tab**.
 
 ### First-time visitor shortcut
 
@@ -72,8 +73,9 @@ linking topology, quaternions, flux lattices, and emergent matter models.
 | 2 | Hopf Visualizer | Read panels ①–④ in the accordion |
 | 3 | Lattice Simulator | **Run lattice comparison** |
 | 4 | Flux Flywheel | Set Z = 2 for the Magic Island anchor |
+| 5 | Book Mode | Select Ch. 2 or Ch. 7 → mini demo or jump to live tab |
 
-*Tip: use **Reset defaults** in Hopf Visualizer anytime.*
+*Tip: use **Reset defaults** in Hopf Visualizer anytime. Reading the QGA book? Start in **Book Mode**.*
 """
 
 HELP_CONTROLS_MD = """
@@ -105,6 +107,17 @@ HELP_CONTROLS_MD = """
 | **Atomic number Z** | Slider or dropdown — Z = 1–118 known, 119–180 predicted |
 | **Periodic table** | Click any cell to jump |
 | **Noble gas buttons** | Quick-jump to He, Ne, Ar, Kr, Xe, Rn, Og |
+
+### Book Mode
+
+| Control | Effect |
+|---------|--------|
+| **Manuscript chapter** | Dropdown for QGA Chapters 0–10 — summary, claim focus, linked tab |
+| **Open linked live tab** | Jumps the main tab bar to Hopf / Lattice / Flux / Observations / Home |
+| **Part mini demos** | In-place Hopf, lattice comparison, or Flux Flywheel snapshot without leaving Book Mode |
+| **Go to … tab** | One-click jump from each Part section |
+
+Companion manuscript: [github.com/kinaar8340/qga](https://github.com/kinaar8340/qga).
 
 ### Limitations
 
@@ -147,6 +160,7 @@ and [hfb/GLOSSARY.md](https://github.com/kinaar8340/hfb/blob/main/GLOSSARY.md).
 | **BEC** | Bose-Einstein Condensate | Ultracold atomic medium used as tabletop acoustic/optical analog in HFB. |
 | **SOC** | Spin-Orbit Coupling | Interaction parameter in p-wave BMGL altermagnetic variant. |
 | **HF** | Hugging Face | Host for live Gradio Spaces in the seven-project ecosystem. |
+| **QGA** | Quaternionic Geometric Approach | Manuscript *Kingdom Come: A Quaternionic Geometric Approach…* ([qga](https://github.com/kinaar8340/qga)); portal **Book Mode** maps chapters to live widgets. |
 | **κ** | Kappa (coupling) | Global pointer-damping / interlayer coupling parameter; doc value ≈ 0.85 across repos. |
 """
 
@@ -163,6 +177,7 @@ HELP_TECH_MD = r"""
 ### Related reading
 
 - **Home** tab — clock mechanism and $W_{g}$ foundation
+- **Book Mode** — QGA manuscript map → Hopf / Lattice / Flux / Observations
 - **Home → The Papers** — *GW_Burst_Threshold*, *Lagrangian_Derivation*, *Observer_Synchronization*
 - **Acronyms** tab (this Help section) — full glossary
 """

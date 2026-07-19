@@ -58,6 +58,7 @@ This is a **Gradio** Space (not Docker). Open the **App** tab above — no insta
 
 | Tab | Action | Output |
 |-----|--------|--------|
+| **Book Mode** | Pick QGA Ch. 0–10 → mini demo or **Open linked live tab** | Manuscript map ↔ Hopf / Lattice / Flux / Observations |
 | **Hopf Visualizer** | Click **Classic Hopf** preset → **Update visualization** | 4-panel 2D view: linked fibers (xy/xz), S² base chart, phase map |
 | **Lattice Simulator** | **Run lattice comparison** | Stable vs chaotic gauge pointer, twist, identity preservation |
 | **The Model** | Read overview + derivation accordion | Core TOE postulates and Hopf→quaternion math |
@@ -65,6 +66,8 @@ This is a **Gradio** Space (not Docker). Open the **App** tab above — no insta
 | **Observations** | Expand investigations | Natural synchronicities, numerics, and TLS probes mapped to the TOE |
 | **Showcase** | Browse links | [kinaar111 HF Spaces](https://huggingface.co/kinaar111/spaces) |
 | **Help** | Full walkthrough | Controls, limitations, tech stack |
+
+Companion manuscript: [Kingdom Come QGA](https://github.com/kinaar8340/qga) (Markdown + PDF).
 
 New investigations in **Observations** tab include TLS tree point-cloud analysis (350/π branch bursts), the Bitcoin Pi Cycle Top emergence of W_g = 350/π, cuprate superconductor mappings (Investigation 9), and PTA pulsar timing / 350/π hypothesis (Investigation 10).
 
@@ -77,6 +80,7 @@ New investigations in **Observations** tab include TLS tree point-cloud analysis
 3. Press **Classic Hopf** → **Update visualization**.
 4. Explore the four panels: stereographic fiber views and S² base markers.
 5. Open **The Model** for the physics narrative.
+6. (Optional) **Book Mode** — follow the manuscript structure with live widget jumps.
 
 ---
 
