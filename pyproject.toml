@@ -48,7 +48,8 @@ where = ["src"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-pythonpath = ["src"]
+# app/ lives at repo root; kingdom package under src/
+pythonpath = [".", "src"]
 
 [tool.ruff]
 line-length = 100
