@@ -199,4 +199,4 @@ and re-exports in `kingdom.core.hopf` / `quaternion`.
 
 ## License
 
-MIT — see [LICENSE](LICENSE). Author: Aaron Michael Kinder · [kinaar111](https://huggingface.co/kinaar111)
+MIT — see [LICENSE](LICENSE). Author: Aaron Michael Kinder · [kinaar111](https://huggingface.co/kinaar111) · X: [@kinaar8340](https://x.com/kinaar8340)
