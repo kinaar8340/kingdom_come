@@ -10,7 +10,7 @@ app_file: app/app.py
 pinned: true
 license: mit
 suggested_hardware: cpu-basic
-short_description: Hopf fibration TOE portal & visualizers
+short_description: Hopf visualizers, flux-flywheel models, observational notes
 tags:
   - physics
   - topology
@@ -32,25 +32,30 @@ tags:
 
 <p align="center"><em>Demo GIF: highlight fiber ξ₁ phase sweep — each loop is one fiber of the Hopf fibration.</em></p>
 
+**Portal for models and observations — not a ToE claim.** Geometry and arithmetic stay theorems on [qga](https://github.com/kinaar8340/qga). Physical models stay models. The five-minute OAM / Orbital Braille run is [vqc_workbench](https://github.com/kinaar8340/vqc_workbench).
+
+| Face | Open |
+|------|------|
+| **Theorems** | [qga](https://github.com/kinaar8340/qga) — Hatcher lift, Hopf, claim table |
+| **Demo** | [vqc_workbench](https://github.com/kinaar8340/vqc_workbench) — install `flux-hopf-lib`, spiral \(\ell=3\), identity recovers `Hi` |
+| **Picture** | The Hopf GIF above — one fiber family, not a manifesto |
+
+This is a **Gradio** Space (not Docker). Open the **App** tab above — no install required.
+
 <p align="center">
   <img src="app/assets/flux_flywheel_demo.gif"
        alt="Flux Flywheel element tour: Helium, Iron, Gold, and Z=129 with Grok Imagine artwork, electron shells, and gold flux ring"
        width="100%" style="max-width: 720px; border-radius: 12px;" />
 </p>
 
-<p align="center"><em>Flux Flywheel demo: He → Fe → Au → Z=129 — Imagine art, shell clouds, and stability metrics.</em></p>
+<p align="center"><em>Flux Flywheel demo (a <strong>Model</strong>): He → Fe → Au → Z=129 — Imagine art, shell clouds, and stability metrics.</em></p>
 
 <p align="center">
   <img src="app/assets/hopf_preview.png" alt="Hopf fibration stereographic preview — linked fibers" width="100%" style="max-width: 720px; border-radius: 12px;" />
 </p>
 
-**Kingdom Come** is Aaron Michael Kinder's ([kinaar111](https://huggingface.co/kinaar111)) unified
-**knowledge repository and interactive portal** for a Hopf-fibration-based Theory of Everything (TOE).
-
-This is a **Gradio** Space (not Docker). Open the **App** tab above — no install required.
-
-> **What it is:** scientific visualization + theory record platform linking topology, quaternions,
-> gauged flux lattices, and emergent physics. **Not a game.**
+Interactive portal for Hopf visualizers, flux-flywheel models, and observational notes
+([kinaar111](https://huggingface.co/kinaar111)). **Not a game.**
 
 ---
 
@@ -61,15 +66,15 @@ This is a **Gradio** Space (not Docker). Open the **App** tab above — no insta
 | **Book Mode** | Pick QGA Ch. 0–10 → mini demo or **Open linked live tab** | Manuscript map ↔ Hopf / Lattice / Flux / Observations |
 | **Hopf Visualizer** | Click **Classic Hopf** preset → **Update visualization** | 4-panel 2D view: linked fibers (xy/xz), S² base chart, phase map |
 | **Lattice Simulator** | **Run lattice comparison** | Stable vs chaotic gauge pointer, twist, identity preservation |
-| **The Model** | Read overview + derivation accordion | Core TOE postulates and Hopf→quaternion math |
-| **Flux Flywheel** | Slide **Z** (try He=2, Ne=10) | Element card, electron cloud, chemistry vs TOE flux |
-| **Observations** | Expand investigations | Natural synchronicities, numerics, and TLS probes mapped to the TOE |
+| **The Model** | Read overview + derivation accordion | Labeled Model: Hopf → quaternion constructions |
+| **Flux Flywheel** | Slide **Z** (try He=2, Ne=10) | Element card, electron cloud — a Model, not a theorem |
+| **Observations** | Expand investigations | Numerics and probes labeled as hypotheses |
 | **Showcase** | Browse links | [kinaar111 HF Spaces](https://huggingface.co/kinaar111/spaces) |
 | **Help** | Full walkthrough | Controls, limitations, tech stack |
 
 Companion manuscript: [Kingdom Come QGA](https://github.com/kinaar8340/qga) (Markdown + PDF).
 
-New investigations in **Observations** tab include TLS tree point-cloud analysis (350/π branch bursts), the Bitcoin Pi Cycle Top emergence of W_g = 350/π, cuprate superconductor mappings (Investigation 9), and PTA pulsar timing / 350/π hypothesis (Investigation 10).
+New investigations in **Observations** tab include TLS tree point-cloud analysis (350/π branch bursts), the Bitcoin Pi Cycle Top emergence of W_g = 350/π, cuprate superconductor mappings (Investigation 9), and PTA pulsar timing / 350/π hypothesis (Investigation 10). Those are **Hypotheses**, not theorems.
 
 ---
 
@@ -98,6 +103,8 @@ New investigations in **Observations** tab include TLS tree point-cloud analysis
 
 ## Core model (one paragraph)
 
+This paragraph is a **Model**, not a QGA theorem.
+
 Physics emerges from **topologically protected flux flywheels** on a **gauged Hopf lattice**
 in a porous vacuum. The Hopf fibration \(S^3 \to S^2\) is the geometric backbone; quaternions
 supply the algebra; stable rotating flux configurations anchor emergent matter (periodic-table proxy
@@ -118,7 +125,7 @@ via Magic Island stability sweeps).
     <img src="app/assets/showcase/kingdom.png" alt="Kingdom Come thumbnail" width="100%" style="max-width:360px;border-radius:10px;" />
   </a><br/>
   <strong>Kingdom Come 👑</strong> · <a href="https://huggingface.co/spaces/kinaar111/kingdom">HF Space</a> · you are here<br/>
-  <sub>Hopf fibration TOE portal &amp; visualizers</sub>
+  <sub>Hopf visualizers, flux-flywheel models, observational notes</sub>
 </td>
 <td width="50%" align="center" valign="top">
   <a href="https://huggingface.co/spaces/kinaar111/6-string-optimizer">
